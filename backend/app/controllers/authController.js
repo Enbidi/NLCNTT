@@ -1,6 +1,6 @@
 const passport = require("passport");
 
-const { body, validationResult } = require("express-validator");
+const { body, validationResult, matchedData } = require("express-validator");
 
 const { parallelValidate } = require("../validate");
 
@@ -59,7 +59,8 @@ module.exports.signupPost = [
     })
   ),
   (req, res) => {
-    const { firstname, lastname, number, email, password, sex } = req.body;
+    const { firstname, lastname, number, email, password, sex } = matchedData(req, 
+      { locations: ["body"] });
     User.register(
       {
         firstname,

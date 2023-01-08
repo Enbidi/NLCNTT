@@ -65,8 +65,6 @@ exports.updateBranchPost = [
 
 exports.deleteBranchGet = [
   parallelValidate(
-    header("Content-Type")
-      .isIn(["application/json"]),
     param("id", "Id nhãn hiệu không hợp lệ")
       .if((id) => mongoose.Types.ObjectId.isValid(id))
       .custom((id) => {

@@ -4,6 +4,8 @@ const router = express.Router();
 const adminProductController = require("../controllers/adminProductController");
 const adminOriginController = require("../controllers/adminOriginController");
 const adminBranchController = require("../controllers/adminBranchController");
+const adminUserController = require("../controllers/adminUserController");
+const adminCommentsController = require("../controllers/adminCommentController");
 
 // router.get("/product/:id");
 
@@ -41,5 +43,28 @@ router.post("/origin/add", adminOriginController.addOriginPost);
 router.get("/origin/:id/delete", adminOriginController.deleteOriginGet);
 
 router.get("/origin/find", adminOriginController.findOriginByNameGet);
+
+
+router.get("/users", adminUserController.usersGet);
+
+router.post("/user/add", adminUserController.addUserPost);
+
+router.patch("/user/:id/update", adminUserController.userPatch);
+
+router.delete("/user/:id/delete", adminUserController.userDelete);
+
+router.get("/user/find", adminUserController.findUserByNameGet);
+
+
+// Comment Routes
+router.get("/comments", adminCommentsController.commentsGet);
+
+router.post("/comment/add", adminCommentsController.addCommentPost);
+
+router.patch("/comment/:id/update", adminCommentsController.commentPatch);
+
+router.delete("/comment/:id/delete", adminCommentsController.commentDelete);
+
+router.get("/comment/find", adminCommentsController.findCommentByContent);
 
 module.exports = router;
