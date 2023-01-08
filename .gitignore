@@ -1,0 +1,4 @@
+backend/app/node_modules
+frontend/Admin/node_modules
+frontend/User/node_modules
+node_modules
