@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 
 const BillDetailSchema = new Schema({
   quantity: Number,
+  note: String,
   product: {
     type: Schema.Types.ObjectId,
     ref: "Product",

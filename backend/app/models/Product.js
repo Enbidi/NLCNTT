@@ -25,6 +25,12 @@ ProductSchema.statics.findProductByName = function(name, cb) {
   }).then(cb);
 }
 
+ProductSchema.virtual("includedInBillDetails", {
+  ref: "BillDetail",
+  localField: "_id",
+  foreignField: "product"
+});
+
 const Product = mongoose.model("Product", ProductSchema);
 
 module.exports = { Product };

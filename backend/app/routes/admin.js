@@ -6,7 +6,8 @@ const adminOriginController = require("../controllers/adminOriginController");
 const adminBranchController = require("../controllers/adminBranchController");
 const adminUserController = require("../controllers/adminUserController");
 const adminCommentsController = require("../controllers/adminCommentController");
-
+const adminSaleController = require("../controllers/adminSaleController");
+const adminBillController = require("../controllers/adminBillController");
 // router.get("/product/:id");
 
 // router.get("/products");
@@ -57,7 +58,7 @@ router.get("/user/find", adminUserController.findUserByNameGet);
 
 
 // Comment Routes
-router.get("/comments", adminCommentsController.commentsGet);
+router.get("/commnets", adminCommentsController.commentsGet);
 
 router.post("/comment/add", adminCommentsController.addCommentPost);
 
@@ -66,5 +67,29 @@ router.patch("/comment/:id/update", adminCommentsController.commentPatch);
 router.delete("/comment/:id/delete", adminCommentsController.commentDelete);
 
 router.get("/comment/find", adminCommentsController.findCommentByContent);
+
+// Sale Routes
+
+router.get("/sales", adminSaleController.salesGet);
+
+router.post("/sale/add", adminSaleController.addSalePost);
+
+router.patch("/sale/:id/update", adminSaleController.salePatch);
+
+router.delete("/sale/:id/delete", adminSaleController.saleDelete);
+
+// router.get("/sale/find", adminSaleController.findCommentByContent);
+
+// Bill Routes
+
+router.get("/bills", adminBillController.billsGet);
+
+router.post("/bill/add", adminBillController.addBillPost);
+
+// router.patch("/bill/:id/update", adminBillController.commentPatch);
+
+// router.delete("/bill/:id/delete", adminBillController.commentDelete);
+
+// router.get("/bill/find", adminBillController.findCommentByContent);
 
 module.exports = router;

@@ -14,8 +14,11 @@ const userService = require("../services/UserService");
 
 exports.commentsGet = [
   query("limit").default(20),
-  async (req, res) => {
-    commentService.fetchLimit(req.query.limit, (comments) => {
+  async (req, res, next) => {
+    commentService.fetchLimit(req.query.limit, (err, comments) => {
+      if (err) {
+        return next(err);
+      }
       res.status(200).json({
         comments,
       });
@@ -41,9 +44,12 @@ exports.addCommentPost = [
         return await productService.isExist(productId);
       })
   ),
-  (req, res) => {
+  (req, res, next) => {
     const comment = matchedData(req, { locations: ["body"] });
-    commentService.createOne(comment, (product) => {
+    commentService.createOne(comment, (err, product) => {
+      if (err) {
+        return next(err);
+      }
       res.status(200).json({
         created: comment,
       });
@@ -81,13 +87,16 @@ exports.commentPatch = [
         return true;
       })
   ),
-  (req, res) => {
+  (req, res, next) => {
     const comment = matchedData(req, { locations: ["body"] });
     commentService.updateOne(
       req.params.id,
       comment,
       { new: true },
-      (comment) => {
+      (err, comment) => {
+        if (err) {
+          return next(err);
+        }
         res.status(200).json({
           updated: comment,
         });
@@ -108,8 +117,11 @@ exports.commentDelete = [
         return true;
       })
   ),
-  (req, res) => {
-    commentService.deleteOne(req.params.id, (comment) => {
+  (req, res, next) => {
+    commentService.deleteOne(req.params.id, (err, comment) => {
+      if (err) {
+        return next(err);
+      }
       res.status(200).json({
         deleted: comment,
       });
@@ -124,8 +136,11 @@ exports.findCommentByContent = [
       .isLength({ min: 1 })
       .escape()
   ),
-  (req, res) => {
-    commentService.findByContent(req.query.keyword, comments => {
+  (req, res, next) => {
+    commentService.findByContent(req.query.keyword, (err, comments) => {
+      if (err) {
+        return next(err);
+      }
       res.status(200).json({
         comments,
       });

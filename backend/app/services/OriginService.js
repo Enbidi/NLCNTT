@@ -1,14 +1,10 @@
 const BaseService = require("./BaseService");
 
-const { Comment } = require("../models/Comment");
+const { Origin } = require("../models/Origin");
 
-class CommentService extends BaseService {
+class OriginService extends BaseService {
   constructor(model) {
     super(model);
-  }
-
-  async findByContent(content, cb) {
-    this.model.findByContent(content, cb);
   }
 
   // async deleteOne(id, cb) {
@@ -28,4 +24,4 @@ class CommentService extends BaseService {
   // }
 }
 
-module.exports = new CommentService(Comment);
+module.exports = new OriginService(Origin);

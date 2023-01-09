@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const CommentSchema = new Schema({
   content: String,
-  rate: Number,
+  rating: Number,
   user: {
     type: Schema.Types.ObjectId,
     ref: "User"
@@ -14,6 +14,15 @@ const CommentSchema = new Schema({
     ref: "Product"
   }
 });
+
+CommentSchema.statics.findByContent = function(content, cb) {
+  this.find({
+    content: {
+      $regex: `.*${content}.*`,
+      $options: "i"
+    }
+  }).then(cb);
+}
 
 const Comment = mongoose.model("Comment", CommentSchema);
 

@@ -1,17 +1,35 @@
 const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
+const { PaymentSchema } = require("./Payment");
 
-const BillSchema = new Schema({
-  amount: Number,
-  sale: {
-    type: Schema.Types.ObjectId,
-    ref: "Sale"
+const BillSchema = new Schema(
+  {
+    sale: {
+      type: Schema.Types.ObjectId,
+      ref: "Sale",
+    },
+    payment: PaymentSchema
   },
-  payment: {
-    type: Schema.Types.ObjectId,
-    ref: "Payment"
+  {
+    timestamps: true,
+    toJSON: { virtuals: true }
   }
+);
+
+BillSchema.virtual("details", {
+  ref: "BillDetail",
+  localField: "_id",
+  foreignField: "bill",
+});
+
+BillSchema.virtual("total").get(async function() {
+  const details = await this.details
+    .populate({
+      path: "product",
+      select: "price -_id"
+    }).exec();
+  return details.reduce(detail => detail.product.price * detail.quantity);
 });
 
 const Bill = mongoose.model("Bill", BillSchema);
