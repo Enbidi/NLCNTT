@@ -25,6 +25,7 @@ exports.addBillPost = [
   parallelValidate(
     header("Content-Type").isIn("application/json"),
     body("sale")
+      .optional()
       .isMongoId()
       .bail()
       .custom(async (saleId) => {
@@ -46,7 +47,7 @@ exports.addBillPost = [
       .isMongoId()
       .bail()
       .custom(async (productId) => {
-        if (!(await productService.isExist())) {
+        if (!(await productService.isExist(productId))) {
           throw new Error("Id sản phẩm không tồn tại");
         }
         return true;
@@ -74,6 +75,9 @@ exports.addBillPost = [
         }
       );
     }
+    res.status(200).json({
+      created: bill,
+    });
   },
 ];
 
