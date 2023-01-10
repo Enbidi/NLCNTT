@@ -47,8 +47,11 @@ BillSchema.method("calcTotal", async function () {
   );
 });
 
-BillSchema.statics.fetchDetailsWithTotal = async function () {
-  return await this.aggregate([
+BillSchema.statics.fetchDetailsWithTotal = function (filter, limit, cb) {
+  this.aggregate([
+    {
+      $match: filter
+    },
     {
       $lookup: {
         from: BillDetail.collection.collectionName,
@@ -100,7 +103,7 @@ BillSchema.statics.fetchDetailsWithTotal = async function () {
         },
       },
     },
-  ]);
+  ]).limit(limit).exec(cb);
 };
 
 const Bill = mongoose.model("Bill", BillSchema);

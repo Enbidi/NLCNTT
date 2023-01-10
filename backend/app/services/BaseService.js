@@ -5,8 +5,11 @@ class BaseService {
   async deleteOne(filter, cb) {
     this.model.findOneAndRemove(filter, cb);
   }
-  async updateOne(filter, obj, options={}, cb) {
+  async updateOne(filter, obj, options = {}, cb) {
     this.model.findOneAndUpdate(filter, obj, options, cb);
+  }
+  async update(filter, obj, options = {}) {
+    return await this.model.findOneAndUpdate(filter, obj, options).exec();
   }
   // async findOneAndUpdate(filter, obj, options) {
   //   await this.model.findOneAndUpdate(filter, obj)
@@ -15,8 +18,11 @@ class BaseService {
   async createOne(obj, cb) {
     this.model.create(obj, cb);
   }
+  async create(obj) {
+    return await new this.model(obj).save();
+  }
   async save(obj) {
-    await (new this.model(obj)).save();
+    await new this.model(obj).save();
   }
   async addOne(obj) {
     const doc = new this.model(obj);
@@ -30,7 +36,7 @@ class BaseService {
     this.model.find(filter, cb);
   }
   async isExist(id) {
-    return await this.model.exists({_id: id});
+    return await this.model.exists({ _id: id });
   }
 }
 

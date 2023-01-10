@@ -18,18 +18,25 @@ const { Bill } = require("../models/Bill");
 exports.billsGet = [
   parallelValidate(query("limit").default(20)),
   async (req, res, next) => {
-    console.log((await Bill.fetchDetailsWithTotal())[0]);
-    billService.populatedDetails({}, req.query.limit, async (err, bills) => {
+    // billService.populatedDetails({}, req.query.limit, async (err, bills) => {
+    //   if (err) {
+    //     return next(err);
+    //   }
+    //   bills = await (async () =>
+    //     await Promise.all(
+    //       bills.map(async (bill) => ({
+    //         ...bill.toObject(),
+    //         total: await bill.calcTotal(),
+    //       }))
+    //     ))();
+    //   res.status(200).json({
+    //     bills,
+    //   });
+    // });
+    billService.populateDetailsWithTotal({}, req.query.limit, (err, bills) => {
       if (err) {
         return next(err);
       }
-      bills = await (async () =>
-        await Promise.all(
-          bills.map(async (bill) => ({
-            ...bill.toObject(),
-            total: await bill.calcTotal(),
-          }))
-        ))();
       res.status(200).json({
         bills,
       });
@@ -131,38 +138,61 @@ exports.billPatch = [
       .isArray()
       .toArray(),
     body("details.*._id", "Id chi tiết hóa đơn không hợp lệ")
-      .isMongoId()
-      .bail()
-      .custom(async (detailId) => {
-        if (!(await billDetailService.isExist(detailId))) {
-          throw new Error("Id chi tiết hóa đơn không tồn tại");
+      .optional()
+      .isMongoId(),
+    body("details.*")
+      .custom(async detail => {
+        if (detail._id) {
+          if (!detail.quantity || !detail.product || !detail.bill) {
+            throw new Error("Không đủ thông tin để tạo chi tiết hóa đơn");
+          }
         }
-        return true;
-      })
-  ),
-  parallelValidate(
-    body("details.*.quantity", "Số lượng của chi tiết hóa đơn không hợp lệ")
-      .if(body("details").exists())
-      .isNumeric(),
-    body("details.*.note", "Mô tả không hợp lệ")
-      .if(body("details").exists())
-      .trim()
-      .escape(),
-    body("details.*.product", "Id sản phẩm không hợp lệ")
-      .if(body("details").exists())
-      .isMongoId()
-      .bail()
-      .custom(async (productId) => {
-        if (!(await productService.isExist(productId))) {
+        if (isNaN(detail.quantity)) {
+          throw new Error("Số lượng không hợp lệ");
+        }
+        if (!(await productService.isExist(detail.product))) {
           throw new Error("Id sản phẩm không tồn tại");
         }
+        if (!(await billService.isExist(detail.bill))) {
+          throw new Error("Id hóa đơn không tồn tại");
+        }
         return true;
       })
   ),
+  // parallelValidate(
+  //   body("details.*.quantity", "Số lượng của chi tiết hóa đơn không hợp lệ")
+  //     .if(body("details").exists())
+  //     .optional()
+  //     .isNumeric(),
+  //   body("details.*.note", "Mô tả không hợp lệ")
+  //     .if(body("details").exists())
+  //     .optional()
+  //     .trim()
+  //     .escape(),
+  //   body("details.*.product", "Id sản phẩm không hợp lệ")
+  //     .if(body("details").exists())
+  //     .optional()
+  //     .isMongoId()
+  //     .bail()
+  //     .custom(async (productId) => {
+  //       if (!(await productService.isExist(productId))) {
+  //         throw new Error("Id sản phẩm không tồn tại");
+  //       }
+  //       return true;
+  //     })
+  // ),
   async (req, res, next) => {
     const bill = matchedData(req, { locations: ["body"] });
-    bill.details.forEach((detail) =>
-      billDetailService.updateOne({ _id: detail._id })
+    // bill.details.forEach((detail) => {
+    //   billDetailService.updateOne({ _id: detail._id })
+    //  }
+    // );
+    await Promise.all(
+      bill.details.map((detail) =>
+        detail._id
+        ? billDetailService.update({ _id: id }, detail)
+        : billDetailService.create(detail)
+      )
     );
     const billInfo = Object.fromEntries(
       Object.entries(bill).filter((e) => e[0] != "details")

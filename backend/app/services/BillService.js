@@ -14,8 +14,8 @@ class BillService extends BaseService {
       .exec(cb)
   }
 
-  async populateDetailsWithTotal(limit, cb) {
-    this.populatedDetails(limit)
+  populateDetailsWithTotal(filter, limit, cb) {
+    Bill.fetchDetailsWithTotal(filter, limit, cb);
   }
 }
 
