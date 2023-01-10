@@ -15,7 +15,7 @@ var adminRouter = require('./routes/admin');
 var app = express();
 const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.set("strictQuery", true);
+// mongoose.set("strictQuery", false);
 
 const { User } = require("./models/User");
 // User.register({

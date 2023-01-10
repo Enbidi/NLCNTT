@@ -11,6 +11,9 @@ class BaseService {
   async createOne(obj, cb) {
     this.model.create(obj, cb);
   }
+  async save(obj) {
+    await (new this.model(obj)).save();
+  }
   async addOne(obj) {
     const doc = new this.model(obj);
     await doc.save();

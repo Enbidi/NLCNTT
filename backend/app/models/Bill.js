@@ -15,18 +15,32 @@ const BillSchema = new Schema(
   {
     timestamps: true,
     toJSON: { virtuals: true },
+    toObject: { virtuals: true }
   }
 );
 
 BillSchema.virtual("details", {
   ref: "BillDetail",
   localField: "_id",
-  foreignField: "bill",
+  foreignField: "bill"
 });
 
-BillSchema.virtual("total").get(async function () {
-  const { details } = await this.populate("details");
-  return details.reduce((detail) => detail.product.price * detail.quantity, 0);
+BillSchema.virtual("total", {
+  ref: "BillDetail",
+  localField: "_id",
+  foreignField: "bill"
+});
+
+BillSchema.method("calcTotal", async function() {
+  const { details } = await this.populate({
+    path: "details",
+    populate: {
+      path: "product",
+      select: "price -_id",
+      model: "Product"
+    }
+  });
+  return details.reduce((acc, detail) => acc + detail.product.price * detail.quantity, 0);
 });
 
 const Bill = mongoose.model("Bill", BillSchema);
