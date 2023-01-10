@@ -60,7 +60,7 @@ exports.salePatch = [
   ),
   (req, res, next) => {
     const sale = matchedData(req, { locations: ["body"] });
-    saleService.updateOne(req.params.id, sale, { new: true }, (err, sale) => {
+    saleService.updateOne({ _id: req.params.id }, sale, { new: true }, (err, sale) => {
       if (err) {
         return next(err);
       }
@@ -84,7 +84,7 @@ exports.saleDelete = [
       })
   ),
   (req, res, next) => {
-    saleService.deleteOne(req.params.id, (err, sale) => {
+    saleService.deleteOne({ _id: req.params.id }, (err, sale) => {
       if (err) {
         return next(err);
       }

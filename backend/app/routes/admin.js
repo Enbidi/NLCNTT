@@ -86,9 +86,9 @@ router.get("/bills", adminBillController.billsGet);
 
 router.post("/bill/add", adminBillController.addBillPost);
 
-// router.patch("/bill/:id/update", adminBillController.commentPatch);
+router.patch("/bill/:id/update", adminBillController.billPatch);
 
-// router.delete("/bill/:id/delete", adminBillController.commentDelete);
+router.delete("/bill/:id/delete", adminBillController.billDelete);
 
 // router.get("/bill/find", adminBillController.findCommentByContent);
 

@@ -90,7 +90,7 @@ exports.commentPatch = [
   (req, res, next) => {
     const comment = matchedData(req, { locations: ["body"] });
     commentService.updateOne(
-      req.params.id,
+      { _id: req.params.id },
       comment,
       { new: true },
       (err, comment) => {
@@ -118,7 +118,7 @@ exports.commentDelete = [
       })
   ),
   (req, res, next) => {
-    commentService.deleteOne(req.params.id, (err, comment) => {
+    commentService.deleteOne({ _id: req.params.id }, (err, comment) => {
       if (err) {
         return next(err);
       }

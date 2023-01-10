@@ -15,7 +15,7 @@ const BillDetailSchema = new Schema({
     ref: "Bill",
     require: true
   }
-});
+}, { toObject: {virtuals: true}});
 
 const BillDetail = mongoose.model("BillDetail", BillDetailSchema);
 

@@ -7,11 +7,15 @@ class BillService extends BaseService {
     super(model);
   }
 
-  async populatedDetails(limit, cb) {
-    this.model.find()
+  async populatedDetails(filter, limit, cb) {
+    this.model.find(filter)
       .populate("details")
       .limit(limit)
       .exec(cb)
+  }
+
+  async populateDetailsWithTotal(limit, cb) {
+    this.populatedDetails(limit)
   }
 }
 

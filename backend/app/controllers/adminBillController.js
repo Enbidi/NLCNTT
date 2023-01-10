@@ -1,6 +1,12 @@
-const { parallelValidate } = require("../validate");
+const { parallelValidate, sequentialValidate } = require("../validate");
 
-const { body, header, param, query } = require("express-validator");
+const {
+  body,
+  header,
+  param,
+  query,
+  matchedData,
+} = require("express-validator");
 
 const billService = require("../services/BillService");
 const billDetailService = require("../services/BillDetailService");
@@ -12,10 +18,18 @@ const { Bill } = require("../models/Bill");
 exports.billsGet = [
   parallelValidate(query("limit").default(20)),
   async (req, res, next) => {
-    billService.populatedDetails(req.query.limit, (err, bills) => {
+    console.log((await Bill.fetchDetailsWithTotal())[0]);
+    billService.populatedDetails({}, req.query.limit, async (err, bills) => {
       if (err) {
         return next(err);
       }
+      bills = await (async () =>
+        await Promise.all(
+          bills.map(async (bill) => ({
+            ...bill.toObject(),
+            total: await bill.calcTotal(),
+          }))
+        ))();
       res.status(200).json({
         bills,
       });
@@ -84,13 +98,13 @@ exports.addBillPost = [
   },
 ];
 
-exports.salePatch = [
+exports.billPatch = [
   parallelValidate(
     param("id", "Id hóa đơn không hợp lệ")
       .isMongoId()
       .bail()
-      .custom(async billId => {
-        if (!(await billDetailService.isExist(billId))) {
+      .custom(async (billId) => {
+        if (!(await billService.isExist(billId))) {
           throw new Error("Id hóa đơn không tồn tại");
         }
         return true;
@@ -105,16 +119,37 @@ exports.salePatch = [
         }
         return true;
       }),
+    body("payment.method", "Phương thức thanh toán không hợp lệ")
+      .optional()
+      .trim()
+      .isLength({ min: 1 })
+      .escape()
+  ),
+  sequentialValidate(
     body("details", "Thông tin chi tiết hóa đơn không hợp lệ")
+      .default([])
       .isArray()
-      .bail()
       .toArray(),
-    body(
-      "details.*.quantity",
-      "Số lượng của chi tiết hóa đơn không hợp lệ"
-    ).isNumeric(),
-    body("details.*.note", "Mô tả không hợp lệ").optional().trim().escape(),
+    body("details.*._id", "Id chi tiết hóa đơn không hợp lệ")
+      .isMongoId()
+      .bail()
+      .custom(async (detailId) => {
+        if (!(await billDetailService.isExist(detailId))) {
+          throw new Error("Id chi tiết hóa đơn không tồn tại");
+        }
+        return true;
+      })
+  ),
+  parallelValidate(
+    body("details.*.quantity", "Số lượng của chi tiết hóa đơn không hợp lệ")
+      .if(body("details").exists())
+      .isNumeric(),
+    body("details.*.note", "Mô tả không hợp lệ")
+      .if(body("details").exists())
+      .trim()
+      .escape(),
     body("details.*.product", "Id sản phẩm không hợp lệ")
+      .if(body("details").exists())
       .isMongoId()
       .bail()
       .custom(async (productId) => {
@@ -124,38 +159,51 @@ exports.salePatch = [
         return true;
       })
   ),
-  (req, res, next) => {
-    const sale = matchedData(req, { locations: ["body"] });
-    saleService.updateOne(req.params.id, sale, { new: true }, (err, sale) => {
-      if (err) {
-        return next(err);
+  async (req, res, next) => {
+    const bill = matchedData(req, { locations: ["body"] });
+    bill.details.forEach((detail) =>
+      billDetailService.updateOne({ _id: detail._id })
+    );
+    const billInfo = Object.fromEntries(
+      Object.entries(bill).filter((e) => e[0] != "details")
+    );
+    billService.updateOne(
+      { _id: req.params.id },
+      {
+        ...billInfo,
+      },
+      { new: true },
+      (err, bill) => {
+        if (err) {
+          return next(err);
+        }
+        res.status(200).json({
+          updated: bill,
+        });
       }
-      res.status(200).json({
-        updated: sale,
-      });
-    });
+    );
   },
 ];
 
-exports.saleDelete = [
+exports.billDelete = [
   parallelValidate(
-    param("id", "Id khuyến mãi không hợp lệ")
+    param("id", "Id hóa đơn không hợp lệ")
       .isMongoId()
       .bail()
       .custom(async (id) => {
-        if (!(await saleService.isExist(id))) {
-          throw new Error("Id khuyến mãi không tồn tại");
+        if (!(await billService.isExist(id))) {
+          throw new Error("Id hóa đơn không tồn tại");
         }
         return true;
       })
   ),
   (req, res, next) => {
-    saleService.deleteOne(req.params.id, (err, sale) => {
+    billService.deleteOne({ _id: req.params.id }, (err, bill) => {
       if (err) {
         return next(err);
       }
       res.status(200).json({
-        deleted: sale,
+        deleted: bill,
       });
     });
   },

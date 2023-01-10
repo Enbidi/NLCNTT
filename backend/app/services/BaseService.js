@@ -2,12 +2,16 @@ class BaseService {
   constructor(model) {
     this.model = model;
   }
-  async deleteOne(id, cb) {
-    this.model.findOneAndRemove({ _id: id }, cb);
+  async deleteOne(filter, cb) {
+    this.model.findOneAndRemove(filter, cb);
   }
-  async updateOne(id, obj, options={}, cb) {
-    this.model.findOneAndUpdate({ _id: id }, obj, options, cb);
+  async updateOne(filter, obj, options={}, cb) {
+    this.model.findOneAndUpdate(filter, obj, options, cb);
   }
+  // async findOneAndUpdate(filter, obj, options) {
+  //   await this.model.findOneAndUpdate(filter, obj)
+  //     .exec();
+  // }
   async createOne(obj, cb) {
     this.model.create(obj, cb);
   }
