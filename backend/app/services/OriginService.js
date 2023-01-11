@@ -7,21 +7,9 @@ class OriginService extends BaseService {
     super(model);
   }
 
-  // async deleteOne(id, cb) {
-  //   super.deleteOne(id).then(cb);
-  // }
-
-  // async updateOne(id, obj, cb) {
-  //   super.updateOne(id, obj).then(cb);
-  // }
-
-  // async createOne(obj, cb) {
-  //   super.createOne(obj).then(cb);
-  // }
-
-  // async fetchLimit(limit, cb) {
-  //   super.fetchLimit(limit, cb);
-  // }
+  async findOriginByCountry(country, cb) {
+    Origin.findOriginByCountry(country, cb);
+  }
 }
 
 module.exports = new OriginService(Origin);

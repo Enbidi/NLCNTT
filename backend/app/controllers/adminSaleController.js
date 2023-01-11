@@ -13,7 +13,7 @@ const saleService = require("../services/SaleService");
 exports.salesGet = [
   query("limit").default(20),
   async (req, res, next) => {
-    saleService.fetchLimit(req.query.limit, (err, sales) => {
+    saleService.fetchLimit({}, req.query.limit, (err, sales) => {
       if (err) {
         return next(err);
       }
@@ -45,7 +45,7 @@ exports.addSalePost = [
 
 exports.salePatch = [
   parallelValidate(
-    header("Content-Type").isIn("application/json"),
+    header("Content-Type").isIn(["application/json"]),
     param("id", "Id khuyến mãi không hợp lệ").isMongoId(),
     body("start", "Ngày bắt đầu không hợp lệ")
       .optional()
@@ -60,14 +60,19 @@ exports.salePatch = [
   ),
   (req, res, next) => {
     const sale = matchedData(req, { locations: ["body"] });
-    saleService.updateOne({ _id: req.params.id }, sale, { new: true }, (err, sale) => {
-      if (err) {
-        return next(err);
+    saleService.updateOne(
+      { _id: req.params.id },
+      sale,
+      { new: true },
+      (err, sale) => {
+        if (err) {
+          return next(err);
+        }
+        res.status(200).json({
+          updated: sale,
+        });
       }
-      res.status(200).json({
-        updated: sale,
-      });
-    });
+    );
   },
 ];
 
@@ -84,7 +89,7 @@ exports.saleDelete = [
       })
   ),
   (req, res, next) => {
-    saleService.deleteOne({ _id: req.params.id }, (err, sale) => {
+    saleService.removeOne({ _id: req.params.id }, (err, sale) => {
       if (err) {
         return next(err);
       }

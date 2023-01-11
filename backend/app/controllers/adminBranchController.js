@@ -1,36 +1,45 @@
-const { Branch } = require("../models/Branch");
-
 const { parallelValidate } = require("../validate");
 
-const { body, header, param, query } = require("express-validator");
+const {
+  body,
+  header,
+  param,
+  query,
+  matchedData,
+} = require("express-validator");
 
-exports.branchesGet = (req, res) => {
-  Branch.find().then(branches => {
-    res.status(200).json({
-      branches
+const branchService = require("../services/BranchService");
+
+exports.branchesGet = [
+  query("limit").default(20),
+  async (req, res) => {
+    branchService.fetchLimit({}, req.query.limit, (err, branches) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200).json({
+        branches,
+      });
     });
-  });
-}
+  },
+];
 
 exports.addBranchPost = [
   parallelValidate(
-    header("Content-Type").custom((value) => {
-      if (value !== "application/json") {
-        throw new Error("Invalid header");
-      }
-      return true;
-    }),
+    header("Content-Type").isIn(["application/json"]),
     body("name", "Tên nhãn hiệu không được trống")
       .trim()
       .isLength({ min: 1 })
       .escape()
   ),
   (req, res) => {
-    Branch.create({
-      name: req.body.name,
-    }).then((branch) => {
+    const branch = matchedData(req, { locations: ["body"] });
+    branchService.createOne(branch, (err, branch) => {
+      if (err) {
+        return next(err);
+      }
       res.status(200).json({
-        added: branch,
+        created: branch,
       });
     });
   },
@@ -38,63 +47,71 @@ exports.addBranchPost = [
 
 exports.updateBranchPost = [
   parallelValidate([
-    header("Content-Type", "Invalid header")
-      .isIn(["application/json"]),
+    header("Content-Type", "Invalid header").isIn(["application/json"]),
     param("id", "Id nhãn hiệu không hợp lệ")
-      .if((id) => mongoose.Types.ObjectId.isValid(id))
-      .custom((id) => {
-        if (!Origin.exists(id)) {
-          throw new Error("Id xuất sứ không tồn tại");
+      .isMongoId()
+      .bail()
+      .custom(async (branchId) => {
+        if (!(await branchService.isExist(branchId))) {
+          throw new Error("Id nhãn hiệu không tồn tại");
         }
         return true;
       }),
-    body("branch.*").trim().isLength({ min: 1 }).escape(),
+    body("name").optional().trim().not().isEmpty().escape(),
   ]),
   (req, res) => {
-    const branch = Branch.findById(req.params.id);
-    if (req.body.branch) {
-      branch.name = req.body.name;
-      origin.save((origin) => {
+    branchService.updateOne(
+      { _id: req.params.id },
+      { new: true },
+      (err, branch) => {
+        if (err) {
+          return next(err);
+        }
         res.status(200).json({
-          updated: origin,
+          updated: branch,
         });
-      });
-    }
+      }
+    );
   },
 ];
 
 exports.deleteBranchGet = [
   parallelValidate(
     param("id", "Id nhãn hiệu không hợp lệ")
-      .if((id) => mongoose.Types.ObjectId.isValid(id))
-      .custom((id) => {
-        if (!Branch.exists(id)) {
+      .isMongoId()
+      .bail()
+      .custom(async (branchId) => {
+        if (!(await branchService.isExist(branchId))) {
           throw new Error("Id nhãn hiệu không tồn tại");
         }
         return true;
       })
   ),
   (req, res) => {
-    Origin.findOneAndRemove(req.params.id).then(branch => {
+    branchService.removeOne({ _id: req.params.id }, (err, branch) => {
+      if (err) {
+        return next(err);
+      }
       res.status(200).json({
-        deleted: origin,
+        deleted: branch,
       });
     });
   },
 ];
 
 exports.findBranchByNameGet = [
-  parallelValidate(
-    query("keyword", "Tên nhãn hiệu không hợp lệ")
-      .trim()
-      .isLength({ min: 1 })
-      .escape()
-  ),
-  (req, res) => {
-    Branch.findBranchByName(req.query.keyword, branches => {
+  query("keyword", "Tên nhãn hiệu không hợp lệ")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  async (req, res) => {
+    branchService.findBranchByName(req.query.keyword, (err, branches) => {
+      if (err) {
+        return next(err);
+      }
       res.status(200).json({
         branches,
       });
     });
-  }
+  },
 ];

@@ -15,7 +15,7 @@ const userService = require("../services/UserService");
 exports.commentsGet = [
   query("limit").default(20),
   async (req, res, next) => {
-    commentService.fetchLimit(req.query.limit, (err, comments) => {
+    commentService.fetchLimit({}, req.query.limit, (err, comments) => {
       if (err) {
         return next(err);
       }
@@ -118,7 +118,7 @@ exports.commentDelete = [
       })
   ),
   (req, res, next) => {
-    commentService.deleteOne({ _id: req.params.id }, (err, comment) => {
+    commentService.removeOne({ _id: req.params.id }, (err, comment) => {
       if (err) {
         return next(err);
       }

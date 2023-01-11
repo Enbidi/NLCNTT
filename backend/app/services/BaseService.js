@@ -6,7 +6,11 @@ class BaseService {
     this.model.findOneAndRemove(filter, cb);
   }
   async updateOne(filter, obj, options = {}, cb) {
-    this.model.findOneAndUpdate(filter, obj, options, cb);
+    if (cb !== undefined) {
+      this.model.findOneAndUpdate(filter, obj, options, cb);
+    } else {
+      return await this.model.findOneAndUpdate(filter, obj, optionals).exec();
+    }
   }
   async update(filter, obj, options = {}) {
     return await this.model.findOneAndUpdate(filter, obj, options).exec();
@@ -15,8 +19,20 @@ class BaseService {
   //   await this.model.findOneAndUpdate(filter, obj)
   //     .exec();
   // }
+  async removeOne(filter, cb) {
+    if (cb !== undefined) {
+      this.model.findOneAndRemove(filter, cb);
+    } else {
+      return await this.model.findOneAndRemove(filter)
+        .exec();
+    }
+  }
   async createOne(obj, cb) {
-    this.model.create(obj, cb);
+    if (cb !== undefined) {
+      this.model.create(obj, cb);
+    } else {
+      return await new this.model(obj).save();
+    }
   }
   async create(obj) {
     return await new this.model(obj).save();
@@ -29,8 +45,8 @@ class BaseService {
     await doc.save();
     return doc;
   }
-  async fetchLimit(limit, cb) {
-    this.model.find({}, cb).limit(limit);
+  async fetchLimit(filter, limit, cb) {
+    this.model.find(filter).limit(limit).exec(cb);
   }
   async find(filter, cb) {
     this.model.find(filter, cb);

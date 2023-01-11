@@ -191,7 +191,7 @@ exports.billPatch = [
       bill.details.map((detail) =>
         detail._id
         ? billDetailService.update({ _id: id }, detail)
-        : billDetailService.create(detail)
+        : billDetailService.createOne(detail)
       )
     );
     const billInfo = Object.fromEntries(
