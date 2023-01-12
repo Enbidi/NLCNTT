@@ -1,6 +1,6 @@
 <script setup>
-import Collapse from './Collapse.vue';
-import NavLink from './NavLink.vue';
+import Collapse from './Collapse.vue'
+import NavLink from './NavLink.vue'
 </script>
 
 <template>
@@ -34,6 +34,9 @@ import NavLink from './NavLink.vue';
               <a class="nav-link" href="layout-sidenav-light.html">Sản phẩm</a>
               <a class="nav-link" href="layout-sidenav-light.html">Hóa Đơn</a>
               <a class="nav-link" href="layout-sidenav-light.html">Bình luận</a>
+              <a class="nav-link" href="layout-sidenav-light.html">Nhãn hiệu</a>
+              <a class="nav-link" href="layout-sidenav-light.html">Xuất sứ</a>
+
             </template>
           </Collapse>
           <NavLink class="collapsed" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#demo2"

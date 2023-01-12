@@ -8,7 +8,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.2.45"
+    "@vueuse/core": "^9.10.0",
+    "vue": "^3.2.45",
+    "vuejs-smart-table": "^1.0.0-beta.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",

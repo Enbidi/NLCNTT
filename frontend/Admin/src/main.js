@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-
+import SmartTable from 'vuejs-smart-table'
 // import './assets/main.css'
-
-createApp(App).mount('#app')
+console.log(SmartTable)
+var app = createApp(App);
+app.use(SmartTable)
+app.mount("#app")
