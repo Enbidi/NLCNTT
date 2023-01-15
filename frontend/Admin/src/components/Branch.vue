@@ -1,16 +1,58 @@
 <script setup>
 import TableWrapper from './TableWrapper.vue'
+import Modal from './Modal.vue'
+import LoadingScreen from './LoadingScreen.vue'
 </script>
 
 <script>
 export default {
   created() {
-    fetch("http://localhost:3000/admin/branches")
+    fetch(this.hostname + "/branches")
       .then(res => res.json())
       .then(data => this.branches = data.branches)
   },
   mounted() {
     new mdb.Input(this.$refs.filter).init()
+  },
+  methods: {
+    async addBranchHandler(event) {
+      this.isLoading = true
+      let form = event.target
+      let url = form.action
+      let formData = new FormData(form)
+      let formDataJSON = JSON.stringify(Object.fromEntries(formData.entries()))
+      let res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: formDataJSON
+      });
+      setTimeout(() => this.isLoading = false, 700)
+      if (!res.ok) {
+        const err = JSON.parse(await res.text())
+        this.errors = err.errors
+        return
+      }
+      this.errors = []
+    },
+    async deleteBranchHandler(branchId) {
+      this.isLoading = true
+      const apiURL = this.hostname + `/branch/${branchId}/delete`
+      let res = await fetch(apiURL, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      setTimeout(() => this.isLoading = false, 700)
+      if (!res.ok) {
+        const err = JSON.parse(await res.text())
+        this.errors = err.errors
+        return
+      }
+      this.errors = []
+    }
   },
   data() {
     return {
@@ -20,18 +62,50 @@ export default {
       },
       selectedRows: [],
       currentPage: 1,
-      totalPages: 1
+      totalPages: 1,
+      branchName: "",
+      isLoading: false,
+      errors: null
     }
   }
 }
 </script>
 
 <template>
+  <LoadingScreen v-if="isLoading" />
   <table-wrapper>
     <div class="row mb-3">
       <div class="col-md-10 d-flex justify-content-start">
         <button class="btn btn-primary me-2" @click="$refs.table.selectAll()">Chọn tất cả</button>
-        <button class="btn btn-primary" @click="$refs.table.deselectAll()">Hủy chọn tất cả</button>
+        <button class="btn btn-primary me-2" @click="$refs.table.deselectAll()">Hủy chọn tất cả</button>
+        <Modal id="addBranchModal">
+          <template #buttonContent>
+            Thêm nhãn hiệu
+          </template>
+          <template #modalTitle>
+            Thêm nhãn hiệu
+          </template>
+          <form @submit.prevent="addBranchHandler($event)" method="POST" :action="hostname + '/branch/add'">
+            <!-- Name input -->
+            <div class="modal-body">
+              <div class="form-outline mb-4">
+                <input type="text" id="addBranchInput" class="form-control" name="name" />
+                <label class="form-label" for="addBranchInput">Tên</label>
+              </div>
+              <div v-if="errors && errors.length != 0" class="alert alert-danger">
+                <p v-for="error in errors">{{ error.msg }}</p>
+              </div>
+              <div v-else-if="errors && errors.length == 0" class="alert alert-success">
+                Thêm thành công
+              </div>
+            </div>
+
+            <!-- Submit button -->
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary btn-block mb-4">Thêm</button>
+            </div>
+          </form>
+        </Modal>
       </div>
       <div class="col-md-2">
         <div class="form-outline" ref="filter">
@@ -51,6 +125,9 @@ export default {
         <VTr v-for="row in rows" :row="row">
           <td>{{ row._id }}</td>
           <td>{{ row.name }}</td>
+          <td>
+            <button class="btn btn-link" @click="deleteBranchHandler(row._id)">Xóa</button>
+          </td>
         </VTr>
       </template>
     </VTable>

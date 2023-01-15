@@ -1,19 +1,13 @@
-<script setup>
-import DataTable from './DataTable.vue'
-import StatisticCard from './StatisticCard.vue'
-import DashBoard from './DashBoard.vue'
-import Origin from './Origin.vue'
-import Branch from './Branch.vue'
-import Product from './Product.vue'
-import Bill from './Bill.vue'
-</script>
-
-
 <template>
   <div>
     <main>
       <div class="container-fluid px-4">
-        <Product />
+        <!-- <User /> -->
+        <router-view v-slot="{ Component }">
+          <transition mode="out-in" name="fade">
+            <component :is="Component"></component>
+          </transition>
+        </router-view>
       </div>
     </main>
     <footer class="py-4 bg-light mt-auto">
@@ -30,3 +24,13 @@ import Bill from './Bill.vue'
     </footer>
   </div>
 </template>
+
+<style scoped>
+.fade-leave-active, .fade-enter-active {
+  transition: all .3s ease-out;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+</style>

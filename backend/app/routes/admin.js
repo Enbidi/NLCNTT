@@ -28,9 +28,9 @@ router.get("/branches", adminBranchController.branchesGet);
 
 router.post("/branch/add", adminBranchController.addBranchPost);
 
-router.post("/branch/update", adminBranchController.updateBranchPost);
+router.patch("/branch/update", adminBranchController.updateBranchPost);
 
-router.get("/branch/:id/delete", adminBranchController.deleteBranchGet);
+router.delete("/branch/:id/delete", adminBranchController.deleteBranchGet);
 
 router.get("/branch/find", adminBranchController.findBranchByNameGet);
 

@@ -30,13 +30,12 @@ import NavLink from './NavLink.vue'
           </NavLink>
           <Collapse id="demoCollapse" parentId="sidenavAccordion">
             <template v-slot:default>
-              <a class="nav-link" href="layout-static.html">Người dùng</a>
-              <a class="nav-link" href="layout-sidenav-light.html">Sản phẩm</a>
-              <a class="nav-link" href="layout-sidenav-light.html">Hóa Đơn</a>
-              <a class="nav-link" href="layout-sidenav-light.html">Bình luận</a>
-              <a class="nav-link" href="layout-sidenav-light.html">Nhãn hiệu</a>
-              <a class="nav-link" href="layout-sidenav-light.html">Xuất sứ</a>
-
+              <router-link to="/users" class="nav-link">Người dùng</router-link>
+              <router-link to="/products" class="nav-link">Sản phẩm</router-link>
+              <router-link to="bills" class="nav-link">Hóa Đơn</router-link>
+              <router-link to="" class="nav-link">Bình luận</router-link>
+              <router-link to="/branches" class="nav-link">Nhãn hiệu</router-link>
+              <router-link to="/origins" class="nav-link">Xuất sứ</router-link>
             </template>
           </Collapse>
           <NavLink class="collapsed" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#demo2"
