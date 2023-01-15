@@ -97,7 +97,10 @@ BillSchema.statics.fetchDetailsWithTotal = function (filter, limit, cb) {
     },
     {
       $project: {
+        payment: "$payment.method",
         details: 1,
+        createdAt: 1,
+        updatedAt: 1,
         total: {
           $sum: "$details.unitPrice",
         },

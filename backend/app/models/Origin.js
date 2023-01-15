@@ -14,6 +14,6 @@ OriginSchema.statics.findOriginByCountry = function (country, cb) {
   }).then(cb);
 };
 
-const Origin = mongoose.model("Producer", OriginSchema);
+const Origin = mongoose.model("Origin", OriginSchema);
 
 module.exports = { Origin };

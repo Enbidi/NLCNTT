@@ -20,15 +20,19 @@ const mongoose = require("mongoose");
 
 exports.productsGet = [
   query("limit").default(20).isNumeric().toFloat(),
-  async (req, res) => {
-    async (req, res) => {
-      productService.fetchLimit({}, req.query.limit, (err, products) => {
-        if (err) {
-          return next(err);
-        }
-        res.status(200).json({ products });
-      });
-    };
+  async (req, res, next) => {
+    productService.fetchLimitWithOriginAndBranch({}, req.query.limit, (err, products) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200).json({ products });
+    });
+    // productService.fetchLimit({}, req.query.limit, (err, products) => {
+    //   if (err) {
+    //     return next(err);
+    //   }
+    //   res.status(200).json({ products });
+    // });
   },
 ];
 

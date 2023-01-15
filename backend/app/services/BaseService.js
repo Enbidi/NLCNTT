@@ -1,5 +1,5 @@
 class BaseService {
-  constructor(model) {
+  constructor(model, populatedFields=[]) {
     this.model = model;
   }
   async deleteOne(filter, cb) {
@@ -47,6 +47,18 @@ class BaseService {
   }
   async fetchLimit(filter, limit, cb) {
     this.model.find(filter).limit(limit).exec(cb);
+  }
+  async fetch(filter, options, cb) {
+    let builder = this.model.find(filter);
+    if (!isNaN(options.limit)) {
+      builder.limit(options.limit)
+    }
+    if (options.populationOptions instanceof Array) {
+      for (const opt of options.populationOptions) {
+        builder = builder.populate(opt);
+      }
+    }
+    builder.exec(cb);
   }
   async find(filter, cb) {
     this.model.find(filter, cb);

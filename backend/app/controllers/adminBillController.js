@@ -13,8 +13,6 @@ const billDetailService = require("../services/BillDetailService");
 const saleService = require("../services/SaleService");
 const productService = require("../services/ProductService");
 
-const { Bill } = require("../models/Bill");
-
 exports.billsGet = [
   parallelValidate(query("limit").default(20)),
   async (req, res, next) => {
