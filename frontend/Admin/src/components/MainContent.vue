@@ -1,3 +1,7 @@
+<script setup>
+import DataTable from './DataTable.vue';
+</script>
+
 <template>
   <div>
     <main>
@@ -8,6 +12,20 @@
             <component :is="Component"></component>
           </transition>
         </router-view>
+        <!-- <DataTable :api-url="hostname + '/branches'" data-key="branches" repr="branches">
+          <template #columnNames>
+            <tr>
+              <td>Id</td>
+              <td>Name</td>
+            </tr>
+          </template>
+          <template #default="rows">
+            <VTr v-for="row in rows" :row="row">
+              <td>{{ row._id }}</td>
+              <td>{{ row.name }}</td>
+            </VTr>
+          </template>
+        </DataTable> -->
       </div>
     </main>
     <footer class="py-4 bg-light mt-auto">
@@ -26,11 +44,13 @@
 </template>
 
 <style scoped>
-.fade-leave-active, .fade-enter-active {
+.fade-leave-active,
+.fade-enter-active {
   transition: all .3s ease-out;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

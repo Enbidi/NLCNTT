@@ -19,7 +19,7 @@ exports.originsGet = [
       if (err) {
         return next(err);
       }
-      res.status(200).json({ origins });
+      res.status(200).json({ items: origins });
     });
   },
 ];

@@ -12,7 +12,7 @@ const adminBillController = require("../controllers/adminBillController");
 
 // router.get("/products");
 
-router.get("/products", adminProductController.productsGet);
+router.get("/product", adminProductController.productsGet);
 
 router.post("/product/add", adminProductController.addProductPost);
 
@@ -24,7 +24,7 @@ router.get("/product/find", adminProductController.findProductByNameGet);
 
 // router.post("/product/:id/delete");
 
-router.get("/branches", adminBranchController.branchesGet);
+router.get("/branch", adminBranchController.branchesGet);
 
 router.post("/branch/add", adminBranchController.addBranchPost);
 
@@ -35,18 +35,18 @@ router.delete("/branch/:id/delete", adminBranchController.deleteBranchGet);
 router.get("/branch/find", adminBranchController.findBranchByNameGet);
 
 
-router.get("/origins", adminOriginController.originsGet);
+router.get("/origin", adminOriginController.originsGet);
 
 router.post("/origin/:id/update", adminOriginController.updateOriginPost);
 
 router.post("/origin/add", adminOriginController.addOriginPost);
 
-router.get("/origin/:id/delete", adminOriginController.deleteOriginGet);
+router.delete("/origin/:id/delete", adminOriginController.deleteOriginGet);
 
 router.get("/origin/find", adminOriginController.findOriginByNameGet);
 
 
-router.get("/users", adminUserController.usersGet);
+router.get("/user", adminUserController.usersGet);
 
 router.post("/user/add", adminUserController.addUserPost);
 
@@ -58,7 +58,7 @@ router.get("/user/find", adminUserController.findUserByNameGet);
 
 
 // Comment Routes
-router.get("/commnets", adminCommentsController.commentsGet);
+router.get("/commnet", adminCommentsController.commentsGet);
 
 router.post("/comment/add", adminCommentsController.addCommentPost);
 
@@ -70,7 +70,7 @@ router.get("/comment/find", adminCommentsController.findCommentByContent);
 
 // Sale Routes
 
-router.get("/sales", adminSaleController.salesGet);
+router.get("/sale", adminSaleController.salesGet);
 
 router.post("/sale/add", adminSaleController.addSalePost);
 
@@ -82,7 +82,7 @@ router.delete("/sale/:id/delete", adminSaleController.saleDelete);
 
 // Bill Routes
 
-router.get("/bills", adminBillController.billsGet);
+router.get("/bill", adminBillController.billsGet);
 
 router.post("/bill/add", adminBillController.addBillPost);
 

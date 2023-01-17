@@ -4,11 +4,10 @@ import SmartTable from 'vuejs-smart-table'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 import Product from './components/Product.vue'
-import Origin from './components/Origin.vue'
 import Bill from './components/Bill.vue'
 import User from './components/User.vue'
 import Branch from './components/Branch.vue'
-
+import Origin from './components/Origin.vue'
 const routes = [
   { path: "/products", component: Product },
   { path: "/origins", component: Origin },

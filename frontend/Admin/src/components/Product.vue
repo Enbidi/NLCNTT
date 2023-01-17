@@ -1,72 +1,106 @@
 <script setup>
-import TableWrapper from './TableWrapper.vue';
+import CommonActions from './CommonActions.vue'
+import Modal from './Modal.vue'
+import ModalTriggerButton from './ModalTriggerButton.vue'
 </script>
 
 <script>
 export default {
-  created() {
-    fetch("http://localhost:3000/admin/products")
-      .then(res => res.json())
-      .then(data => this.products = data.products)
+  mounted() {
+    this.$data.deletionModal = this.$refs.deletionModal
   },
   data() {
     return {
-      products: [],
-      filters: {
-        name: { value: '', keys: ['name'] }
-      },
-      selectedRows: [],
-      currentPage: 1,
-      totalPages: 1
+      deletionModal: {}
     }
   }
 }
 </script>
 
 <template>
-  <table-wrapper>
-    <div class="row mb-3">
-      <div class="col-md-10 d-flex justify-content-start">
-        <button class="btn btn-primary me-2" @click="$refs.table.selectAll()">Chọn tất cả</button>
-        <button class="btn btn-primary" @click="$refs.table.deselectAll()">Hủy chọn tất cả</button>
-      </div>
-      <div class="col-md-2">
-        <div class="form-outline">
-          <input type="text" class="form-control" id="filter" v-model="filters.name.value" />
-          <label class="form-label" for="filter">Lọc bằng tên</label>
+  <CommonActions :api-url="`${hostname}/product`" :modal-ref="deletionModal">
+    <template #modalTriggerButtons>
+      <ModalTriggerButton target="addOriginModal">
+        Thêm sản phẩm
+      </ModalTriggerButton>
+    </template>
+
+    <template #additionModal="{ addHandler, errors }">
+      <Modal id="addOriginModal">
+        <template #modalTitle>
+          Thêm sản phẩm
+        </template>
+        <form @submit.prevent="addHandler($event)" method="POST">
+          <!-- Name input -->
+          <div class="modal-body">
+            <div class="form-outline mb-4">
+              <input type="text" id="addOriginInput" class="form-control" name="country" />
+              <label class="form-label" for="addOriginInput">Tên</label>
+            </div>
+
+            <div v-if="errors && errors.length != 0" class="alert alert-danger">
+              <p v-for="error in errors">{{ error.msg }}</p>
+            </div>
+            <div v-else-if="errors && errors.length == 0" class="alert alert-success">
+              Thêm thành công
+            </div>
+          </div>
+
+          <!-- Submit button -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary btn-block mb-4">Thêm</button>
+          </div>
+        </form>
+      </Modal>
+    </template>
+
+    <template #deletionModal="{ callDeleteAPI, errors }">
+      <Modal id="deleteOriginModal" ref="deletionModal">
+        <template #modalTitle>
+          Xóa xuất sứ
+        </template>
+        <div class="modal-body">
+          <dir>
+            <p class="text-warning text-center">Bạn có chắc muốn xóa sản phẩm này</p>
+          </dir>
+
+          <div v-if="errors && errors.length != 0" class="alert alert-danger">
+            <p v-for="error in errors">{{ error.msg }}</p>
+          </div>
+          <div v-else-if="errors && errors.length == 0" class="alert alert-success">
+            Xóa sản phẩm thành công
+          </div>
         </div>
-      </div>
-    </div>
-    <VTable class="table table-bordered table-hover" :data="products" :filters="filters" :page-size="20"
-      v-model:currentPage="currentPage" selectionMode="multiple" selectedClass="bg-primary bg-gradient bg-opacity-50"
-      @totalPagesChanged="totalPages = $event" @stateChanged="selectedRows = $event.selectedRows" ref="table">
-      <template #head="{ allRowsSelected, toggleAllRows }">
+
+        <!-- Submit button -->
+        <div class="modal-footer">
+          <button class="btn btn-primary btn-block mb-4" @click="callDeleteAPI()">Xóa</button>
+        </div>
+      </Modal>
+    </template>
+
+    <template #tableColumnNames>
+      <tr>
         <VTh sortKey="_id">#</VTh>
         <VTh class="text-center" sortKey="name">Tên</VTh>
         <VTh class="text-center" sortKey="price">Giá</VTh>
         <VTh class="text-center" sortKey="description">Mô tả</VTh>
         <VTh class="text-center" sortKey="branch">Nhãn hiệu</VTh>
         <VTh class="text-center" sortKey="origin">Xuất sứ</VTh>
-      </template>
-      <template #body="{ rows }">
-        <VTr v-for="row in rows" :key="row._id" :row="row" v-slot="{ isSelected, toggle }">
-          <td>{{ row._id }}</td>
-          <td>{{ row.name }}</td>
-          <td>{{ row.price }}</td>
-          <td>{{ row.description }}</td>
-          <td>{{ row.origin.country }}</td>
-          <td>{{ row.branch?.name }}</td>
-        </VTr>
-      </template>
-    </VTable>
-    <strong>Đang chọn:</strong>
-    <div v-if="selectedRows.length === 0">Không có hàng nào đang chọn</div>
-    <ul>
-      <li v-for="selected in selectedRows">
-        {{ selected.name }}
-      </li>
-    </ul>
-    <VTPagination v-model:currentPage="currentPage" :total-pages="totalPages" :boundary-link="true"
-      class="d-flex justify-content-center" />
-  </table-wrapper>
+      </tr>
+    </template>
+    <template #tableColumnDatas="{ rows, deleteHandler }">
+      <VTr v-for="row in rows" :key="row._id" :row="row" v-slot="{ isSelected, toggle }">
+        <td>{{ row._id }}</td>
+        <td>{{ row.name }}</td>
+        <td>{{ row.price }}</td>
+        <td>{{ row.description }}</td>
+        <td>{{ row.origin.country }}</td>
+        <td>{{ row.branch?.name }}</td>
+        <td>
+          <button class="btn btn-link" @click="deleteHandler(row._id)">Xóa</button>
+        </td>
+      </VTr>
+    </template>
+  </CommonActions>
 </template>

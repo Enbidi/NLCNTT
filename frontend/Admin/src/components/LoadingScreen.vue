@@ -1,17 +1,19 @@
 
 <template>
-  <div class="overlay position-fixed top-0 start-0 w-100 h-100">
-    <div class="lds-roller">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+  <Teleport to="body">
+    <div class="overlay position-fixed top-0 start-0 w-100 h-100">
+      <div class="lds-roller">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <style scoped>

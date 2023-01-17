@@ -1,6 +1,4 @@
 <script setup>
-import SmartTable from 'vuejs-smart-table'
-import { useFetch } from '@vueuse/core'
 defineProps(["apiUrl", "dataKey", "repr"])
 </script>
 
@@ -63,16 +61,16 @@ export default {
             <VTh sortKey="name">Tên</VTh> -->
           </template>
           <template #body="{ rows }">
-            <slot v-for="row in rows" :key="row._id" v-bind="row"/>
-            <VTr v-for="row in rows" :key="row._id" :row="row" v-slot="{ isSelected, toggle }">
+            <slot v-bind="rows"/>
+            <!-- <VTr v-for="row in rows" :key="row._id" :row="row" v-slot="{ isSelected, toggle }">
               {{ isSelected }}
               <td @click="log(toggle)">
                 <input type="checkbox" :checked="isSelected" @change="toggle" />
-              </td>
+              </td> -->
               <!-- <td>{{ row._id }}</td>
               <td>{{ row.name }}</td> -->
               <!-- <td><slot v-bind="row" @click="log(toggle)"></slot></td> -->
-            </VTr>
+            <!-- </VTr> -->
           </template>
         </VTable>
         <strong>Đang chọn:</strong>

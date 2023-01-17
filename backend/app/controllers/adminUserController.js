@@ -79,7 +79,7 @@ function getValidationChains(optionals) {
 
 exports.usersGet = async (req, res) => {
   User.find().then((users) => {
-    res.status(200).json({ users });
+    res.status(200).json({ items: users });
   });
 };
 

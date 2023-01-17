@@ -25,7 +25,7 @@ exports.productsGet = [
       if (err) {
         return next(err);
       }
-      res.status(200).json({ products });
+      res.status(200).json({ items: products });
     });
     // productService.fetchLimit({}, req.query.limit, (err, products) => {
     //   if (err) {
