@@ -28,7 +28,7 @@ router.get("/branch", adminBranchController.branchesGet);
 
 router.post("/branch/add", adminBranchController.addBranchPost);
 
-router.patch("/branch/update", adminBranchController.updateBranchPost);
+router.patch("/branch/:id/update", adminBranchController.branchPatch);
 
 router.delete("/branch/:id/delete", adminBranchController.deleteBranchGet);
 
@@ -37,9 +37,9 @@ router.get("/branch/find", adminBranchController.findBranchByNameGet);
 
 router.get("/origin", adminOriginController.originsGet);
 
-router.post("/origin/:id/update", adminOriginController.updateOriginPost);
+router.post("/origin//add", adminOriginController.addOriginPost);
 
-router.post("/origin/add", adminOriginController.addOriginPost);
+router.patch("/origin/:id/update", adminOriginController.updateOriginPost);
 
 router.delete("/origin/:id/delete", adminOriginController.deleteOriginGet);
 

@@ -55,7 +55,7 @@ export default {
     </template>
 
     <template #deletionModal="{ callDeleteAPI, errors }">
-      <Modal id="deleteOriginModal" ref="deletionModal">
+      <Modal id="deleteBillModal" ref="deletionModal">
         <template #modalTitle>
           Xóa hóa đơn
         </template>

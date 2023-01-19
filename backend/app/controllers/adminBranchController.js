@@ -45,8 +45,8 @@ exports.addBranchPost = [
   },
 ];
 
-exports.updateBranchPost = [
-  parallelValidate([
+exports.branchPatch = [
+  parallelValidate(
     header("Content-Type", "Invalid header").isIn(["application/json"]),
     param("id", "Id nhãn hiệu không hợp lệ")
       .isMongoId()
@@ -58,10 +58,12 @@ exports.updateBranchPost = [
         return true;
       }),
     body("name").optional().trim().not().isEmpty().escape(),
-  ]),
+  ),
   (req, res) => {
+    const branch = matchedData(req, { locaions: ["body"] })
     branchService.updateOne(
       { _id: req.params.id },
+      branch,
       { new: true },
       (err, branch) => {
         if (err) {

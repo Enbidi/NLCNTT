@@ -1,6 +1,31 @@
 const { Product } = require("../models/Product");
 const { Origin } = require("../models/Origin");
 const { Branch } = require("../models/Branch");
+const path = require("path");
+
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: (req, res, cb) => {
+    cb(null, "public/uploads/images/");
+  },
+  filename(req, file, cb) {
+    let uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    let parts = file.originalname.split(".");
+    let filename = parts[parts.length - 2];
+    let ext = parts[parts.length - 1];
+    cb(null, `${filename}-${uniqueSuffix}.${ext}`);
+  },
+});
+const upload = multer({
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.includes("image")) {
+      cb(null, false);
+      return;
+    }
+    cb(null, true);
+  },
+  storage,
+});
 
 const { parallelValidate } = require("../validate");
 
@@ -21,12 +46,16 @@ const mongoose = require("mongoose");
 exports.productsGet = [
   query("limit").default(20).isNumeric().toFloat(),
   async (req, res, next) => {
-    productService.fetchLimitWithOriginAndBranch({}, req.query.limit, (err, products) => {
-      if (err) {
-        return next(err);
+    productService.fetchLimitWithOriginAndBranch(
+      {},
+      req.query.limit,
+      (err, products) => {
+        if (err) {
+          return next(err);
+        }
+        res.status(200).json({ items: products });
       }
-      res.status(200).json({ items: products });
-    });
+    );
     // productService.fetchLimit({}, req.query.limit, (err, products) => {
     //   if (err) {
     //     return next(err);
@@ -37,19 +66,15 @@ exports.productsGet = [
 ];
 
 exports.addProductPost = [
+  upload.single("img"),
   parallelValidate(
-    header("Content-Type").isIn(["application/json"]),
+    // header("Content-Type").isIn(["application/json"]),
     body("name", "Tên không được trống").trim().isLength({ min: 1 }).escape(),
-    body("price", "Giá không được trống")
-      .trim()
-      .isLength({ min: 4 })
-      .matches(/\d/)
-      .toFloat(),
-    body("img", "Img không được trống")
-      .optional()
-      .trim()
-      .isLength({ min: 1 })
-      .escape(),
+    body("price", "Giá không được trống").isNumeric().toFloat(),
+    body("img")
+      .customSanitizer((img, { req }) => {
+        return req.file ? req.file.destination + req.file.filename : undefined;
+      }),
     body("description", "Mô tả không được trống")
       .trim()
       .isLength({ min: 1 })

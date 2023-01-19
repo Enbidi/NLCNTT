@@ -1,8 +1,6 @@
 <script setup>
-import Modal from './Modal.vue'
-import ModalTriggerButton from './ModalTriggerButton.vue';
 import LoadingScreen from './LoadingScreen.vue'
-defineProps(['apiUrl', 'modalRef'])
+defineProps(['apiUrl', 'deletionModal', 'updationModal'])
 </script>
 
 <script>
@@ -20,57 +18,82 @@ export default {
     )
   },
   methods: {
-    async addHandler(event) {
+    _wait(millis) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, millis)
+      })
+    },
+    async callAPI(url, payload) {
       this.isLoading = true
-      let form = event.target
-      let url = `${this.apiUrl}/add`
-      let formData = new FormData(form)
-      let formDataJSON = JSON.stringify(Object.fromEntries(formData.entries()))
-      let res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: formDataJSON
-      });
-      setTimeout(() => this.isLoading = false, 700)
+      // Use this to show loading screen
+      // in case of fast network caused
+      // loading screen to be too fast
+      // to see
+      const [res, _] = await Promise.all([fetch(url, payload), this._wait(700)])
+      this.isLoading = false
       if (!res.ok) {
-        const err = JSON.parse(await res.text())
+        let err = JSON.parse(await res.text())
         this.errors = err.errors
         return
       }
       this.errors = []
     },
-    async callDeleteAPI() {
-      if (this.$options.deletingId == undefined)
-        return
-      this.isLoading = true
-      let branchId = this.$options.deletingId
-      let apiURL = `${this.apiUrl}/${branchId}/delete`
-      let res = await fetch(apiURL, {
+    async addHandler(event, includeFile = false) {
+      let form = event.target
+      let formData = new FormData(form)
+      let formDataJSON = JSON.stringify(Object.fromEntries(formData.entries()))
+      let url = `${this.apiUrl}/add`
+      let payload = includeFile ? 
+        {
+          method: "POST",
+          body: formData
+        } : {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "appilication/json"
+          },
+          body: formDataJSON
+        }
+      this.callAPI(url, payload)
+    },
+    async deleteHandler() {
+      let id = this.selectedItem._id
+      let apiURL = `${this.apiUrl}/${id}/delete`
+      let payload = {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           "Accept": "appilication/json"
         }
-      })
-      setTimeout(() => this.isLoading = false, 700)
-      if (!res.ok) {
-        const err = JSON.parse(await res.text())
-        this.errors = err.errors
-        return
       }
-      this.errors = []
+      this.callAPI(apiURL, payload)
+      // Update UI
+      this.fetchedData.items = this.fetchedData.items.filter(item => item._id != id)
     },
-    async deleteHandler(branchId) {
-      this.$options.deletingId = branchId
-      let modalRef = this.$props.modalRef.$refs.modal
-      let modalInstance = mdb.Modal.getInstance(modalRef)
-      if (modalInstance) {
-        modalInstance.show()
-      } else {
-        (new mdb.Modal(modalRef)).show()
+    async updateHandler(event) {
+      this.isLoading = true
+      let form = event.target
+      let formData = new FormData(form)
+      let id = this.selectedItem._id
+      let apiURL = `${this.apiUrl}/${id}/update`
+      for (const [key, val] of formData.entries()) {
+        if (val == this.selectItem[key]) {
+          formData.delete(key)
+        }
       }
+      let formDataJSON = JSON.stringify(Object.fromEntries(formData.entries()))
+      let payload = {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: formDataJSON
+      }
+      this.callAPI(apiURL, payload)
+    },
+    selectItem(item) {
+      this.selectedItem = item
     }
   },
   data() {
@@ -83,6 +106,7 @@ export default {
       currentPage: 1,
       totalPages: 1,
       isLoading: false,
+      selectedItem: null,
       errors: null
     }
   }
@@ -106,10 +130,10 @@ export default {
           <div class="col-md-10">
             <button class="btn btn-primary me-2" @click="$refs.table.selectAll()">Chọn tất cả</button>
             <button class="btn btn-primary me-2" @click="$refs.table.deselectAll()">Hủy chọn tất cả</button>
-            <slot name="modalTriggerButtons"/>
-            <slot name="additionModal" v-bind="{ addHandler, errors}"/>
-            <slot name="updationModal" />
-            <slot name="deletionModal" v-bind="{ callDeleteAPI, errors }"/>
+            <slot name="modalTriggerButtons" />
+            <slot name="additionModal" v-bind="{ addHandler, errors }" />
+            <slot name="updationModal" v-bind="{ updateHandler, errors, selectedItem }" />
+            <slot name="deletionModal" v-bind="{ deleteHandler, errors, selectedItem }" />
           </div>
           <div class="col-md-2">
             <div class="form-outline">
@@ -126,7 +150,7 @@ export default {
             <slot name="tableColumnNames" />
           </template>
           <template #body="{ rows }">
-            <slot name="tableColumnDatas" v-bind="{ rows, deleteHandler }" />
+            <slot name="tableColumnDatas" v-bind="{ rows, selectItem }" />
           </template>
         </VTable>
         <strong>Đang chọn:</strong>

@@ -12,6 +12,10 @@ const BillSchema = new Schema(
       ref: "Sale",
     },
     payment: PaymentSchema,
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User"
+    }
   },
   {
     timestamps: true,
@@ -101,6 +105,7 @@ BillSchema.statics.fetchDetailsWithTotal = function (filter, limit, cb) {
         details: 1,
         createdAt: 1,
         updatedAt: 1,
+        user: 1,
         total: {
           $sum: "$details.unitPrice",
         },

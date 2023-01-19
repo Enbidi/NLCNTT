@@ -5,6 +5,11 @@ export default {
     this.$refs.modal.querySelectorAll(".form-outline").forEach(
       formOutline => new mdb.Input(formOutline).init()
     )
+    let modalRef = this.$refs.modal
+    this.instance = mdb.Modal.getInstance(modalRef)
+    if (this.instance == undefined) {
+      this.instance = new mdb.Modal(modalRef)
+    }
   }
 }
 </script>

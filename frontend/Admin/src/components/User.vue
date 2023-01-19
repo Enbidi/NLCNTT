@@ -26,7 +26,7 @@ export default {
     </template>
 
     <template #additionModal="{ addHandler, errors }">
-      <Modal id="addOriginModal">
+      <Modal id="addUserModal">
         <template #modalTitle>
           Thêm người dùng
         </template>
@@ -55,7 +55,7 @@ export default {
     </template>
 
     <template #deletionModal="{ callDeleteAPI, errors }">
-      <Modal id="deleteOriginModal" ref="deletionModal">
+      <Modal id="deleteUserModal" ref="deletionModal">
         <template #modalTitle>
           Xóa người dùng
         </template>
