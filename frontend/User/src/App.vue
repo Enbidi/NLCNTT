@@ -12,8 +12,11 @@ import NavItem from './components/NavItem.vue';
 
 <template>
   <NavBar>
-    <NavItem path="/products">
+    <NavItem path="/product">
       Sản phẩm
+    </NavItem>
+    <NavItem path="/product/:id">
+      Chi tiết sản phẩm
     </NavItem>
     <NavItem path="/cart">
       Giỏ hàng

@@ -2,8 +2,15 @@
 import CommonActions from './CommonActions.vue'
 import Modal from './Modal.vue'
 import ModalTriggerButton from './ModalTriggerButton.vue'
-</script>
 
+import { useTemplateRef } from './composables/useTemplateRef'
+import { inject } from 'vue'
+
+const hostname = inject("hostname")
+const updationModal = useTemplateRef("updationModal")
+const deletionModal = useTemplateRef("deletionModal")
+</script>
+<!-- 
 <script>
 export default {
   mounted() {
@@ -15,18 +22,18 @@ export default {
     }
   }
 }
-</script>
+</script> -->
 
 <template>
-  <CommonActions :api-url="`${hostname}/bill`" :modal-ref="deletionModal">
+  <CommonActions :api-url="`${hostname}/bill`" :deletion-modal="deletionModal" :updation-modal="updationModal">
     <template #modalTriggerButtons>
-      <ModalTriggerButton target="addOriginModal">
+      <ModalTriggerButton target="addBillModal">
         Thêm hóa đơn
       </ModalTriggerButton>
     </template>
 
     <template #additionModal="{ addHandler, errors }">
-      <Modal id="addOriginModal">
+      <Modal id="addBillModal">
         <template #modalTitle>
           Thêm hóa đơn
         </template>
@@ -34,8 +41,8 @@ export default {
           <!-- Name input -->
           <div class="modal-body">
             <div class="form-outline mb-4">
-              <input type="text" id="addOriginInput" class="form-control" name="country" />
-              <label class="form-label" for="addOriginInput">Tên</label>
+              <input type="text" id="addBillInput" class="form-control" name="country" />
+              <label class="form-label" for="addBillInput">Tên</label>
             </div>
 
             <div v-if="errors && errors.length != 0" class="alert alert-danger">
@@ -54,7 +61,36 @@ export default {
       </Modal>
     </template>
 
-    <template #deletionModal="{ callDeleteAPI, errors }">
+    <template #updationModal="{ updateHandler, errors }">
+      <Modal id="updateBillModal" ref="updateBillModal">
+        <template #modalTitle>
+          Thêm hóa đơn
+        </template>
+        <form @submit.prevent="updateHandler($event)" method="POST">
+          <!-- Name input -->
+          <div class="modal-body">
+            <div class="form-outline mb-4">
+              <input type="text" id="updateBillInput" class="form-control" name="country" />
+              <label class="form-label" for="updateBillInput">Tên</label>
+            </div>
+
+            <div v-if="errors && errors.length != 0" class="alert alert-danger">
+              <p v-for="error in errors">{{ error.msg }}</p>
+            </div>
+            <div v-else-if="errors && errors.length == 0" class="alert alert-success">
+              Thêm thành công
+            </div>
+          </div>
+
+          <!-- Submit button -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary btn-block mb-4">Thêm</button>
+          </div>
+        </form>
+      </Modal>
+    </template>
+
+    <template #deletionModal="{ deleteHandler, errors }">
       <Modal id="deleteBillModal" ref="deletionModal">
         <template #modalTitle>
           Xóa hóa đơn
@@ -74,7 +110,7 @@ export default {
 
         <!-- Submit button -->
         <div class="modal-footer">
-          <button class="btn btn-primary btn-block mb-4" @click="callDeleteAPI()">Xóa</button>
+          <button class="btn btn-primary btn-block mb-4" @click="deleteHandler()">Xóa</button>
         </div>
       </Modal>
     </template>
@@ -94,7 +130,7 @@ export default {
         <VTh sortKey="details.unitPrice">Tổng giá</VTh>
       </tr>
     </template>
-    <template #tableColumnDatas="{ rows, deleteHandler }">
+    <template #tableColumnDatas="{ rows, selectItem }">
       <template v-for="row in rows">
         <VTr :row="row">
           <td class="align-middle" :rowspan="row.details.length + 1">{{ row._id }}</td>
@@ -107,8 +143,15 @@ export default {
           <td>{{ detail.quantity }}</td>
           <td>{{ detail.price }}</td>
           <td>{{ detail.unitPrice }}</td>
-          <td class="align-middle" :rowspan="row.details.length + 1" v-if="index==0">
-            <button class="btn btn-link" @click="deleteHandler(row._id)">Xóa</button>
+          <td class="align-middle" :rowspan="row.details.length + 1" v-if="index == 0">
+            <ModalTriggerButton target="updateBillModal" class="me-2 btn btn-warning" @click="selectItem(row)">
+              Sửa
+            </ModalTriggerButton>
+          <!-- </td> -->
+          <!-- <td class="align-middle" :rowspan="row.details.length + 1" v-if="index == 0"> -->
+            <ModalTriggerButton target="deleteBillModal" class="me-2 btn btn-warning" @click="selectItem(row)">
+              Xóa
+            </ModalTriggerButton>
           </td>
         </VTr>
       </template>

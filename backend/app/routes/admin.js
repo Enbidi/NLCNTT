@@ -1,95 +1,95 @@
 const express = require("express");
 const router = express.Router();
 
-const adminProductController = require("../controllers/adminProductController");
-const adminOriginController = require("../controllers/adminOriginController");
-const adminBranchController = require("../controllers/adminBranchController");
-const adminUserController = require("../controllers/adminUserController");
-const adminCommentsController = require("../controllers/adminCommentController");
-const adminSaleController = require("../controllers/adminSaleController");
-const adminBillController = require("../controllers/adminBillController");
+const productAPI = require("../controllers/productController");
+const originAPI = require("../controllers/originController");
+const branchAPI = require("../controllers/branchController");
+const userAPI = require("../controllers/userController");
+const commentAPI = require("../controllers/commentController");
+const saleAPI = require("../controllers/saleController");
+const billAPI = require("../controllers/billController");
 // router.get("/product/:id");
 
 // router.get("/products");
 
-router.get("/product", adminProductController.productsGet);
+router.get("/product", productAPI.productsGet);
 
-router.post("/product/add", adminProductController.addProductPost);
+router.post("/product/add", productAPI.addProductPost);
 
-router.patch("/product/:id/update", adminProductController.productPatch);
+router.patch("/product/:id/update", productAPI.productPatch);
 
-router.delete("/product/:id/delete", adminProductController.productDelete);
+router.delete("/product/:id/delete", productAPI.productDelete);
 
-router.get("/product/find", adminProductController.findProductByNameGet);
+router.get("/product/find", productAPI.findProductByNameGet);
 
 // router.post("/product/:id/delete");
 
-router.get("/branch", adminBranchController.branchesGet);
+router.get("/branch", branchAPI.branchesGet);
 
-router.post("/branch/add", adminBranchController.addBranchPost);
+router.post("/branch/add", branchAPI.addBranchPost);
 
-router.patch("/branch/:id/update", adminBranchController.branchPatch);
+router.patch("/branch/:id/update", branchAPI.branchPatch);
 
-router.delete("/branch/:id/delete", adminBranchController.deleteBranchGet);
+router.delete("/branch/:id/delete", branchAPI.deleteBranchGet);
 
-router.get("/branch/find", adminBranchController.findBranchByNameGet);
-
-
-router.get("/origin", adminOriginController.originsGet);
-
-router.post("/origin//add", adminOriginController.addOriginPost);
-
-router.patch("/origin/:id/update", adminOriginController.updateOriginPost);
-
-router.delete("/origin/:id/delete", adminOriginController.deleteOriginGet);
-
-router.get("/origin/find", adminOriginController.findOriginByNameGet);
+router.get("/branch/find", branchAPI.findBranchByNameGet);
 
 
-router.get("/user", adminUserController.usersGet);
+router.get("/origin", originAPI.originsGet);
 
-router.post("/user/add", adminUserController.addUserPost);
+router.post("/origin//add", originAPI.addOriginPost);
 
-router.patch("/user/:id/update", adminUserController.userPatch);
+router.patch("/origin/:id/update", originAPI.updateOriginPost);
 
-router.delete("/user/:id/delete", adminUserController.userDelete);
+router.delete("/origin/:id/delete", originAPI.deleteOriginGet);
 
-router.get("/user/find", adminUserController.findUserByNameGet);
+router.get("/origin/find", originAPI.findOriginByNameGet);
+
+
+router.get("/user", userAPI.usersGet);
+
+router.post("/user/add", userAPI.addUserPost);
+
+router.patch("/user/:id/update", userAPI.userPatch);
+
+router.delete("/user/:id/delete", userAPI.userDelete);
+
+router.get("/user/find", userAPI.findUserByNameGet);
 
 
 // Comment Routes
-router.get("/commnet", adminCommentsController.commentsGet);
+router.get("/commnet", commentAPI.commentsGet);
 
-router.post("/comment/add", adminCommentsController.addCommentPost);
+router.post("/comment/add", commentAPI.addCommentPost);
 
-router.patch("/comment/:id/update", adminCommentsController.commentPatch);
+router.patch("/comment/:id/update", commentAPI.commentPatch);
 
-router.delete("/comment/:id/delete", adminCommentsController.commentDelete);
+router.delete("/comment/:id/delete", commentAPI.commentDelete);
 
-router.get("/comment/find", adminCommentsController.findCommentByContent);
+router.get("/comment/find", commentAPI.findCommentByContent);
 
 // Sale Routes
 
-router.get("/sale", adminSaleController.salesGet);
+router.get("/sale", saleAPI.salesGet);
 
-router.post("/sale/add", adminSaleController.addSalePost);
+router.post("/sale/add", saleAPI.addSalePost);
 
-router.patch("/sale/:id/update", adminSaleController.salePatch);
+router.patch("/sale/:id/update", saleAPI.salePatch);
 
-router.delete("/sale/:id/delete", adminSaleController.saleDelete);
+router.delete("/sale/:id/delete", saleAPI.saleDelete);
 
-// router.get("/sale/find", adminSaleController.findCommentByContent);
+// router.get("/sale/find", saleAPI.findCommentByContent);
 
 // Bill Routes
 
-router.get("/bill", adminBillController.billsGet);
+router.get("/bill", billAPI.billsGet);
 
-router.post("/bill/add", adminBillController.addBillPost);
+router.post("/bill/add", billAPI.addBillPost);
 
-router.patch("/bill/:id/update", adminBillController.billPatch);
+router.patch("/bill/:id/update", billAPI.billPatch);
 
-router.delete("/bill/:id/delete", adminBillController.billDelete);
+router.delete("/bill/:id/delete", billAPI.billDelete);
 
-// router.get("/bill/find", adminBillController.findCommentByContent);
+// router.get("/bill/find", billAPI.findCommentByContent);
 
 module.exports = router;

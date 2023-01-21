@@ -24,6 +24,20 @@ exports.branchesGet = [
   },
 ];
 
+exports.productsPerBranchGet = [
+  (req, res) => {
+    branchService.fetchProductsPerBranch((err, branches) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200)
+        .json({
+          items: branches
+      });
+    })
+  }
+];
+
 exports.addBranchPost = [
   parallelValidate(
     header("Content-Type").isIn(["application/json"]),

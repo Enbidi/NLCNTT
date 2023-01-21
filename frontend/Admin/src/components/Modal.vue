@@ -1,3 +1,7 @@
+<script setup>
+defineProps(["id"])
+</script>
+
 <script>
 export default {
   inheritAttrs: false,
@@ -18,7 +22,7 @@ export default {
 
   <Teleport to="body">
     <!-- Modal -->
-    <div class="modal fade" :id="$attrs.id" tabindex="-1" :aria-labelledby="`${$attrs.id}Label`"
+    <div class="modal fade" :id="id" tabindex="-1" :aria-labelledby="`${id}Label`"
       aria-hidden="true" ref="modal">
       <div class="modal-dialog">
         <div class="modal-content">

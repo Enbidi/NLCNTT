@@ -1,20 +1,22 @@
 <script setup>
 import { inject } from 'vue'
+
 import CommonActions from './CommonActions.vue'
 import Modal from './Modal.vue'
 import ModalTriggerButton from './ModalTriggerButton.vue'
+
 import { useTemplateRef } from './composables/useTemplateRef'
 import { useFetch } from './composables/useFetch'
 
 const hostname = inject("hostname")
 const updationModal = useTemplateRef("updationModal")
 const deletionModal = useTemplateRef("deletionModal")
-const originData = useFetch(`${hostname}/origin`)
-const branchData = useFetch(`${hostname}/branch`)
+const originData = useFetch(`${hostname}/admin/origin`)
+const branchData = useFetch(`${hostname}/admin/branch`)
 </script>
 
 <template>
-  <CommonActions :api-url="`${hostname}/product`" :deletion-modal="deletionModal" :updation-modal="updationModal">
+  <CommonActions :api-url="`${hostname}/admin/product`" :deletion-modal="deletionModal" :updation-modal="updationModal">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addProductModal">
         Thêm sản phẩm
@@ -46,16 +48,20 @@ const branchData = useFetch(`${hostname}/branch`)
 
             <select class="form-select mb-4" aria-label="Chọn xuất sứ" name="origin">
               <option selected>Chọn xuất sứ cho sản phẩm</option>
-              <template v-for="origin in originData.items" :key="origin._id">
-                <option :value="origin._id">{{ origin.country }}</option>
-              </template>
+              <option v-for="origin in originData?.items"
+                :value="origin._id"
+                :key="origin._id">
+                {{ origin.country }}
+              </option>
             </select>
 
             <select class="form-select mb-4" aria-label="Chọn nhãn hiệu" name="branch">
               <option selected>Chọn nhãn hiệu cho sản phẩm</option>
-              <template v-for="branch in branchData.items" :key="branch._id">
-                <option :value="branch._id">{{ branch.name }}</option>
-              </template>
+              <option v-for="branch in branchData?.items"
+                :key="branch._id"
+                :value="branch._id">
+                {{ branch.name }}
+              </option>
             </select>
 
             <div class="form-outline mb-4">
@@ -168,8 +174,9 @@ const branchData = useFetch(`${hostname}/branch`)
         <VTh class="text-center" sortKey="name">Tên</VTh>
         <VTh class="text-center" sortKey="price">Giá</VTh>
         <VTh class="text-center" sortKey="description">Mô tả</VTh>
-        <VTh class="text-center" sortKey="branch">Nhãn hiệu</VTh>
         <VTh class="text-center" sortKey="origin">Xuất sứ</VTh>
+        <VTh class="text-center" sortKey="branch">Nhãn hiệu</VTh>
+        <th class="text-center">Hình ảnh</th>
       </tr>
     </template>
     <template #tableColumnDatas="{ rows, selectItem }">
@@ -178,8 +185,11 @@ const branchData = useFetch(`${hostname}/branch`)
         <td>{{ row.name }}</td>
         <td>{{ row.price }}</td>
         <td>{{ row.description }}</td>
-        <td>{{ row.origin.country }}</td>
+        <td>{{ row.origin?.country }}</td>
         <td>{{ row.branch?.name }}</td>
+        <td class="text-center">
+          <img :src="hostname + row.img" crossorigin="anonymous" class="img-fluid" style="width: 50px; height: 50px;">
+        </td>
         <td>
           <ModalTriggerButton target="updateProductModal" class="me-2 btn btn-warning" @click="selectItem(row)">
             Sửa

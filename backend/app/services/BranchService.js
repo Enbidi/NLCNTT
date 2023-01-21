@@ -7,8 +7,14 @@ class BranchService extends BaseService {
     super(model);
   }
 
-  async findBranchByName(name, cb) {
+  findBranchByName(name, cb) {
     Branch.findBranchByName(name, cb);
+  }
+
+  async fetchProductsPerBranch(cb) {
+    this.model.find({})
+      .populate("products")
+      .exec(cb);
   }
 }
 

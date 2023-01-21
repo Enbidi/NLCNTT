@@ -11,11 +11,11 @@ import Branch from './components/Branch.vue'
 import Origin from './components/Origin.vue'
 
 const routes = [
-  { path: "/products", component: Product },
-  { path: "/origins", component: Origin },
-  { path: "/bills", component: Bill},
-  { path: '/users', component: User},
-  { path: '/branches', component: Branch}
+  { path: "/products", component: () => import("./components/Product.vue") },
+  { path: "/origins", component: () => import("./components/Origin.vue") },
+  { path: "/bills", component: () => import("./components/Bill.vue")},
+  { path: '/users', component: () => import("./components/User.vue")},
+  { path: '/branches', component: () => import("./components/Branch.vue")}
 ]
 
 const router = createRouter({
@@ -27,7 +27,7 @@ const app = createApp(App)
 
 
 app.config.globalProperties.hostname = "http://localhost:3000/admin"
-app.provide("hostname", "http://localhost:3000/admin")
+app.provide("hostname", "http://localhost:3000")
 app.use(SmartTable)
 app.use(router)
 app.mount("#app")

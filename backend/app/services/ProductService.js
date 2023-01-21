@@ -17,6 +17,12 @@ class ProductService extends BaseService {
   async findProductByName(name, cb) {
     Product.findProductByName(name, cb);
   }
+  findOne(filter, cb) {
+    this.model.findOne(filter)
+      .populate("branch")
+      .populate("origin")
+      .exec(cb);
+  }
 }
 
 module.exports = new ProductService(Product);

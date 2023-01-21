@@ -1,24 +1,22 @@
 import { createApp } from 'vue'
 import 'mdb-vue-ui-kit/css/mdb.min.css';
 import App from './App.vue'
-import ProductView from './components/ProductsView.vue';
-import Cart from './components/Cart.vue';
-import { createRouter, createWebHashHistory } from 'vue-router';
+import router from './router'
 import './assets/main.css'
 
-window.helper = function() {
-
-}
-
-const routes = [
-  { path: "/products", component: ProductView },
-  { path: "/cart", component: Cart }
-];
+// const routes = [
+//   { path: "/products", component: ProductView },
+//   { path: "/product/detail", component: import("./components/ProductDetail.vue")},
+//   { path: "/cart", component: Cart }
+// ]
 
 
-const router = createRouter({
-  history: createWebHashHistory(),
-  routes
-});
+// const router = createRouter({
+//   history: createWebHashHistory(),
+//   routes
+// })
 
-createApp(App).use(router).mount("#app");
+const app = createApp(App)
+app.provide("hostname", "http://localhost:3000")
+app.use(router)
+app.mount("#app")

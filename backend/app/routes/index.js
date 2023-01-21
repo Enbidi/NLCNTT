@@ -3,11 +3,18 @@ var router = express.Router();
 
 const authController = require("../controllers/authController");
 const connectEnsureLogin = require("connect-ensure-login");
-
+const productAPI = require("../controllers/productController");
+const branchAPI = require("../controllers/branchController");
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
+
+router.get("/product/:id", productAPI.productGetById);
+
+router.get("/product", productAPI.productsGet);
+
+router.get("/branch/product", branchAPI.productsPerBranchGet);
 
 router.get("/login", authController.loginGet);
 

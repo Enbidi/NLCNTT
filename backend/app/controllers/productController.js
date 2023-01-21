@@ -41,8 +41,6 @@ const productService = require("../services/ProductService");
 const originService = require("../services/OriginService");
 const branchService = require("../services/BranchService");
 
-const mongoose = require("mongoose");
-
 exports.productsGet = [
   query("limit").default(20).isNumeric().toFloat(),
   async (req, res, next) => {
@@ -65,16 +63,40 @@ exports.productsGet = [
   },
 ];
 
+exports.productGetById = [
+  param("id", "Id sản phẩm không được trống")
+    .isMongoId()
+    .bail()
+    .custom(async (productId) => {
+      if (!(await productService.isExist(productId))) {
+        throw new Error("Id sản phẩm không tồn tại");
+      }
+      return true;
+    }),
+  (req, res) => {
+    productService.findOne({ _id: req.params.id }, (err, product) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200).json({
+        item: product,
+      });
+    });
+  },
+];
+
 exports.addProductPost = [
   upload.single("img"),
   parallelValidate(
     // header("Content-Type").isIn(["application/json"]),
     body("name", "Tên không được trống").trim().isLength({ min: 1 }).escape(),
     body("price", "Giá không được trống").isNumeric().toFloat(),
-    body("img")
-      .customSanitizer((img, { req }) => {
-        return req.file ? req.file.destination + req.file.filename : undefined;
-      }),
+    body("img").customSanitizer((img, { req }) => {
+      // remove public/
+      return req.file
+        ? req.file.destination.substr(6) + req.file.filename
+        : undefined;
+    }),
     body("description", "Mô tả không được trống")
       .trim()
       .isLength({ min: 1 })
