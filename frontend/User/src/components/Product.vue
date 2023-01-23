@@ -1,24 +1,32 @@
 <script setup>
 import { inject } from 'vue'
-defineProps({
+
+import { useProductStore } from '../stores/product'
+import { useCartStore } from '../stores/cart'
+
+const props = defineProps({
   product: {
     type: Object,
-    require: true
-  },
-  addToCart: {
-    type: Function,
     require: true
   }
 })
 
 const hostname = inject("hostname")
+const productStore = useProductStore()
+const cartStore = useCartStore()
+
+cartStore.$subscribe((mutation, state) => {
+  localStorage.setItem("cart", JSON.stringify(state))
+}, { detached: true })
+
+productStore.data = props.product
+
 </script>
 
 <script>
 export default {
   methods: {
     navigateToDetail() {
-      this.$router.productDetail = this.product
       this.$router.push(
         {
           name: "productDetail",
@@ -46,7 +54,7 @@ export default {
       <div class="row">
         <a class="col btn btn-primary d-flex align-items-center justify-content-center" @click="navigateToDetail()">Xem
           chi tiết</a>
-        <a class="col btn btn-primary d-flex align-items-center justify-content-center" @click="addToCart()">Thêm vào
+        <a class="col btn btn-primary d-flex align-items-center justify-content-center" @click="cartStore.addToCart(product)">Thêm vào
           giỏ hàng</a>
       </div>
     </div>

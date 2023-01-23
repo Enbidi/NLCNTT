@@ -1,15 +1,16 @@
 <script setup>
 import LoadingScreen from './LoadingScreen.vue'
-defineProps(['apiUrl', 'deletionModal', 'updationModal'])
+
+defineProps(['apiUrl', 'deletionModal', 'updationModal', 'fetchedData'])
 </script>
 
 <script>
 export default {
-  created() {
-    fetch(this.$props.apiUrl)
-      .then(response => response.json())
-      .then(data => this.fetchedData = data)
-  },
+  // created() {
+  //   fetch(this.$props.apiUrl)
+  //     .then(response => response.json())
+  //     .then(data => this.fetchedData = data)
+  // },
   mounted() {
     this.$el.querySelectorAll('.form-outline').forEach(
       formOutline => {
@@ -98,7 +99,7 @@ export default {
   },
   data() {
     return {
-      fetchedData: null,
+      // fetchedData: null,
       filters: {
         name: { value: '', keys: ['name'] }
       },

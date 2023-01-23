@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import SmartTable from 'vuejs-smart-table'
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { createPinia } from 'pinia'
 import './assets/main.css'
 
 import Product from './components/Product.vue'
@@ -23,8 +24,9 @@ const router = createRouter({
   routes
 })
 
+const pinia = createPinia()
 const app = createApp(App)
-
+app.use(pinia)
 
 app.config.globalProperties.hostname = "http://localhost:3000/admin"
 app.provide("hostname", "http://localhost:3000")

@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import 'mdb-vue-ui-kit/css/mdb.min.css';
 import App from './App.vue'
 import router from './router'
+import { createPinia } from 'pinia'
 import './assets/main.css'
 
 // const routes = [
@@ -15,8 +16,9 @@ import './assets/main.css'
 //   history: createWebHashHistory(),
 //   routes
 // })
-
+const pinia = createPinia()
 const app = createApp(App)
-app.provide("hostname", "http://localhost:3000")
 app.use(router)
+app.use(pinia)
+app.provide("hostname", "http://localhost:3000")
 app.mount("#app")

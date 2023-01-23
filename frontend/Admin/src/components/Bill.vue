@@ -6,6 +6,11 @@ import ModalTriggerButton from './ModalTriggerButton.vue'
 import { useTemplateRef } from './composables/useTemplateRef'
 import { inject } from 'vue'
 
+import { useBillsStore } from '../stores/bills'
+
+const billsStore = useBillsStore()
+billsStore.fetchBills()
+
 const hostname = inject("hostname")
 const updationModal = useTemplateRef("updationModal")
 const deletionModal = useTemplateRef("deletionModal")
@@ -25,7 +30,7 @@ export default {
 </script> -->
 
 <template>
-  <CommonActions :api-url="`${hostname}/bill`" :deletion-modal="deletionModal" :updation-modal="updationModal">
+  <CommonActions :api-url="`${hostname}/bill`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="billsStore">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addBillModal">
         Thêm hóa đơn

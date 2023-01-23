@@ -3,6 +3,12 @@ import CommonActions from './CommonActions.vue'
 import Modal from './Modal.vue'
 import ModalTriggerButton from './ModalTriggerButton.vue'
 import { useTemplateRef } from './composables/useTemplateRef'
+
+import { useOriginsStore } from '../stores/origins'
+
+const originsStore = useOriginsStore()
+originsStore.fetchOrigins()
+
 const updationModal = useTemplateRef("updationModal")
 const deletionModal = useTemplateRef("deletionModal")
 </script>
@@ -23,7 +29,7 @@ export default {
 </script> -->
 
 <template>
-  <CommonActions :api-url="`${hostname}/origin`" :deletion-modal="deletionModal" :updation-modal="updationModal">
+  <CommonActions :api-url="`${hostname}/origin`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="originsStore">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addOriginModal">
         Thêm xuất sứ

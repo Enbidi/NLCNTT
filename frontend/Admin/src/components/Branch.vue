@@ -3,6 +3,11 @@ import CommonActions from './CommonActions.vue'
 import Modal from './Modal.vue'
 import ModalTriggerButton from './ModalTriggerButton.vue'
 import { useTemplateRef } from './composables/useTemplateRef'
+
+import { useBranchesStore } from '../stores/branches'
+
+const branchesStore = useBranchesStore()
+branchesStore.fetchBranches()
 const updationModal = useTemplateRef("updationModal")
 const deletionModal = useTemplateRef("deletionModal")
 </script>
@@ -23,7 +28,7 @@ export default {
 </script> -->
 
 <template>
-  <CommonActions :api-url="`${hostname}/branch`" :deletion-modal="deletionModal" :updation-modal="updationModal">
+  <CommonActions :api-url="`${hostname}/branch`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="branchesStore">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addOriginModal">
         Thêm nhãn hiệu

@@ -1,36 +1,14 @@
 <script setup>
-import Branch from './Branch.vue';
-import Product from './Product.vue';
-import { ref } from 'vue';
-import iphone from '../iphone';
-import xiaomi from '../xiaomi';
-import { inject, watch } from 'vue'
+import Branch from './Branch.vue'
+import Product from './Product.vue'
+import { ref } from 'vue'
 
-import { useFetch } from './composables/useFetch'
+import { useProductsPerBranchStore } from '../stores/productsPerBranch'
 
-const hostname = inject("hostname")
-const productAPI_URL = hostname + "/product"
-const productsPerBranchAPI_URL = hostname + "/branch/product"
-const productData = useFetch(productAPI_URL)
-const productsPerBranch = useFetch(productsPerBranchAPI_URL)
+const productsPerBranchStore = useProductsPerBranchStore()
+productsPerBranchStore.fetchProductsPerBranch()
 
-</script>
-
-<script>
-export default {
-  mounted() {
-    var cartData = window.localStorage.getItem("cart")
-    this.cart = cartData ? JSON.parse(cartData) : []
-  },
-  unmounted() {
-    window.localStorage.setItem("cart", JSON.stringify(this.cart))
-  },
-  methods: {
-    addToCart(product) {
-      this.cart.push(product)
-    }
-  }
-};
+const products = ref(null)
 </script>
 
 <template>
@@ -38,17 +16,13 @@ export default {
     <div class="row">
       <div class="col-md-2">
         <ul class="list-group list-group-light">
-          <Branch @click="products = iphone">Iphone</Branch>
-          <Branch @click="products = xiaomi">Xiami</Branch>
-          <Branch>Samsung</Branch>
-          <Branch>Nokia</Branch>z
-          <Branch>Lenovo</Branch>
+          <Branch v-for="branch in productsPerBranchStore?.items" :branch-name="branch.name" @click="products = branch.products"/>
         </ul>
       </div>
       <div class="col-md-10">
         <div class="row row-cols-1 row-cols-md-4 g-4">
-          <div v-for="product in productData?.items" class="col">
-            <Product :product="product" :add-to-cart="() => addToCart(product)" :id="product._id"/>
+          <div v-for="product in products" class="col">
+            <Product :product="product" :id="product._id"/>
           </div>
         </div>
       </div>

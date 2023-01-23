@@ -1,5 +1,10 @@
 <script setup>
-import CartItem from './CartItem.vue';
+import CartItem from './CartItem.vue'
+
+import { useCartStore } from '../stores/cart'
+
+const cartStore = useCartStore()
+
 </script>
 
 <template>
@@ -14,7 +19,7 @@ import CartItem from './CartItem.vue';
 
                 <div class="col-lg-7">
                   <h5 class="mb-3"><a href="#!" class="text-body"><i
-                        class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
+                      class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
                   <hr>
 
                   <div class="d-flex justify-content-between align-items-center mb-4">
@@ -27,6 +32,8 @@ import CartItem from './CartItem.vue';
                             class="fas fa-angle-down mt-1"></i></a></p>
                     </div>
                   </div>
+
+                  <CartItem v-for="item in cartStore.items" :img-src="item.img" :name="item.name" :description="item.description"/>
 
                   <CartItem img-src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
                     name="Iphone 11 pro"

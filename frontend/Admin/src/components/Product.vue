@@ -8,15 +8,26 @@ import ModalTriggerButton from './ModalTriggerButton.vue'
 import { useTemplateRef } from './composables/useTemplateRef'
 import { useFetch } from './composables/useFetch'
 
+import { useOriginsStore } from '../stores/origins'
+import { useBranchesStore } from '../stores/branches'
+import { useProductsStore } from '../stores/products'
+
+const productsStore = useProductsStore()
+const originsStore = useOriginsStore()
+const branchesStore = useBranchesStore()
+productsStore.fetchProducts()
+originsStore.fetchOrigins()
+branchesStore.fetchBranches()
+
 const hostname = inject("hostname")
 const updationModal = useTemplateRef("updationModal")
 const deletionModal = useTemplateRef("deletionModal")
-const originData = useFetch(`${hostname}/admin/origin`)
-const branchData = useFetch(`${hostname}/admin/branch`)
+// const originData = useFetch(`${hostname}/admin/origin`)
+// const branchData = useFetch(`${hostname}/admin/branch`)
 </script>
 
 <template>
-  <CommonActions :api-url="`${hostname}/admin/product`" :deletion-modal="deletionModal" :updation-modal="updationModal">
+  <CommonActions :api-url="`${hostname}/admin/product`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="productsStore">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addProductModal">
         Thêm sản phẩm
@@ -48,7 +59,7 @@ const branchData = useFetch(`${hostname}/admin/branch`)
 
             <select class="form-select mb-4" aria-label="Chọn xuất sứ" name="origin">
               <option selected>Chọn xuất sứ cho sản phẩm</option>
-              <option v-for="origin in originData?.items"
+              <option v-for="origin in originsStore.items"
                 :value="origin._id"
                 :key="origin._id">
                 {{ origin.country }}
@@ -57,7 +68,7 @@ const branchData = useFetch(`${hostname}/admin/branch`)
 
             <select class="form-select mb-4" aria-label="Chọn nhãn hiệu" name="branch">
               <option selected>Chọn nhãn hiệu cho sản phẩm</option>
-              <option v-for="branch in branchData?.items"
+              <option v-for="branch in branchesStore.items"
                 :key="branch._id"
                 :value="branch._id">
                 {{ branch.name }}

@@ -1,6 +1,9 @@
 <script setup>
-import { ref } from 'vue';
-const active = ref(false);
+import { ref } from 'vue'
+
+defineProps(["branchName"])
+
+const active = ref(false)
 
 </script>
 
@@ -10,6 +13,6 @@ const active = ref(false);
     :aria-current="active ? 'true' : ''"
     @mouseenter="active=true"
     @mouseleave="active=false">
-    <slot></slot>
+    {{ branchName }}
   </li>
 </template>
