@@ -18,9 +18,15 @@ router.get("/branch/product", branchAPI.productsPerBranchGet);
 
 router.get("/login", authController.loginGet);
 
+router.get("/signup", authController.signupGet);
+
+router.post("/signup", authController.signupPost);
+
 router.post("/login", authController.loginPost);
 
 router.get("/logout", authController.logoutGet);
+
+router.get("/auth/user_info", authController.getAuthInfo);
 
 router.get("/dashboard", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
   res.send(`Hello ${req.user.email}. Your session ID is ${req.sessionID} 

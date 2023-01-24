@@ -11,20 +11,10 @@ import NavItem from './components/NavItem.vue';
 </script>
 
 <template>
-  <NavBar>
-    <NavItem path="/product">
-      Sản phẩm
-    </NavItem>
-    <NavItem path="/product/:id">
-      Chi tiết sản phẩm
-    </NavItem>
-    <NavItem path="/cart">
-      Giỏ hàng
-    </NavItem>
-  </NavBar>
+  <NavBar />
   <router-view v-slot="{ Component }">
     <transition name="fade" mode="out-in">
-      <component :is="Component"/>
+      <component :is="Component" />
     </transition>
   </router-view>
   <!-- <ProductsView /> -->
@@ -37,7 +27,8 @@ body {
   background-attachment: fixed;
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: all 0.5s ease-out;
 }
 

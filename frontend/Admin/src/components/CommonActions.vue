@@ -47,7 +47,6 @@ export default {
       let payload = includeFile ? 
         {
           method: "POST",
-          body: formData
         } : {
           method: "POST",
           headers: {

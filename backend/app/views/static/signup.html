@@ -1,16 +1,28 @@
-<script>
-export default {
-  mounted: function () {
-    this.$el.querySelectorAll('.form-outline').forEach(
-      formOutline => {
-        new mdb.Input(formOutline).init();
-      }
-    )
-  }
-};
-</script>
+<!DOCTYPE html>
+<html lang="en">
 
-<template>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/MDB/css/mdb.min.css">
+  <script src="/MDB/js/mdb.min.js" defer></script>
+  <style>
+    .gradient-custom {
+      /* fallback for old browsers */
+      background: #6a11cb;
+
+      /* Chrome 10-25, Safari 5.1-6 */
+      background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+
+      /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+    }
+  </style>
+  <title>Document</title>
+</head>
+
+<body>
   <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -29,7 +41,7 @@ export default {
                     <label class="form-label" for="firstname">Họ</label>
                   </div>
                   <div class="form-outline form-white mb-4">
-                    <input type="text" id="lastname" class="form-control form-control-lg" name="lastname" />
+                  <input type="text" id="lastname" class="form-control form-control-lg" name="lastname" />
                     <label class="form-label" for="lastname">Tên</label>
                   </div>
                   <select class="form-select mb-4 bg-dark text-white" name="sex">
@@ -50,8 +62,7 @@ export default {
                     <label class="form-label" for="password">Mật khẩu</label>
                   </div>
                   <div class="form-outline form-white mb-4">
-                    <input type="password" id="retypePassword" class="form-control form-control-lg"
-                      name="passwordConfirmation" />
+                    <input type="password" id="retypePassword" class="form-control form-control-lg" name="passwordConfirmation" />
                     <label class="form-label" for="retypePassword">Nhập lại mật khẩu</label>
                   </div>
 
@@ -79,17 +90,6 @@ export default {
       </div>
     </div>
   </section>
-</template>
+</body>
 
-<!-- <style>
-.gradient-custom {
-  /* fallback for old browsers */
-  background: #6a11cb;
-
-  /* Chrome 10-25, Safari 5.1-6 */
-  background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
-
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
-}
-</style> -->
+</html>

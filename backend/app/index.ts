@@ -1,19 +1,21 @@
-require("dotenv").config();
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
-var passport = require('passport');
-var logger = require('morgan');
-var helmet = require('helmet');
+import express from 'express';
+import dotenv from 'dotenv';
+import createError from 'http-errors';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import passport from 'passport';
+import logger from 'morgan';
+import helmet from 'helmet';
+import mongoose from 'mongoose';
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
 
+dotenv.config()
+
 var app = express();
-const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 // mongoose.set("strictQuery", false);
 
@@ -41,37 +43,20 @@ app.use(cookieParser());
 // Uses session after cookieParser, otherwise error will occur
 app.use(session({
   secret: "thisisasecret",
-  saveUninitialized: true,
+  saveUninitialized: false,
   resave: false,
-  cookie: { maxAge: 60 * 60 * 100 },
+  cookie: { maxAge: 60 * 60 * 100 }
 }));
 
 app.use(passport.initialize());
 
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(passport.session());
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 passport.use(User.createStrategy());
-// passport.serializeUser(function(user, cb) {
-//   process.nextTick(User.serializeUser(), user, cb);
-// });
-passport.serializeUser(function(user, cb) {
-  process.nextTick(function() {
-    return cb(null, {
-      id: user._id,
-      email: user.email,
-      firstname: user.firstname,
-      lastname: user.lastname
-    })
-  })
-})
-// passport.deserializeUser(User.deserializeUser());
-passport.deserializeUser(function(user, cb) {
-  process.nextTick(() => {
-    return cb(null, user);
-  })
-})
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use('/', indexRouter);
 app.use('/user', usersRouter);

@@ -1,46 +1,28 @@
-<script>
-import { useAuthStore } from '../stores/auth'
+<!DOCTYPE html>
+<html lang="en">
 
-export default {
-  setup() {
-    const authStore = useAuthStore()
-    authStore.$subscribe((mutation, state) => {
-      localStorage.setItem('isSignedIn', state.isAuthenticated)
-    }, { detached: true })
-    return { authStore }
-  },
-  mounted: function () {
-    this.$el.querySelectorAll('.form-outline').forEach(
-      formOutline => {
-        new mdb.Input(formOutline).init();
-      }
-    )
-  },
-  methods: {
-    async loginAPI(event) {
-      let form = event.target
-      let formData = new FormData(form)
-      let formDataJSON = JSON.stringify(Object.fromEntries(formData.entries()))
-      let response = await fetch('http://localhost:3000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: formDataJSON
-      })
-      if (!response.ok) {
-        let err = await response.json()
-        console.log(err)
-        return
-      }
-      console.log('OK')
-      this.authStore.isAuthenticated = true
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/MDB/css/mdb.min.css">
+  <script src="/MDB/js/mdb.min.js" defer></script>
+  <style>
+    .gradient-custom {
+      /* fallback for old browsers */
+      background: #6a11cb;
+
+      /* Chrome 10-25, Safari 5.1-6 */
+      background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+
+      /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
     }
-  }
-};
-</script>
+  </style>
+  <title>Document</title>
+</head>
 
-<template>
+<body>
   <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -53,7 +35,7 @@ export default {
                 <h2 class="fw-bold mb-2 text-uppercase">Đăng nhập</h2>
                 <p class="text-white-50 mb-5">Vui lòng nhập email và mật khẩu!</p>
 
-                <form action="/login" method="POST" @submit.prevent="loginAPI($event)">
+                <form action="/login" method="POST">
                   <div class="form-outline form-white mb-4">
                     <input type="email" id="email" class="form-control form-control-lg" name="email" />
                     <label class="form-label" for="email">Email</label>
@@ -88,4 +70,6 @@ export default {
       </div>
     </div>
   </section>
-</template>
+</body>
+
+</html>

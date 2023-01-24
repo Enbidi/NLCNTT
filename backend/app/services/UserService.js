@@ -7,6 +7,10 @@ class UserService extends BaseService {
     super(model);
   }
 
+  async findUserByEmail(email, cb) {
+    await this.model.findOne({ email }).exec();
+  }
+
   // async deleteOne(id, cb) {
   //   super.deleteOne(id).then(cb);
   // }

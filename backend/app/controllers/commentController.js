@@ -35,13 +35,19 @@ exports.addCommentPost = [
       .isMongoId()
       .bail()
       .custom(async (userId) => {
-        return await commentService.isExist(userId);
+        if (!(await commentService.isExist(userId))) {
+          throw new Error("Id người dùng không tồn tại");
+        }
+        return true;
       }),
     body("product")
       .isMongoId()
       .bail()
       .custom(async (productId) => {
-        return await productService.isExist(productId);
+        if (!(await productService.isExist(productId))) {
+          throw new Error("Id sản phẩm không tồn tại");
+        }
+        return true;
       })
   ),
   (req, res, next) => {

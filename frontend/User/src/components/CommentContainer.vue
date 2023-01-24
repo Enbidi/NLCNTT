@@ -2,22 +2,41 @@
 import Comment from './Comment.vue'
 import { inject } from 'vue'
 import { useFetch } from './composables/useFetch'
+import { useAuthStore } from '../stores/auth'
 defineProps(['productId'])
 </script>
 
 <script>
 export default {
+  setup() {
+    const authStore = useAuthStore()
+    return {
+      authStore
+    }
+  },
   mounted() {
     this.$el.querySelectorAll(".form-outline").forEach(input => new mdb.Input(input).init())
   },
   methods: {
     addComment(newComment) {
+      if (!this.authStore.isAuthenticated) {
+        return
+      }
       this.comments.push(newComment)
+      fetch("http://localhost:3000/comment/add", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          comment: newComment,
+        })
+      })
     }
   },
   data() {
     return {
-      comment: '',
+      typingComment: '',
       comments: []
     }
   }
@@ -45,7 +64,7 @@ export default {
           <div class="input-group mb-3">
             <input type="text" id="addAComment" class="form-control" placeholder="Nhập bình luận..."
               v-model="comment" />
-            <button class="btn btn-primary" type="button" @click="addComment(comment)">
+            <button class="btn btn-primary" type="button" @click="addComment(typingComment)">
               Thêm bình luận
             </button>
           </div>

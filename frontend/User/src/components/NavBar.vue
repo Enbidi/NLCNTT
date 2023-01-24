@@ -1,5 +1,32 @@
-<script setup>
-import NavItem from './NavItem.vue';
+<script>
+import NavItem from './NavItem.vue'
+import DropDown from './DropDown.vue'
+import DropDownItem from './DropDownItem.vue'
+import { useAuthStore } from '../stores/auth'
+
+export default {
+  components: {
+    NavItem,
+    DropDown,
+    DropDownItem
+  },
+  setup() {
+    const authStore = useAuthStore()
+    return {
+      authStore
+    }
+  },
+  methods: {
+    async logout() {
+      let res = await fetch('http://localhost:3000/logout')
+      if (!res.ok) {
+        let err = await res.json()
+        console.log(err)
+      }
+      this.authStore.isAuthenticated = false
+    }
+  }
+}
 </script>
 
 <template>
@@ -12,7 +39,38 @@ import NavItem from './NavItem.vue';
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <slot></slot>
+          <NavItem path="/product">
+            Sản phẩm
+          </NavItem>
+          <NavItem path="/product/:id">
+            Chi tiết sản phẩm
+          </NavItem>
+          <NavItem path="/cart">
+            Giỏ hàng
+          </NavItem>
+          <template v-if="authStore.isAuthenticated">
+            <DropDown btn-name="Xin chào">
+              <DropDownItem>
+                Cài đặt
+              </DropDownItem>
+              <DropDownItem>
+                Lịch sử mua hàng
+              </DropDownItem>
+              <template #footer>
+                <DropDownItem @click="logout()">
+                  Đăng xuất
+                </DropDownItem>
+              </template>
+            </DropDown>
+          </template>
+          <template v-else>
+            <NavItem path="/login">
+              Đăng nhập
+            </NavItem>
+            <NavItem path="/signup">
+              Đăng kí
+            </NavItem>
+          </template>
         </ul>
       </div>
       <form class="d-flex input-group w-auto">

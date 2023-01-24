@@ -13,19 +13,13 @@ const UserSchema = new Schema({
   password: String,
   sex: {
     type: String,
-    enum: ["Male", "Female"]
+    enum: ["male", "female"]
   }
 }, options);
 
 UserSchema.virtual("name").get(function() {
   return `${this.firstname} ${this.lastname}`;
 })
-
-UserSchema.plugin(passportLocalMongoose, {
-  usernameUnique: false,
-  usernameField: "email",
-  selectFields: "email password",
-});
 
 UserSchema.statics.findUserByEmail = function(email, cb) {
   return this.where("email", email).exec(cb);
@@ -50,6 +44,14 @@ UserSchema.statics.findUserByFullname = function(fullname, cb) {
     }
   ]).project("firstname lastname email number sex").then(cb);
 }
+
+
+UserSchema.plugin(passportLocalMongoose, {
+  usernameUnique: false,
+  usernameQueryFields: ["email"],
+  usernameField: "email",
+  selectFields: "firstname lastname email password hash"
+});
 
 const User = mongoose.model("User", UserSchema);
 

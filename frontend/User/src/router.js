@@ -17,6 +17,16 @@ const routes = [
     component: () => import("./components/Cart.vue"),
     name: "cart"
   },
+  {
+    path: "/login",
+    name: "login",
+    component: () => import("./components/Login.vue")
+  },
+  {
+    path: "/signup",
+    name: "signup",
+    component: () => import("./components/SignUp.vue")
+  }
 ];
 
 export default createRouter({
