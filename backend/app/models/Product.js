@@ -29,7 +29,7 @@ const ProductSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Branch"
   }
-});
+}, { toJSON: {virtuals: true }, toObject: {virtuals: true} });
 
 ProductSchema.statics.findProductByName = function(name, cb) {
   this.find({
@@ -41,6 +41,12 @@ ProductSchema.statics.findProductByName = function(name, cb) {
 
 ProductSchema.virtual("includedInBillDetails", {
   ref: "BillDetail",
+  localField: "_id",
+  foreignField: "product"
+});
+
+ProductSchema.virtual("comments", {
+  ref: "Comment",
   localField: "_id",
   foreignField: "product"
 });

@@ -6,22 +6,32 @@ class ProductService extends BaseService {
     super(model);
   }
   fetchLimitWithOriginAndBranch(filter, limit, cb) {
-    super.fetch(filter, {
-      limit,
-      populationOptions: [
-        { path: "origin", select: "country -_id" },
-        { path: "branch", select: "name -_id" }
-      ]
-    }, cb);
+    super.fetch(
+      filter,
+      {
+        limit,
+        populationOptions: [
+          { path: "origin", select: "country -_id" },
+          { path: "branch", select: "name -_id" },
+        ],
+      },
+      cb
+    );
   }
   async findProductByName(name, cb) {
     Product.findProductByName(name, cb);
   }
+  async fetchComments(filter, cb) {
+    if (cb) {
+      this.model.findOne(filter, "_id")
+        .populate("comments")
+        .exec(cb);
+      return;
+    }
+    await this.model.findOne(filter, "_id").populate("comments");
+  }
   findOne(filter, cb) {
-    this.model.findOne(filter)
-      .populate("branch")
-      .populate("origin")
-      .exec(cb);
+    this.model.findOne(filter).populate("branch").populate("origin").exec(cb);
   }
 }
 

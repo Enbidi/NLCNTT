@@ -10,7 +10,7 @@ export const useAuthStore = defineStore("auth", {
    }),
   actions: {
     async fetchAuthInfo() {
-      let response = await fetch('http://localhost:3000/user_ifno')
+      let response = await fetch('http://localhost:3000/auth/user_info')
       if (!response.ok) {
         let error = await response.json()
         console.log(error)
@@ -19,10 +19,10 @@ export const useAuthStore = defineStore("auth", {
       }
       this.isAuthenticated = true
       let data = await response.json()
-      this.id = data.id
-      this.firstname = data.firstname
-      this.lastname = data.lastname
-      this.email = data.email
+      this.id = data.item._id
+      this.firstname = data.item.firstname
+      this.lastname = data.item.lastname
+      this.email = data.item.email
     }
   }
 })

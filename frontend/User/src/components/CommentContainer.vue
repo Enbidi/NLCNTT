@@ -1,13 +1,15 @@
-<script setup>
-import Comment from './Comment.vue'
-import { inject } from 'vue'
-import { useFetch } from './composables/useFetch'
-import { useAuthStore } from '../stores/auth'
-defineProps(['productId'])
-</script>
-
 <script>
+import Comment from './Comment.vue'
+import Rating from './Rating.vue'
+import RatingInput from './RatingInput.vue'
+import { useAuthStore } from '../stores/auth'
 export default {
+  components: {
+    Comment,
+    Rating,
+    RatingInput
+  },
+  props: ['productId'],
   setup() {
     const authStore = useAuthStore()
     return {
@@ -23,13 +25,16 @@ export default {
         return
       }
       this.comments.push(newComment)
-      fetch("http://localhost:3000/comment/add", {
+      fetch("http://localhost:3000/user/comment/add", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          comment: newComment,
+          rating: 4,
+          content: newComment,
+          user: this.authStore.id,
+          product: this.productId
         })
       })
     }
@@ -63,14 +68,17 @@ export default {
 
           <div class="input-group mb-3">
             <input type="text" id="addAComment" class="form-control" placeholder="Nhập bình luận..."
-              v-model="comment" />
+              v-model="typingComment" />
             <button class="btn btn-primary" type="button" @click="addComment(typingComment)">
               Thêm bình luận
             </button>
           </div>
-
+          <form>
+            <RatingInput />
+          </form>
           <Comment 
             v-for="t in comments"
+            :rating-stars="t.rating"
             avt="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(4).webp"
             content="Type your note, and hit enter to add it" username="Martha" />
 

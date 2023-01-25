@@ -35,7 +35,7 @@ exports.addCommentPost = [
       .isMongoId()
       .bail()
       .custom(async (userId) => {
-        if (!(await commentService.isExist(userId))) {
+        if (!(await userService.isExist(userId))) {
           throw new Error("Id người dùng không tồn tại");
         }
         return true;

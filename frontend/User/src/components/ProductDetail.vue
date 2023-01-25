@@ -4,12 +4,14 @@ import CommentContainer from './CommentContainer.vue'
 import { inject } from 'vue'
 
 import { useProductStore } from '../stores/product'
-import { useCartStore } from '../stores/cart';
+import { useCartStore } from '../stores/cart'
+import { useAuthStore } from '../stores/auth'
 defineProps(["test", "dummy"])
 const hostname = inject("hostname")
 const productStore = useProductStore()
 const cartStore = useCartStore()
-
+const authStore = useAuthStore()
+authStore.fetchAuthInfo()
 </script>
 
 <template>
@@ -39,7 +41,7 @@ const cartStore = useCartStore()
         </div>
       </div>
       <div class="col-12">
-        <CommentContainer />
+        <CommentContainer :product-id="productStore.data._id"/>
       </div>
     </div>
   </div>

@@ -53,25 +53,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.session());
 
 passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
 // passport.serializeUser(function(user, cb) {
 //   process.nextTick(User.serializeUser(), user, cb);
 // });
-passport.serializeUser(function(user, cb) {
-  process.nextTick(function() {
-    return cb(null, {
-      id: user._id,
-      email: user.email,
-      firstname: user.firstname,
-      lastname: user.lastname
-    })
-  })
-})
-// passport.deserializeUser(User.deserializeUser());
-passport.deserializeUser(function(user, cb) {
-  process.nextTick(() => {
-    return cb(null, user);
-  })
-})
+// passport.serializeUser(function(user, cb) {
+//   process.nextTick(function() {
+//     return cb(null, {
+//       id: user._id,
+//       email: user.email,
+//       firstname: user.firstname,
+//       lastname: user.lastname
+//     })
+//   })
+// })
+passport.deserializeUser(User.deserializeUser());
+// passport.deserializeUser(function(user, cb) {
+//   process.nextTick(() => {
+//     return cb(null, user);
+//   })
+// })
 
 app.use('/', indexRouter);
 app.use('/user', usersRouter);

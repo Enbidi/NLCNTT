@@ -31,17 +31,19 @@ module.exports.logoutGet = (req, res, next) => {
   });
 };
 
-module.exports.getAuthInfo = (req, res) => {
-  if (req.session.passport) {
-    res.status(200).json({
-      item: req.session.passport
-    });
-  } else {
-    res.status(200).json({
-      errors: ['Người dùng chưa đăng nhập']
-    });
+module.exports.getAuthInfo = [
+  (req, res) => {
+    if (req.user) {
+      res.status(200).json({
+        item: req.user
+      });
+    } else {
+      res.status(401).json({
+        errors: ['Người dùng chưa đăng nhập']
+      });
+    }
   }
-}
+]
 
 module.exports.signupGet = (req, res) => {
   res.sendFile(path.join(process.env.VIEW_DIR, 'static/signup.html'));

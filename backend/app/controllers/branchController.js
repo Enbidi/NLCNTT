@@ -26,6 +26,8 @@ exports.branchesGet = [
 
 exports.productsPerBranchGet = [
   (req, res) => {
+    console.log('User: ', req.user)
+    console.log(req.session)
     branchService.fetchProductsPerBranch((err, branches) => {
       if (err) {
         return next(err);

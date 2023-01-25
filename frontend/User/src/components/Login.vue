@@ -1,13 +1,14 @@
 <script>
 import { useAuthStore } from '../stores/auth'
-
+import { useAlertsStore } from '../stores/alerts'
 export default {
   setup() {
     const authStore = useAuthStore()
+    const alertsStore = useAlertsStore()
     authStore.$subscribe((mutation, state) => {
       localStorage.setItem('isSignedIn', state.isAuthenticated)
     }, { detached: true })
-    return { authStore }
+    return { authStore, alertsStore }
   },
   mounted: function () {
     this.$el.querySelectorAll('.form-outline').forEach(
@@ -29,12 +30,23 @@ export default {
         body: formDataJSON
       })
       if (!response.ok) {
-        let err = await response.json()
-        console.log(err)
+        this.alertsStore.push(
+          response.status == 401
+          ? { content: 'Tên đăng nhập hoặc mật khẩu không đúng', type: 'danger'}
+          : { content: 'Gặp lỗi gì rồi', type: 'danger'}
+        )
         return
       }
-      console.log('OK')
+      this.alertsStore.clear()
+      this.alertsStore.push({
+        content: 'Đăng nhập thành công',
+        type: 'success'
+      })
       this.authStore.isAuthenticated = true
+      this.$router.push({
+        name: 'product',
+        replace: true
+      })
     }
   }
 };

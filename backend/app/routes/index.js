@@ -12,6 +12,8 @@ router.get('/', function(req, res, next) {
 
 router.get("/product/:id", productAPI.productGetById);
 
+router.get("/product/:id/comment", productAPI.getComments);
+
 router.get("/product", productAPI.productsGet);
 
 router.get("/branch/product", branchAPI.productsPerBranchGet);

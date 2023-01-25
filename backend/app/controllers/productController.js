@@ -85,6 +85,28 @@ exports.productGetById = [
   },
 ];
 
+exports.getComments = [
+  param("id")
+    .isMongoId()
+    .bail()
+    .custom(async (productId) => {
+      if (!(await productService.isExist(productId))) {
+        throw new Error("Id sản phẩm không tồn tại");
+      }
+      return true;
+    }),
+  (req, res) => {
+    productService.fetchComments({ _id: req.params.id }, (err, product) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200).json({
+        items: product.comments,
+      });
+    });
+  },
+];
+
 exports.addProductPost = [
   upload.single("img"),
   parallelValidate(

@@ -1,4 +1,4 @@
-<script>
+<script >
 import NavItem from './NavItem.vue'
 import DropDown from './DropDown.vue'
 import DropDownItem from './DropDownItem.vue'
@@ -12,6 +12,7 @@ export default {
   },
   setup() {
     const authStore = useAuthStore()
+    authStore.fetchAuthInfo()
     return {
       authStore
     }
@@ -49,7 +50,7 @@ export default {
             Giỏ hàng
           </NavItem>
           <template v-if="authStore.isAuthenticated">
-            <DropDown btn-name="Xin chào">
+            <DropDown :btn-name="'Xin chào, ' + authStore.lastname">
               <DropDownItem>
                 Cài đặt
               </DropDownItem>

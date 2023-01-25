@@ -50,7 +50,7 @@ UserSchema.plugin(passportLocalMongoose, {
   usernameUnique: false,
   usernameQueryFields: ["email"],
   usernameField: "email",
-  selectFields: "firstname lastname email password hash"
+  selectFields: "firstname lastname email"
 });
 
 const User = mongoose.model("User", UserSchema);

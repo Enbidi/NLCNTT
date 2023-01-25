@@ -7,7 +7,7 @@ import Branches from './components/Branches.vue';
 import Cart from './components/Cart.vue';
 import ProductsView from './components/ProductsView.vue';
 import NavItem from './components/NavItem.vue';
-
+import Alert from './components/Alert.vue'
 </script>
 
 <template>
@@ -17,6 +17,7 @@ import NavItem from './components/NavItem.vue';
       <component :is="Component" />
     </transition>
   </router-view>
+  <Alert/>
   <!-- <ProductsView /> -->
 </template>
 
