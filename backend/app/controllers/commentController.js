@@ -12,6 +12,16 @@ const commentService = require("../services/CommentService");
 const productService = require("../services/ProductService");
 const userService = require("../services/UserService");
 
+const validateCommentParam = param("id", "Id bình luận không hợp lệ")
+  .isMongoId()
+  .bail()
+  .custom(async (id) => {
+    if (!(await commentService.isExist(id))) {
+      throw new Error("Id nhãn hiệu không tồn tại");
+    }
+    return true;
+  });
+
 exports.commentsGet = [
   query("limit").default(20),
   async (req, res, next) => {
@@ -66,10 +76,7 @@ exports.addCommentPost = [
 exports.commentPatch = [
   parallelValidate(
     header("Content-Type").isIn("application/json"),
-    param("id", "Id bình luận không hợp lệ")
-      .trim()
-      .isLength({ min: 1 })
-      .escape(),
+    validateCommentParam,
     body("content").optional().trim().isLength({ min: 1 }).escape(),
     body("rating").optional().isIn([1, 2, 3, 4, 5]),
     body("user")
@@ -112,17 +119,7 @@ exports.commentPatch = [
 ];
 
 exports.commentDelete = [
-  parallelValidate(
-    param("id", "Id bình luận không hợp lệ")
-      .isMongoId()
-      .bail()
-      .custom(async (id) => {
-        if (!(await commentService.isExist(id))) {
-          throw new Error("Id nhãn hiệu không tồn tại");
-        }
-        return true;
-      })
-  ),
+  validateCommentParam,
   (req, res, next) => {
     commentService.removeOne({ _id: req.params.id }, (err, comment) => {
       if (err) {

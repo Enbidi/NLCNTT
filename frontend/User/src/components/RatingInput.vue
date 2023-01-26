@@ -1,34 +1,34 @@
 <template>
   <div class="rating">
     <label>
-      <input type="radio" name="rating" value="1" />
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
+      <input type="radio" name="rating" value="1" @change="$emit('ratingChange', 1)"/>
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
     </label>
     <label>
-      <input type="radio" name="rating" value="2" />
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
+      <input type="radio" name="rating" value="2" @change="$emit('ratingChange', 2)" />
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
     </label>
     <label>
-      <input type="radio" name="rating" value="3" />
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
+      <input type="radio" name="rating" value="3" @change="$emit('ratingChange', 3)"/>
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
     </label>
     <label>
-      <input type="radio" name="rating" value="4" />
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
+      <input type="radio" name="rating" value="4" @change="$emit('ratingChange', 4)" />
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
     </label>
     <label>
-      <input type="radio" name="rating" value="5" />
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
-      <span class="icon"><i class="fa-solid fa-star"></i></span>
+      <input type="radio" name="rating" value="5" @change="$emit('ratingChange', 5)"/>
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
+      <span class="icon"><i class="fa-regular fa-star"></i></span>
     </label>
   </div>
 </template>
@@ -84,15 +84,22 @@
 .rating label .icon {
   float: left;
   color: transparent;
+  transition: all .5s ease-in-out;
+}
+
+.rating label .icon .fa-star{
+  transition: all .3s ease-in-out;
 }
 
 .rating label:last-child .icon {
   color: #000;
 }
 
-.rating:not(:hover) label input:checked~.icon,
-.rating:hover label:hover input~.icon {
-  color: rgb(249, 255, 64);
+.rating:not(:hover) label input:checked~.icon .fa-star,
+.rating:hover label:hover input~.icon .fa-star{
+  color: rgb(56, 50, 50);
+  font-weight: 900;
+  transform: scale(1.5);
 }
 
 .rating label input:focus:not(:checked)~.icon:last-child {

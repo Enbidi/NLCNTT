@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     async logout() {
-      let res = await fetch('http://localhost:3000/logout')
+      let res = await fetch('http://localhost:3000/auth/logout')
       if (!res.ok) {
         let err = await res.json()
         console.log(err)

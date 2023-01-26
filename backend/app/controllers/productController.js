@@ -41,6 +41,30 @@ const productService = require("../services/ProductService");
 const originService = require("../services/OriginService");
 const branchService = require("../services/BranchService");
 
+const validateProductParam = param("id", "ID sản phẩm không hợp lệ")
+  .isMongoId()
+  .bail()
+  .custom(async (productId) => {
+    if (!(await productService.isExist(productId))) {
+      throw new Error("Id sản phẩm không tồn tại");
+    }
+    return true;
+  });
+
+const customOriginValidation = async (originId) => {
+  if (!(await originService.isExist(originId))) {
+    throw new Error("Id xuất sứ không tồn tại");
+  }
+  return true;
+}
+
+const customBranchValidation = async (branchId) => {
+  if (!(await branchService.isExist(branchId))) {
+    throw new Error("Id nhãn hiệu không tồn tại");
+  }
+  return true;
+}
+
 exports.productsGet = [
   query("limit").default(20).isNumeric().toFloat(),
   async (req, res, next) => {
@@ -54,25 +78,11 @@ exports.productsGet = [
         res.status(200).json({ items: products });
       }
     );
-    // productService.fetchLimit({}, req.query.limit, (err, products) => {
-    //   if (err) {
-    //     return next(err);
-    //   }
-    //   res.status(200).json({ products });
-    // });
   },
 ];
 
 exports.productGetById = [
-  param("id", "Id sản phẩm không được trống")
-    .isMongoId()
-    .bail()
-    .custom(async (productId) => {
-      if (!(await productService.isExist(productId))) {
-        throw new Error("Id sản phẩm không tồn tại");
-      }
-      return true;
-    }),
+  validateProductParam,
   (req, res) => {
     productService.findOne({ _id: req.params.id }, (err, product) => {
       if (err) {
@@ -86,15 +96,7 @@ exports.productGetById = [
 ];
 
 exports.getComments = [
-  param("id")
-    .isMongoId()
-    .bail()
-    .custom(async (productId) => {
-      if (!(await productService.isExist(productId))) {
-        throw new Error("Id sản phẩm không tồn tại");
-      }
-      return true;
-    }),
+  validateProductParam,
   (req, res) => {
     productService.fetchComments({ _id: req.params.id }, (err, product) => {
       if (err) {
@@ -126,21 +128,11 @@ exports.addProductPost = [
     body("origin", "Xuất sứ không hợp lệ")
       .isMongoId()
       .bail()
-      .custom(async (originId) => {
-        if (!(await originService.isExist(originId))) {
-          throw new Error("Id xuất sứ không tồn tại");
-        }
-        return true;
-      }),
+      .custom(customOriginValidation),
     body("branch", "Nhãn hiệu không hợp lệ")
       .isMongoId()
       .bail()
-      .custom(async (branchId) => {
-        if (!(await branchService.isExist(branchId))) {
-          throw new Error("Id nhãn hiệu không tồn tại");
-        }
-        return true;
-      })
+      .custom(customBranchValidation)
   ),
   (req, res) => {
     const product = matchedData(req, { locations: ["body"] });
@@ -158,15 +150,7 @@ exports.addProductPost = [
 exports.productPatch = [
   parallelValidate(
     header("Content-Type").isIn(["application/json"]),
-    param("id", "Id sản phẩm không hợp lệ")
-      .isMongoId()
-      .bail()
-      .custom(async (productId) => {
-        if (!(await productService.isExist(productId))) {
-          throw new Error("Id sản phẩm không tồn tại");
-        }
-        return true;
-      }),
+    validateProductParam,
     body("name", "Tên sản phẩm không hợp lệ")
       .optional()
       .trim()
@@ -184,22 +168,12 @@ exports.productPatch = [
       .optional()
       .isMongoId()
       .bail()
-      .custom(async (originId) => {
-        if (!(await originService.isExist(originId))) {
-          throw new Error("Id xuất sứ không tồn tại");
-        }
-        return true;
-      }),
+      .custom(customOriginValidation),
     body("branch", "Nhãn hiệu không hợp lệ")
       .optional()
       .isMongoId()
       .bail()
-      .custom(async (branchId) => {
-        if (!(await branchService.isExist(branchId))) {
-          throw new Error("Id nhãn hiệu không tồn tại");
-        }
-        return true;
-      })
+      .custom(customBranchValidation)
   ),
   (req, res) => {
     const product = matchedData(req, {
@@ -222,17 +196,7 @@ exports.productPatch = [
 ];
 
 exports.productDelete = [
-  parallelValidate(
-    param("id", "Id sản phẩm không hợp lệ")
-      .isMongoId()
-      .bail()
-      .custom(async (productId) => {
-        if (!(await productService.isExist(branchId))) {
-          throw new Error("Id sản phẩm không tồn tại");
-        }
-        return true;
-      })
-  ),
+  validateProductParam,
   (req, res) => {
     productService.removeOne({ _id: req.params.id }, (err, product) => {
       if (err) {

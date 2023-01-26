@@ -22,7 +22,7 @@ export default {
       let form = event.target
       let formData = new FormData(form)
       let formDataJSON = JSON.stringify(Object.fromEntries(formData.entries()))
-      let response = await fetch('http://localhost:3000/login', {
+      let response = await fetch('http://localhost:3000/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

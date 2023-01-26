@@ -1,23 +1,32 @@
 <script>
+import { watch } from 'vue'
 import Comment from './Comment.vue'
 import Rating from './Rating.vue'
 import RatingInput from './RatingInput.vue'
 import { useAuthStore } from '../stores/auth'
 export default {
+  inject: ['ratingStars'],
+  props: ['productId'],
   components: {
     Comment,
     Rating,
     RatingInput
   },
-  props: ['productId'],
   setup() {
     const authStore = useAuthStore()
     return {
       authStore
     }
   },
-  mounted() {
+  async mounted() {
     this.$el.querySelectorAll(".form-outline").forEach(input => new mdb.Input(input).init())
+    var response = await fetch(`http://localhost:3000/product/${this.productId}/comment`)
+    if (!response.ok) {
+      console.error(await response.json())
+      return
+    }
+    var data = await response.json()
+    this.comments = data.items
   },
   methods: {
     addComment(newComment) {
@@ -53,19 +62,6 @@ export default {
     <div class="col">
       <div class="card shadow-0 border" style="background-color: #f0f2f5;">
         <div class="card-body p-4">
-          <!-- <div class="row">
-            <div class="col-md-11">
-              <div class="form-outline mb-4">
-                <input type="text" id="addAComment" class="form-control" placeholder="Nhập bình luận..."
-                  v-model="comment" />
-                <label class="form-label" for="addAComment"> Thêm bình luận</label>
-              </div>
-            </div>
-            <div class="col-md-1">
-              <button class="btn btn-primary">Them</button>
-            </div>
-          </div> -->
-
           <div class="input-group mb-3">
             <input type="text" id="addAComment" class="form-control" placeholder="Nhập bình luận..."
               v-model="typingComment" />
@@ -73,15 +69,11 @@ export default {
               Thêm bình luận
             </button>
           </div>
-          <form>
-            <RatingInput />
-          </form>
           <Comment 
-            v-for="t in comments"
-            :rating-stars="t.rating"
+            v-for="comment in comments"
+            :rating-stars="comment.rating"
             avt="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(4).webp"
-            content="Type your note, and hit enter to add it" username="Martha" />
-
+            :content="comment.content" username="Martha" />
         </div>
       </div>
     </div>

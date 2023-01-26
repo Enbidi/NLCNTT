@@ -1,7 +1,7 @@
 <script setup>
 import CommentContainer from './CommentContainer.vue'
-
-import { inject } from 'vue'
+import RatingInput from './RatingInput.vue'
+import { inject, provide, ref } from 'vue'
 
 import { useProductStore } from '../stores/product'
 import { useCartStore } from '../stores/cart'
@@ -11,6 +11,8 @@ const hostname = inject("hostname")
 const productStore = useProductStore()
 const cartStore = useCartStore()
 const authStore = useAuthStore()
+const rating = ref(0)
+provide('ratingStars', rating)
 authStore.fetchAuthInfo()
 </script>
 
@@ -24,6 +26,7 @@ authStore.fetchAuthInfo()
       <div class="col-md-6">
         <div class="small mb-1">{{ productStore.data.branch.name }}</div>
         <h1 class="display-5 fw-bolder">{{ productStore.data.name }}</h1>
+        <RatingInput @rating-change="stars => rating = stars" class="mx-1 ms-0" />
         <div class="fs-5 mb-5">
           <span class="text-decoration-line-through">{{ productStore.data.price }}</span>
           <span>{{ productStore.data.price }}</span>

@@ -12,6 +12,16 @@ const {
 
 const originService = require("../services/OriginService");
 
+const validateOriginParam = param("id", "Id xuất sứ không hợp lệ")
+  .isMongoId()
+  .bail()
+  .custom(async (originId) => {
+    if (!(await originService.isExist(originId))) {
+      throw new Error("Id xuất sứ không tồn tại");
+    }
+    return true;
+  });
+
 exports.originsGet = [
   query("limit").default(20).isNumeric().toFloat(),
   async (req, res) => {
@@ -42,15 +52,7 @@ exports.addOriginPost = [
 exports.updateOriginPost = [
   parallelValidate(
     header("Content-Type").isIn(["application/json"]),
-    param("id", "Id xuất sứ không hợp lệ")
-      .isMongoId()
-      .bail()
-      .custom(async (originId) => {
-        if (!(await originService.isExist(originId))) {
-          throw new Error("Id xuất sứ không tồn tại");
-        }
-        return true;
-      }),
+    validateOriginParam,
     body("country").trim().not().isEmpty().escape()
   ),
   (req, res) => {
@@ -74,15 +76,7 @@ exports.updateOriginPost = [
 exports.deleteOriginGet = [
   parallelValidate(
     header("Content-Type").isIn(["application/json"]),
-    param("id", "Id xuất sứ không hợp lệ")
-      .isMongoId()
-      .bail()
-      .custom(async (originId) => {
-        if (!(await originService.isExist(originId))) {
-          throw new Error("Id xuất sứ không tồn tại");
-        }
-        return true;
-      })
+    validateOriginParam
   ),
   (req, res) => {
     originService.removeOne({ _id: req.params.id }, (err, origin) => {
