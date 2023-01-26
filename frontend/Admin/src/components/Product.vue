@@ -53,6 +53,51 @@ const deletionModal = useTemplateRef("deletionModal")
             </div>
 
             <div class="form-outline mb-4">
+              <input type="text" id="addProductScreenInput" class="form-control" name="screen" />
+              <label class="form-label" for="addProductScreenInput">Màn hình</label>
+            </div>
+            
+            <div class="form-outline mb-4">
+              <input type="text" id="addProductOSInput" class="form-control" name="os" />
+              <label class="form-label" for="addProductOSInput">Hệ điều hành</label>
+            </div>
+            
+            <div class="form-outline mb-4">
+              <input type="text" id="addProductBackCamInput" class="form-control" name="backCamera" />
+              <label class="form-label" for="addProductBackCamInput">Camera sau</label>
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="text" id="addProductFrontCamInput" class="form-control" name="frontCamera" />
+              <label class="form-label" for="addProductFrontCamInput">Camera trước</label>
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="text" id="addProductChipInput" class="form-control" name="chip" />
+              <label class="form-label" for="addProductChipInput">Chip</label>
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="number" id="addProductRAMInput" class="form-control" name="ram" />
+              <label class="form-label" for="addProductRAMInput">RAM</label>
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="number" id="addProductDiskInput" class="form-control" name="diskSize" />
+              <label class="form-label" for="addProductDiskInput">Dung lượng bộ nhớ</label>
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="text" id="addProductSIMsInput" class="form-control" name="sims" />
+              <label class="form-label" for="addProductSIMsInput">Số SIM</label>
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="text" id="addProductCharingInput" class="form-control" name="charging" />
+              <label class="form-label" for="addProductCharingInput">Bin</label>
+            </div>
+
+            <div class="form-outline mb-4">
               <input type="file" id="addProductPriceInput" class="form-control" name="img" />
               <label class="form-label" for="addProductPriceInput">Hình</label>
             </div>
@@ -114,6 +159,51 @@ const deletionModal = useTemplateRef("deletionModal")
               <input type="number" id="updateProductPriceInput" class="form-control" name="price"
                 :value="selectedItem?.price" />
               <label class="form-label" for="updateProductPriceInput">Giá</label>
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="text" id="updateProductScreenInput" class="form-control" name="screen" />
+              <label class="form-label" for="updateProductScreenInput">Màn hình</label>
+            </div>
+            
+            <div class="form-outline mb-4">
+              <input type="text" id="updateProductOSInput" class="form-control" name="os" />
+              <label class="form-label" for="updateProductOSInput">Hệ điều hành</label>
+            </div>
+            
+            <div class="form-outline mb-4">
+              <input type="text" id="updateProductBackCamInput" class="form-control" name="backCamera" />
+              <label class="form-label" for="updateProductBackCamInput">Camera sau</label>
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="text" id="updateProductFrontCamInput" class="form-control" name="frontCamera" />
+              <label class="form-label" for="updateProductFrontCamInput">Camera trước</label>
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="text" id="updateProductChipInput" class="form-control" name="chip" />
+              <label class="form-label" for="updateProductChipInput">Chip</label>
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="number" id="updateProductRAMInput" class="form-control" name="ram" />
+              <label class="form-label" for="updateProductRAMInput">RAM</label>
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="number" id="updateProductDiskInput" class="form-control" name="diskSize" />
+              <label class="form-label" for="updateProductDiskInput">Dung lượng bộ nhớ</label>
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="text" id="updateProductSIMsInput" class="form-control" name="sims" />
+              <label class="form-label" for="updateProductSIMsInput">Số SIM</label>
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="text" id="updateProductCharingInput" class="form-control" name="charging" />
+              <label class="form-label" for="updateProductCharingInput">Bin</label>
             </div>
 
             <div class="form-outline mb-4">
@@ -187,6 +277,7 @@ const deletionModal = useTemplateRef("deletionModal")
         <VTh class="text-center" sortKey="description">Mô tả</VTh>
         <VTh class="text-center" sortKey="origin">Xuất sứ</VTh>
         <VTh class="text-center" sortKey="branch">Nhãn hiệu</VTh>
+        <th>Thông số kĩ thuật</th>
         <th class="text-center">Hình ảnh</th>
       </tr>
     </template>

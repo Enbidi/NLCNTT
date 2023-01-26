@@ -10,9 +10,9 @@ const SpecsSchema = new Schema({
   chip: String,
   RAM: Number,
   diskSize: Number,
-  SIM: String,
+  SIMs: String,
   charging: String
-});
+}, { _id: false });
 
 const ProductSchema = new Schema({
   name: String,

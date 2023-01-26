@@ -132,10 +132,36 @@ exports.addProductPost = [
     body("branch", "Nhãn hiệu không hợp lệ")
       .isMongoId()
       .bail()
-      .custom(customBranchValidation)
+      .custom(customBranchValidation),
+    body(["screen", "os", "backCamera", "frontCamera", "chip", "sims", "charging"], "Thông số kĩ thuật không hợp lệ")
+      .not()
+      .isEmpty()
+      .escape(),
+    body(["ram", "diskSize"], "Thông số kĩ thuật không hợp lệ")
+      .isNumeric()
+      .toInt()
   ),
   (req, res) => {
-    const product = matchedData(req, { locations: ["body"] });
+    // const productData = matchedData(req, { locations: ["body"] });
+    const product = {
+      name: req.body.name,
+      price: req.body.price,
+      img: req.body.img,
+      description: req.body.description,
+      origin: req.body.origin,
+      branch: req.body.branch,
+      specs: {
+        screen: req.body.screen,
+        os: req.body.os,
+        frontCamera: req.body.frontCamera,
+        backCamera: req.body.backCamera,
+        chip: req.body.chip,
+        SIMs: req.body.sims,
+        charging: req.body.charging,
+        RAM: req.body.ram,
+        diskSize: req.body.diskSize
+      }      
+    }
     productService.createOne(product, (err, product) => {
       if (err) {
         return next(err);
@@ -173,12 +199,40 @@ exports.productPatch = [
       .optional()
       .isMongoId()
       .bail()
-      .custom(customBranchValidation)
+      .custom(customBranchValidation),
+    body(["screen", "os", "backCamera", "frontCamera", "chip", "sims", "charging"], "Thông số kĩ thuật không hợp lệ")
+      .optional()
+      .not()
+      .isEmpty()
+      .escape(),
+    body(["ram", "diskSize"], "Thông số kĩ thuật không hợp lệ")
+      .optional()
+      .isNumeric()
+      .toInt()
   ),
   (req, res) => {
-    const product = matchedData(req, {
-      locations: ["body"],
-    });
+    // const product = matchedData(req, {
+    //   locations: ["body"],
+    // });
+    const product = {
+      name: req.body.name,
+      price: req.body.price,
+      img: req.body.img,
+      description: req.body.description,
+      origin: req.body.origin,
+      branch: req.body.branch,
+      specs: {
+        screen: req.body.screen,
+        os: req.body.os,
+        frontCamera: req.body.frontCamera,
+        backCamera: req.body.backCamera,
+        chip: req.body.chip,
+        SIMs: req.body.sims,
+        charging: req.body.charging,
+        RAM: req.body.ram,
+        diskSize: req.body.diskSize
+      }      
+    }
     productService.updateOne(
       { _id: req.param.id },
       product,

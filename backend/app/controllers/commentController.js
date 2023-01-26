@@ -62,7 +62,7 @@ exports.addCommentPost = [
   ),
   (req, res, next) => {
     const comment = matchedData(req, { locations: ["body"] });
-    commentService.createOne(comment, (err, product) => {
+    commentService.createOne(comment, (err, comment) => {
       if (err) {
         return next(err);
       }

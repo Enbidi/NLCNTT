@@ -29,23 +29,28 @@ export default {
     this.comments = data.items
   },
   methods: {
-    addComment(newComment) {
+    async addComment(content) {
       if (!this.authStore.isAuthenticated) {
         return
       }
-      this.comments.push(newComment)
-      fetch("http://localhost:3000/user/comment/add", {
+      const response = await fetch("http://localhost:3000/user/comment/add", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          rating: 4,
-          content: newComment,
+          rating: this.ratingStars.value,
+          content,
           user: this.authStore.id,
           product: this.productId
         })
       })
+      if (!response.ok) {
+        return
+      }
+      const data = await response.json()
+      const comment = data.created
+      this.comments.unshift(comment)
     }
   },
   data() {
@@ -69,13 +74,39 @@ export default {
               Thêm bình luận
             </button>
           </div>
-          <Comment 
-            v-for="comment in comments"
-            :rating-stars="comment.rating"
-            avt="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(4).webp"
-            :content="comment.content" username="Martha" />
+          <TransitionGroup
+            enter-active-class="animate__animated animate__fadeInDown"
+            leave-active-class="animate__animated animate__fadeOutDown"
+            tag="div">
+            <Comment v-for="comment in comments" :rating-stars="comment.rating"
+              avt="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(4).webp"
+              :content="comment.content"
+              username="Martha" 
+              :key="comment._id"/>
+          </TransitionGroup>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+/* .fade-leave-active,
+.fade-enter-active,
+.fade-move {
+  transition: all .5s ease-in-out;
+} */
+
+.v-move {
+  transition: all .5s ease-in-out;
+}
+/* 
+.fade-leave-active {
+  position: absolute;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+} */
+</style>
