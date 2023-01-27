@@ -6,7 +6,6 @@ class CommentService extends BaseService {
   constructor(model) {
     super(model);
   }
-
   async findByContent(content, cb) {
     this.model.findByContent(content, cb);
   }

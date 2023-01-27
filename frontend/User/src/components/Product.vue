@@ -15,10 +15,6 @@ const hostname = inject("hostname")
 const productStore = useProductStore()
 const cartStore = useCartStore()
 
-cartStore.$subscribe((mutation, state) => {
-  localStorage.setItem("cart", JSON.stringify(state))
-}, { detached: true })
-
 productStore.data = props.product
 
 </script>

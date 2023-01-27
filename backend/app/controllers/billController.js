@@ -63,7 +63,7 @@ exports.addBillPost = [
       "details.*.quantity",
       "Số lượng của chi tiết hóa đơn không hợp lệ"
     ).isNumeric(),
-    body("details.*.note", "Mô tả không hợp lệ").optional().trim().escape(),
+    body("note", "Mô tả không hợp lệ").optional().trim().escape(),
     body("details.*.product", "Id sản phẩm không hợp lệ")
       .isMongoId()
       .bail()
@@ -72,14 +72,29 @@ exports.addBillPost = [
           throw new Error("Id sản phẩm không tồn tại");
         }
         return true;
-      })
+      }),
+    body("creditCard.cardType", "Loại thẻ không hợp lệ")
+      .not()
+      .isEmpty(),
+    body("creditCard.cardNumber", "Số thẻ không hợp lệ")
+      .isCreditCard(),
+    body("creditCard.cvv", "CVV không hợp lệ")
+      .not()
+      .isEmpty(),
+    body("creditCard.expiration", "Thời hạn không hợp lệ")
+      .isISO8601()
   ),
   async (req, res, next) => {
+    const creditCard = {
+      cardType: req.body.creditCard.cardType,
+      cardNumber: req.body.creditCard.cardNumber,
+      expiration: req.body.creditCard.expiration,
+      CVV: req.body.creditCard.cvv
+    };
     const bill = await billService.addOne({
-      sale: req.param.sale,
-      payment: {
-        method: "Trực tiếp",
-      },
+      sale: req.body.sale,
+      note: req.body.note,
+      creditCard
     });
     // Awaiting for all details to be saved,
     // otherwise bill's populating will receive
@@ -88,7 +103,6 @@ exports.addBillPost = [
       req.body.details.map((detail) =>
         billDetailService.save({
           quantity: detail.quantity,
-          note: detail.note,
           product: detail.product,
           bill: bill._id,
         })

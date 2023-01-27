@@ -8,6 +8,11 @@ import Cart from './components/Cart.vue';
 import ProductsView from './components/ProductsView.vue';
 import NavItem from './components/NavItem.vue';
 import Alert from './components/Alert.vue'
+import { useCartStore } from './stores/cart'
+const cartStore = useCartStore()
+cartStore.$subscribe((_, state) => {
+  localStorage.setItem("cart", JSON.stringify(state))
+}, { detached: true })
 </script>
 
 <template>

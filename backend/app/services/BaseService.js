@@ -66,8 +66,13 @@ class BaseService {
     }
     return await this.modal.findOne(filter).exec();
   }
-  async isExist(id) {
-    return await this.model.exists({ _id: id });
+  async isExist(filter) {
+    switch(typeof filter) {
+    case "string":
+      return await this.model.exists({ _id: filter });
+    case "object":
+      return await this.model.exists(filter);
+    }
   }
 }
 

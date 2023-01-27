@@ -1,9 +1,18 @@
 const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
-const { PaymentSchema } = require("./Payment");
 const { BillDetail } = require("./BillDetail");
 const { Product } = require("./Product");
+
+const CreditCardSchema = new Schema({
+  cardType: String,
+  cardNumber: {
+    type: String,
+    unique: true
+  },
+  CVV: String,
+  expiration: Date
+}, { _id: false });
 
 const BillSchema = new Schema(
   {
@@ -11,11 +20,12 @@ const BillSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Sale",
     },
-    payment: PaymentSchema,
+    creditCard: CreditCardSchema,
     user: {
       type: Schema.Types.ObjectId,
       ref: "User"
-    }
+    },
+    note: String
   },
   {
     timestamps: true,
@@ -101,7 +111,7 @@ BillSchema.statics.fetchDetailsWithTotal = function (filter, limit, cb) {
     },
     {
       $project: {
-        payment: "$payment.method",
+        creditCard: "$creditCard.cardType",
         details: 1,
         createdAt: 1,
         updatedAt: 1,

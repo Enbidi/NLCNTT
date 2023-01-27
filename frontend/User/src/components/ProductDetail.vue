@@ -1,17 +1,18 @@
 <script setup>
 import CommentContainer from './CommentContainer.vue'
 import RatingInput from './RatingInput.vue'
-import { inject, provide, ref } from 'vue'
+import { inject, provide, ref, watch } from 'vue'
 
 import { useProductStore } from '../stores/product'
 import { useCartStore } from '../stores/cart'
 import { useAuthStore } from '../stores/auth'
-defineProps(["test", "dummy"])
+
 const hostname = inject("hostname")
 const productStore = useProductStore()
 const cartStore = useCartStore()
 const authStore = useAuthStore()
 const rating = ref(0)
+const quantity = ref(1)
 provide('ratingStars', rating)
 authStore.fetchAuthInfo()
 </script>
@@ -35,11 +36,11 @@ authStore.fetchAuthInfo()
           {{ productStore.data.description }}
         </p>
         <div class="d-flex">
-          <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1"
+          <input class="form-control text-center me-3" type="num" v-model="quantity"
             style="max-width: 3rem" />
-          <button class="btn btn-outline-dark flex-shrink-0" type="button">
+          <button class="btn btn-outline-dark flex-shrink-0" type="button" @click="cartStore.addToCart(productStore.data, quantity)">
             <i class="bi-cart-fill me-1" @click="cartStore.addToCart(productStore.data)"></i>
-            Add to cart
+            Thêm vào giỏ hàng
           </button>
         </div>
       </div>
