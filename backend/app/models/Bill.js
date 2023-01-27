@@ -111,7 +111,7 @@ BillSchema.statics.fetchDetailsWithTotal = function (filter, limit, cb) {
     },
     {
       $project: {
-        creditCard: "$creditCard.cardType",
+        creditCard: 1,
         details: 1,
         createdAt: 1,
         updatedAt: 1,

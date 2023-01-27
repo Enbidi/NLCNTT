@@ -25,6 +25,10 @@ export default {
         console.log(err)
       }
       this.authStore.isAuthenticated = false
+    },
+    async search(keyword) {
+      const url = new URL("http://localhost:3000/product")
+      url.searchParams.append("keyword", keyword)
     }
   }
 }
@@ -75,7 +79,7 @@ export default {
         </ul>
       </div>
       <form class="d-flex input-group w-auto">
-        <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+        <input type="search" class="form-control rounded" placeholder="Tìm kiếm" aria-label="Search"
           aria-describedby="search-addon" />
         <span class="input-group-text border-0" id="search-addon">
           <i class="fas fa-search"></i>

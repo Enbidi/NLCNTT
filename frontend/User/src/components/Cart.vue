@@ -67,8 +67,8 @@ async function order() {
 
                   <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                      <p class="mb-1">Shopping cart</p>
-                      <p class="mb-0">You have 4 items in your cart</p>
+                      <p class="mb-1">Giỏ hàng</p>
+                      <p class="mb-0">Bạn có {{ cartStore.items.length }} trong giỏ hàng</p>
                     </div>
                     <div>
                       <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!" class="text-body">price <i

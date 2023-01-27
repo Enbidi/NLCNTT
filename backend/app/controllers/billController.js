@@ -73,28 +73,22 @@ exports.addBillPost = [
         }
         return true;
       }),
-    body("creditCard.cardType", "Loại thẻ không hợp lệ")
-      .not()
-      .isEmpty(),
-    body("creditCard.cardNumber", "Số thẻ không hợp lệ")
-      .isCreditCard(),
-    body("creditCard.cvv", "CVV không hợp lệ")
-      .not()
-      .isEmpty(),
-    body("creditCard.expiration", "Thời hạn không hợp lệ")
-      .isISO8601()
+    body("creditCard.cardType", "Loại thẻ không hợp lệ").not().isEmpty(),
+    body("creditCard.cardNumber", "Số thẻ không hợp lệ").isCreditCard(),
+    body("creditCard.cvv", "CVV không hợp lệ").not().isEmpty(),
+    body("creditCard.expiration", "Thời hạn không hợp lệ").isISO8601()
   ),
   async (req, res, next) => {
     const creditCard = {
       cardType: req.body.creditCard.cardType,
       cardNumber: req.body.creditCard.cardNumber,
       expiration: req.body.creditCard.expiration,
-      CVV: req.body.creditCard.cvv
+      CVV: req.body.creditCard.cvv,
     };
     const bill = await billService.addOne({
       sale: req.body.sale,
       note: req.body.note,
-      creditCard
+      creditCard,
     });
     // Awaiting for all details to be saved,
     // otherwise bill's populating will receive
@@ -138,11 +132,10 @@ exports.billPatch = [
         }
         return true;
       }),
-    body("payment.method", "Phương thức thanh toán không hợp lệ")
-      .optional()
-      .trim()
-      .isLength({ min: 1 })
-      .escape()
+    body("creditCard.cardType", "Loại thẻ không hợp lệ").not().isEmpty(),
+    body("creditCard.cardNumber", "Số thẻ không hợp lệ").isCreditCard(),
+    body("creditCard.cvv", "CVV không hợp lệ").not().isEmpty(),
+    body("creditCard.expiration", "Thời hạn không hợp lệ").isISO8601()
   ),
   sequentialValidate(
     body("details", "Thông tin chi tiết hóa đơn không hợp lệ")
@@ -152,24 +145,23 @@ exports.billPatch = [
     body("details.*._id", "Id chi tiết hóa đơn không hợp lệ")
       .optional()
       .isMongoId(),
-    body("details.*")
-      .custom(async detail => {
-        if (detail._id) {
-          if (!detail.quantity || !detail.product || !detail.bill) {
-            throw new Error("Không đủ thông tin để tạo chi tiết hóa đơn");
-          }
+    body("details.*").custom(async (detail) => {
+      if (detail._id) {
+        if (!detail.quantity || !detail.product || !detail.bill) {
+          throw new Error("Không đủ thông tin để tạo chi tiết hóa đơn");
         }
-        if (isNaN(detail.quantity)) {
-          throw new Error("Số lượng không hợp lệ");
-        }
-        if (!(await productService.isExist(detail.product))) {
-          throw new Error("Id sản phẩm không tồn tại");
-        }
-        if (!(await billService.isExist(detail.bill))) {
-          throw new Error("Id hóa đơn không tồn tại");
-        }
-        return true;
-      })
+      }
+      if (isNaN(detail.quantity)) {
+        throw new Error("Số lượng không hợp lệ");
+      }
+      if (!(await productService.isExist(detail.product))) {
+        throw new Error("Id sản phẩm không tồn tại");
+      }
+      if (!(await billService.isExist(detail.bill))) {
+        throw new Error("Id hóa đơn không tồn tại");
+      }
+      return true;
+    })
   ),
   // parallelValidate(
   //   body("details.*.quantity", "Số lượng của chi tiết hóa đơn không hợp lệ")
@@ -202,8 +194,8 @@ exports.billPatch = [
     await Promise.all(
       bill.details.map((detail) =>
         detail._id
-        ? billDetailService.update({ _id: id }, detail)
-        : billDetailService.createOne(detail)
+          ? billDetailService.update({ _id: id }, detail)
+          : billDetailService.createOne(detail)
       )
     );
     const billInfo = Object.fromEntries(

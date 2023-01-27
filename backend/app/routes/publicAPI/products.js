@@ -8,5 +8,6 @@ router.get("/:id", productController.productGetById);
 
 router.get("/:id/comment", productController.getComments);
 
+router.get("/find", productController.findProductByNameGet);
 
 module.exports = router;

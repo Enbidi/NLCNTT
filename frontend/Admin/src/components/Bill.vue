@@ -125,7 +125,7 @@ export default {
         <VTh class="align-middle" rowspan="2" sortKey="_id">#</VTh>
         <VTh class="align-middle" rowspan="2" sortKey="createdAt">Ngày tạo</VTh>
         <VTh class="align-middle" rowspan="2" sortKey="updatedAt">Ngày cập nhật</VTh>
-        <VTh class="align-middle" rowspan="2" sortKey="payment">Phương thức thanh toán</VTh>
+        <VTh class="align-middle" rowspan="2" sortKey="payment">PTTT(Credit Card/Trực tiếp)</VTh>
         <VTh class="align-middle" rowspan="2" sortKey="updatedAt">Tổng phải trả</VTh>
         <th class="text-center" colspan="3">Chi tiết hóa đơn</th>
       </tr>
@@ -141,7 +141,14 @@ export default {
           <td class="align-middle" :rowspan="row.details.length + 1">{{ row._id }}</td>
           <td class="align-middle" :rowspan="row.details.length + 1">{{ row.createdAt }}</td>
           <td class="align-middle" :rowspan="row.details.length + 1">{{ row.updatedAt }}</td>
-          <td class="align-middle" :rowspan="row.details.length + 1">{{ row.payment }}</td>
+          <td class="align-middle" :rowspan="row.details.length + 1">
+            <template v-if="row.creditCard">
+              <p><strong>Loại thẻ: </strong>{{ row.creditCard.cardType }}</p>
+              <p><strong>Số thẻ: </strong>{{ row.creditCard.cardNumber }}</p>
+              <p><strong>CVV: </strong>{{ row.creditCard.CVV }}</p>
+              <p><strong>Ngày hết hạn: </strong>{{ row.creditCard.expiration }}</p>
+            </template>
+          </td>
           <td class="align-middle" :rowspan="row.details.length + 1">{{ row.total }}</td>
         </VTr>
         <VTr v-for="(detail, index) in row.details" :row="row">

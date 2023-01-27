@@ -83,7 +83,7 @@ exports.productsGet = [
 
 exports.productGetById = [
   validateProductParam,
-  (req, res) => {
+  (req, res, next) => {
     productService.findOne({ _id: req.params.id }, (err, product) => {
       if (err) {
         return next(err);
@@ -270,7 +270,8 @@ exports.findProductByNameGet = [
       .isLength({ min: 1 })
       .escape()
   ),
-  (req, res) => {
+  (req, res, next) => {
+    console.log("OK")
     productService.findProductByName(req.query.keyword, (err, products) => {
       if (err) {
         return next(err);
