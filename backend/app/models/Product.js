@@ -36,7 +36,7 @@ ProductSchema.statics.findProductByName = function(name, cb) {
     name: {
       $regex: `.*${name}.*`
     }
-  }).then(cb);
+  }, cb);
 }
 
 ProductSchema.virtual("includedInBillDetails", {

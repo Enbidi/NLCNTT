@@ -14,6 +14,19 @@ class BillService extends BaseService {
       .exec(cb)
   }
 
+  async getBillsAndDetailsOfUser(userId, cb) {
+    var filter = { _id: userId }
+    if (cb) {
+      this.model.findOne(filter)
+        .populate("details")
+        .exec(cb);
+      return;
+    }
+    return await this.model.findOne(filter)
+      .populate("details")
+      .exec();
+  }
+
   populateDetailsWithTotal(filter, limit, cb) {
     Bill.fetchDetailsWithTotal(filter, limit, cb);
   }

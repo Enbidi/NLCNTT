@@ -12,6 +12,8 @@ const {
   matchedData,
 } = require("express-validator");
 
+const userService = require("../services/UserService");
+
 function getValidationChains(optionals) {
   const chains = [];
   chains.push(header("Content-Type").isIn(["application/json"]));
@@ -220,3 +222,12 @@ exports.findUserByNameGet = [
     });
   },
 ];
+
+exports.userBilslHistory = (req, res, next) => {
+  userService.fetchBills({ _id: req.user._id }, (err, userWithBills) => {
+    if (err) {
+      return next(err);
+    }
+    res.status(200).json(userWithBills);
+  })
+}

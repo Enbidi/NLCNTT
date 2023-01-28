@@ -242,3 +242,14 @@ exports.billDelete = [
     });
   },
 ];
+
+exports.getBillHistory = (req, res, next) => {
+  billService.getBillsAndDetailsOfUser(req.user._id, (err, bills) => {
+    if (err) {
+      return next(err);
+    }
+    res.status(200).json({
+      items: bills
+    });
+  })
+}

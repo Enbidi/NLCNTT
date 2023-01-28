@@ -289,6 +289,9 @@ const deletionModal = useTemplateRef("deletionModal")
         <td>{{ row.description }}</td>
         <td>{{ row.origin?.country }}</td>
         <td>{{ row.branch?.name }}</td>
+        <td>
+          <p>{{ row }}</p>
+        </td>
         <td class="text-center">
           <img :src="hostname + row.img" crossorigin="anonymous" class="img-fluid" style="width: 50px; height: 50px;">
         </td>

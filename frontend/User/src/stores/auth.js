@@ -6,7 +6,9 @@ export const useAuthStore = defineStore("auth", {
     id: '',
     firstname: '',
     lastname: '',
-    email: ''
+    email: '',
+    number: '',
+    sex: ''
    }),
   actions: {
     async fetchAuthInfo() {
@@ -23,6 +25,8 @@ export const useAuthStore = defineStore("auth", {
       this.firstname = data.item.firstname
       this.lastname = data.item.lastname
       this.email = data.item.email
+      this.number = data.item.number
+      this.sex = data.item.sex
     }
   }
 })

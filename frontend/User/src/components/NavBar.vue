@@ -3,6 +3,7 @@ import NavItem from './NavItem.vue'
 import DropDown from './DropDown.vue'
 import DropDownItem from './DropDownItem.vue'
 import { useAuthStore } from '../stores/auth'
+import { useSearchResultStore } from '../stores/searchResult'
 
 export default {
   components: {
@@ -12,9 +13,11 @@ export default {
   },
   setup() {
     const authStore = useAuthStore()
+    const searchResultStore = useSearchResultStore()
     authStore.fetchAuthInfo()
     return {
-      authStore
+      authStore,
+      searchResultStore
     }
   },
   methods: {
@@ -25,10 +28,11 @@ export default {
         console.log(err)
       }
       this.authStore.isAuthenticated = false
-    },
-    async search(keyword) {
-      const url = new URL("http://localhost:3000/product")
-      url.searchParams.append("keyword", keyword)
+    }
+  },
+  data() {
+    return {
+      searchString: ''
     }
   }
 }
@@ -56,7 +60,9 @@ export default {
           <template v-if="authStore.isAuthenticated">
             <DropDown :btn-name="'Xin chào, ' + authStore.lastname">
               <DropDownItem>
-                Cài đặt
+                <NavItem path="/userprofile">
+                  Thông tin người dùng
+                </NavItem>
               </DropDownItem>
               <DropDownItem>
                 Lịch sử mua hàng
@@ -80,9 +86,10 @@ export default {
       </div>
       <form class="d-flex input-group w-auto">
         <input type="search" class="form-control rounded" placeholder="Tìm kiếm" aria-label="Search"
-          aria-describedby="search-addon" />
+          aria-describedby="search-addon" v-model.lazy="searchString" />
         <span class="input-group-text border-0" id="search-addon">
-          <i class="fas fa-search"></i>
+          <i class="fas fa-search cursor-pointer" style="cursor: pointer"
+            @click="searchResultStore.search(searchString)"></i>
         </span>
       </form>
     </div>

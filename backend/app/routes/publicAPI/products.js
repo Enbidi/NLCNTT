@@ -4,7 +4,7 @@ const productController = require("../../controllers/productController");
 
 router.get("/", productController.productsGet);
 
-router.get("/:id", productController.productGetById);
+router.get("/:id(^[0-9a-fA-F]{24}$)", productController.productGetById);
 
 router.get("/:id/comment", productController.getComments);
 

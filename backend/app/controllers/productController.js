@@ -271,13 +271,13 @@ exports.findProductByNameGet = [
       .escape()
   ),
   (req, res, next) => {
-    console.log("OK")
     productService.findProductByName(req.query.keyword, (err, products) => {
       if (err) {
         return next(err);
       }
       res.status(200).json({
-        products,
+        items: products,
+        keyword: req.query.keyword
       });
     });
   },

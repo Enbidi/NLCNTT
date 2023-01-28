@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 const routes = [
   { 
     path: "/product",
-    component: () => import("./components/ProductsView.vue"),
+    component: () => import("./components/ProductPage.vue"),
     name: "product"
   },
   { 
@@ -26,6 +26,10 @@ const routes = [
     path: "/signup",
     name: "signup",
     component: () => import("./components/SignUp.vue")
+  },
+  {
+    path: "/userprofile",
+    component: () => import('./components/UserProfile.vue')
   }
 ];
 

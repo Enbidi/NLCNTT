@@ -45,12 +45,19 @@ UserSchema.statics.findUserByFullname = function(fullname, cb) {
   ]).project("firstname lastname email number sex").then(cb);
 }
 
+UserSchema.virtual("bills", {
+  ref: "Bill",
+  localField: "_id",
+  foreignField: "user"
+}, { 
+  toJSON: { virtuals: true }
+});
 
 UserSchema.plugin(passportLocalMongoose, {
   usernameUnique: false,
   usernameQueryFields: ["email"],
   usernameField: "email",
-  selectFields: "firstname lastname email"
+  selectFields: "firstname lastname email number sex"
 });
 
 const User = mongoose.model("User", UserSchema);
