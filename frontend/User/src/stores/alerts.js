@@ -6,8 +6,14 @@ export const useAlertsStore = defineStore("alerts", {
     remove(alert) {
       this.items = this.items.filter(item => item.content != alert.content)
     },
-    push(alert) {
-      this.items.push(alert)
+    push(alert, type='warning') {
+      switch(typeof alert) {
+      case 'object':
+        this.items.push(alert)
+        break
+      case 'string':
+        this.items.push({ content: alert, type })
+      }
     },
     clear() {
       this.items = []

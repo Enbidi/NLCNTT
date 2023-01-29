@@ -223,11 +223,11 @@ exports.findUserByNameGet = [
   },
 ];
 
-exports.userBilslHistory = (req, res, next) => {
-  userService.fetchBills({ _id: req.user._id }, (err, userWithBills) => {
-    if (err) {
-      return next(err);
-    }
-    res.status(200).json(userWithBills);
-  })
-}
+// exports.userBilslHistory = (req, res, next) => {
+//   userService.fetchBills({ _id: req.user._id }, (err, userWithBills) => {
+//     if (err) {
+//       return next(err);
+//     }
+//     res.status(200).json(userWithBills);
+//   })
+// }

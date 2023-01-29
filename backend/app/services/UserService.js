@@ -13,16 +13,6 @@ class UserService extends BaseService {
     await this.model.findOne({ email }).exec();
   }
 
-  async fetchBills(filter, cb) {
-    if (cb) {
-      this.model.find(filter)
-        .populate("bills")
-        .exec(cb);
-      return;
-    }
-    return await this.model.find(filter).exec();
-  }
-
   // async deleteOne(id, cb) {
   //   super.deleteOne(id).then(cb);
   // }

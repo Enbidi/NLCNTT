@@ -3,7 +3,10 @@ const passportLocalMongoose = require("passport-local-mongoose");
 
 const { Schema } = mongoose;
 
-const options = { discriminatorKey: "role" };
+const options = { 
+  discriminatorKey: "role",
+  toJSON: { virtuals: true }
+};
 
 const UserSchema = new Schema({
   firstname: String,
@@ -49,8 +52,6 @@ UserSchema.virtual("bills", {
   ref: "Bill",
   localField: "_id",
   foreignField: "user"
-}, { 
-  toJSON: { virtuals: true }
 });
 
 UserSchema.plugin(passportLocalMongoose, {

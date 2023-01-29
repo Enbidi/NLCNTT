@@ -1,11 +1,13 @@
 <script>
 import { useAuthStore } from '../stores/auth'
 import { useAlertsStore } from '../stores/alerts'
+import { wait } from '../utils'
 export default {
+  inject: ['isLoading'],
   setup() {
     const authStore = useAuthStore()
     const alertsStore = useAlertsStore()
-    authStore.$subscribe((mutation, state) => {
+    authStore.$subscribe((_, state) => {
       localStorage.setItem('isSignedIn', state.isAuthenticated)
     }, { detached: true })
     return { authStore, alertsStore }
@@ -19,16 +21,18 @@ export default {
   },
   methods: {
     async loginAPI(event) {
-      let form = event.target
-      let formData = new FormData(form)
-      let formDataJSON = JSON.stringify(Object.fromEntries(formData.entries()))
-      let response = await fetch('http://localhost:3000/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: formDataJSON
-      })
+      this.isLoading = true
+      var form = event.target
+      var formData = new FormData(form)
+      var formDataJSON = JSON.stringify(Object.fromEntries(formData.entries()))
+      var [response, _] = await Promise.all([fetch('http://localhost:3000/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: formDataJSON
+        }), wait(700)])
+      this.isLoading = false
       if (!response.ok) {
         this.alertsStore.push(
           response.status == 401

@@ -1,4 +1,5 @@
 <script setup>
+import { ref, provide } from 'vue'
 import Login from './components/Login.vue';
 import NavBar from './components/NavBar.vue';
 import Product from './components/Product.vue';
@@ -7,15 +8,19 @@ import Branches from './components/Branches.vue';
 import Cart from './components/Cart.vue';
 import ProductsView from './components/ProductsView.vue';
 import NavItem from './components/NavItem.vue';
+import LoadingScreen from './components/LoadingScreen.vue';
 import Alert from './components/Alert.vue'
 import { useCartStore } from './stores/cart'
 const cartStore = useCartStore()
+const isLoading = ref(false)
+provide('isLoading', isLoading)
 cartStore.$subscribe((_, state) => {
   localStorage.setItem("cart", JSON.stringify(state))
 }, { detached: true })
 </script>
 
 <template>
+  <LoadingScreen v-if="isLoading"/>
   <NavBar />
   <router-view v-slot="{ Component }">
     <transition name="fade" mode="out-in">

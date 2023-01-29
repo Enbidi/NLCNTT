@@ -87,7 +87,7 @@ async function order() {
 
                   <!-- <CartItem img-src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img3.webp" name="Canon EOS M50" description="Onyx Black"/> -->
 
-                  <div class="card mb-3 mb-lg-0">
+                  <!-- <div class="card mb-3 mb-lg-0">
                     <div class="card-body">
                       <div class="d-flex justify-content-between">
                         <div class="d-flex flex-row align-items-center">
@@ -112,7 +112,7 @@ async function order() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
 
                 <!-- Pills navs -->

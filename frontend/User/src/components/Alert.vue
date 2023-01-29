@@ -1,6 +1,10 @@
 <script setup>
+import { onMounted } from 'vue'
 import { useAlertsStore } from '../stores/alerts'
 const alertsStore = useAlertsStore()
+onMounted(() => {
+  setTimeout(() => alertsStore.items = [], 10000)
+})
 </script>
 
 <template>

@@ -86,6 +86,7 @@ exports.addBillPost = [
       CVV: req.body.creditCard.cvv,
     };
     const bill = await billService.addOne({
+      user: req.user._id,
       sale: req.body.sale,
       note: req.body.note,
       creditCard,
@@ -244,7 +245,7 @@ exports.billDelete = [
 ];
 
 exports.getBillHistory = (req, res, next) => {
-  billService.getBillsAndDetailsOfUser(req.user._id, (err, bills) => {
+  billService.fetchBillsFromUser(req.user._id, (err, bills) => {
     if (err) {
       return next(err);
     }

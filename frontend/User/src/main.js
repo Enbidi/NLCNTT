@@ -19,6 +19,7 @@ import 'animate.css'
 // })
 const pinia = createPinia()
 const app = createApp(App)
+app.config.unwrapInjectedRef = true
 app.use(router)
 app.use(pinia)
 app.provide("hostname", "http://localhost:3000")

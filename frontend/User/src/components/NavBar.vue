@@ -2,6 +2,8 @@
 import NavItem from './NavItem.vue'
 import DropDown from './DropDown.vue'
 import DropDownItem from './DropDownItem.vue'
+import BillHistory from './BillHistory.vue'
+import ModalTriggerButton from './ModalTriggerButton.vue'
 import { useAuthStore } from '../stores/auth'
 import { useSearchResultStore } from '../stores/searchResult'
 
@@ -9,7 +11,9 @@ export default {
   components: {
     NavItem,
     DropDown,
-    DropDownItem
+    DropDownItem,
+    BillHistory,
+    ModalTriggerButton
   },
   setup() {
     const authStore = useAuthStore()
@@ -65,7 +69,11 @@ export default {
                 </NavItem>
               </DropDownItem>
               <DropDownItem>
-                Lịch sử mua hàng
+                  <a class="nav-link text-primary" data-mdb-toggle="modal" data-mdb-target="#billHistoryModal">
+                    Lịch sử mua hàng
+                  </a>
+                <!-- <ModalTriggerButton target="billHistoryModal" content="Lịch sử mua hàng"/> -->
+                <BillHistory />
               </DropDownItem>
               <template #footer>
                 <DropDownItem @click="logout()">
