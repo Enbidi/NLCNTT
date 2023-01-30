@@ -23,6 +23,13 @@ class BaseService {
     return await this.model.findOneAndRemove(filter)
       .exec();
   }
+  async removeMany(filter, cb) {
+    if (cb !== undefined) {
+      this.model.deleteMany(filter, cb);
+      return;
+    }
+    return await this.model.deleteMany(filter).exec();
+  }
   async createOne(obj, cb) {
     if (cb !== undefined) {
       this.model.create(obj, cb);

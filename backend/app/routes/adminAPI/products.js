@@ -31,6 +31,8 @@ router.get("/", productController.productsGet);
 
 router.post("/add", productController.addProductPost);
 
+router.delete("/delete", productController.deleteProducts);
+
 router.patch("/:id/update", productController.productPatch);
 
 router.delete("/:id/delete", productController.productDelete);

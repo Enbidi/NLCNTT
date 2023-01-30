@@ -1,16 +1,18 @@
-<script setup>
-import LoadingScreen from './LoadingScreen.vue'
-
-defineProps(['apiUrl', 'deletionModal', 'updationModal', 'fetchedData'])
-</script>
-
 <script>
+import LoadingScreen from './LoadingScreen.vue'
+import { useAlertsStore } from '../stores/alerts'
+
 export default {
-  // created() {
-  //   fetch(this.$props.apiUrl)
-  //     .then(response => response.json())
-  //     .then(data => this.fetchedData = data)
-  // },
+  components: {
+    LoadingScreen
+  },
+  props: ['apiUrl', 'deletionModal', 'updationModal', 'fetchedData'],
+  setup() {
+    var alertsStore = useAlertsStore()
+    return {
+      alertsStore
+    }
+  },
   mounted() {
     this.$el.querySelectorAll('.form-outline').forEach(
       formOutline => {
@@ -32,9 +34,14 @@ export default {
       // to see
       const [res, _] = await Promise.all([fetch(url, payload), this._wait(700)])
       this.isLoading = false
+      var data = await res.json()
       if (!res.ok) {
-        let err = JSON.parse(await res.text())
-        this.errors = err.errors
+        data.errors.forEach(error => {
+          this.alertsStore.push({
+            content: error.msg,
+            type: 'danger'
+          })
+        })
         return
       }
       this.errors = []
@@ -95,6 +102,38 @@ export default {
     },
     selectItem(item) {
       this.selectedItem = item
+    },
+    async deleteSelectedItems() {
+      var body = { ids: this.selectedRows.map(row => row._id) }
+      var response = await fetch('http://localhost:3000/admin/product/delete', {
+        method: "DELETE",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      })
+      var data = await response.json()
+      if (!response.ok) {
+        data.errors?.forEach(error => {
+          this.alertsStore.push({
+            content: error.msg,
+            type: 'danger'
+          })
+        })
+        return
+      }
+      this.alertsStore.push({
+        content: 'Xóa thành công',
+        type: 'success'
+      })
+    },
+    updateSelectedItem() {
+      if (this.selectedRows.length > 1) {
+        this.alertsStore.push('Không thể sửa nhiều hơn 1 sản phẩm')
+        return
+      }
+      this.selectedItem = this.selectedRows[0]
+      this.updationModal.show()
     }
   },
   data() {
@@ -131,6 +170,8 @@ export default {
           <div class="col-md-10">
             <button class="btn btn-primary me-2" @click="$refs.table.selectAll()">Chọn tất cả</button>
             <button class="btn btn-primary me-2" @click="$refs.table.deselectAll()">Hủy chọn tất cả</button>
+            <button class="btn btn-warning me-2" @click="updateSelectedItem()">Sửa sản phẩm đang chọn</button>
+            <button class="btn btn-danger me-2" @click="deleteSelectedItems()">Xóa sản phẩm đang chọn</button>
             <slot name="modalTriggerButtons" />
             <slot name="additionModal" v-bind="{ addHandler, errors }" />
             <slot name="updationModal" v-bind="{ updateHandler, errors, selectedItem }" />

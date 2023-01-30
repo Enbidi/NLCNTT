@@ -1,5 +1,5 @@
 <script setup>
-import { inject } from 'vue'
+import { inject, watch } from 'vue'
 
 import CommonActions from './CommonActions.vue'
 import Modal from './Modal.vue'
@@ -15,6 +15,7 @@ import { useProductsStore } from '../stores/products'
 const productsStore = useProductsStore()
 const originsStore = useOriginsStore()
 const branchesStore = useBranchesStore()
+
 productsStore.fetchProducts()
 originsStore.fetchOrigins()
 branchesStore.fetchBranches()
@@ -26,8 +27,10 @@ const deletionModal = useTemplateRef("deletionModal")
 // const branchData = useFetch(`${hostname}/admin/branch`)
 </script>
 
+
 <template>
-  <CommonActions :api-url="`${hostname}/admin/product`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="productsStore">
+  <CommonActions :api-url="`${hostname}/admin/product`" :deletion-modal="deletionModal" :updation-modal="updationModal"
+    :fetched-data="productsStore">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addProductModal">
         Thêm sản phẩm
@@ -56,12 +59,12 @@ const deletionModal = useTemplateRef("deletionModal")
               <input type="text" id="addProductScreenInput" class="form-control" name="screen" />
               <label class="form-label" for="addProductScreenInput">Màn hình</label>
             </div>
-            
+
             <div class="form-outline mb-4">
               <input type="text" id="addProductOSInput" class="form-control" name="os" />
               <label class="form-label" for="addProductOSInput">Hệ điều hành</label>
             </div>
-            
+
             <div class="form-outline mb-4">
               <input type="text" id="addProductBackCamInput" class="form-control" name="backCamera" />
               <label class="form-label" for="addProductBackCamInput">Camera sau</label>
@@ -104,18 +107,14 @@ const deletionModal = useTemplateRef("deletionModal")
 
             <select class="form-select mb-4" aria-label="Chọn xuất sứ" name="origin">
               <option selected>Chọn xuất sứ cho sản phẩm</option>
-              <option v-for="origin in originsStore.items"
-                :value="origin._id"
-                :key="origin._id">
+              <option v-for="origin in originsStore.items" :value="origin._id" :key="origin._id">
                 {{ origin.country }}
               </option>
             </select>
 
             <select class="form-select mb-4" aria-label="Chọn nhãn hiệu" name="branch">
               <option selected>Chọn nhãn hiệu cho sản phẩm</option>
-              <option v-for="branch in branchesStore.items"
-                :key="branch._id"
-                :value="branch._id">
+              <option v-for="branch in branchesStore.items" :key="branch._id" :value="branch._id">
                 {{ branch.name }}
               </option>
             </select>
@@ -162,47 +161,55 @@ const deletionModal = useTemplateRef("deletionModal")
             </div>
 
             <div class="form-outline mb-4">
-              <input type="text" id="updateProductScreenInput" class="form-control" name="screen" />
+              <input type="text" id="updateProductScreenInput" class="form-control" name="screen"
+                :value="selectedItem?.specs?.screen" />
               <label class="form-label" for="updateProductScreenInput">Màn hình</label>
             </div>
-            
+
             <div class="form-outline mb-4">
-              <input type="text" id="updateProductOSInput" class="form-control" name="os" />
+              <input type="text" id="updateProductOSInput" class="form-control" name="os" :value="selectedItem?.specs?.os" />
               <label class="form-label" for="updateProductOSInput">Hệ điều hành</label>
             </div>
-            
+
             <div class="form-outline mb-4">
-              <input type="text" id="updateProductBackCamInput" class="form-control" name="backCamera" />
+              <input type="text" id="updateProductBackCamInput" class="form-control" name="backCamera"
+                :value="selectedItem?.specs?.backCamera" />
               <label class="form-label" for="updateProductBackCamInput">Camera sau</label>
             </div>
 
             <div class="form-outline mb-4">
-              <input type="text" id="updateProductFrontCamInput" class="form-control" name="frontCamera" />
+              <input type="text" id="updateProductFrontCamInput" class="form-control" name="frontCamera"
+                :value="selectedItem?.specs?.frontCamera" />
               <label class="form-label" for="updateProductFrontCamInput">Camera trước</label>
             </div>
 
             <div class="form-outline mb-4">
-              <input type="text" id="updateProductChipInput" class="form-control" name="chip" />
+              <input type="text" id="updateProductChipInput" class="form-control" name="chip"
+                :value="selectedItem?.specs?.chip" />
               <label class="form-label" for="updateProductChipInput">Chip</label>
             </div>
 
             <div class="form-outline mb-4">
-              <input type="number" id="updateProductRAMInput" class="form-control" name="ram" />
+              <input type="number" id="updateProductRAMInput" class="form-control" name="ram"
+                :value="selectedItem?.specs?.RAM" />
               <label class="form-label" for="updateProductRAMInput">RAM</label>
             </div>
 
             <div class="form-outline mb-4">
-              <input type="number" id="updateProductDiskInput" class="form-control" name="diskSize" />
+              <input type="number" id="updateProductDiskInput" class="form-control" name="diskSize"
+                :value="selectedItem?.specs?.diskSize" />
               <label class="form-label" for="updateProductDiskInput">Dung lượng bộ nhớ</label>
             </div>
 
             <div class="form-outline mb-4">
-              <input type="text" id="updateProductSIMsInput" class="form-control" name="sims" />
+              <input type="text" id="updateProductSIMsInput" class="form-control" name="sims"
+                :value="selectedItem?.specs?.SIMs" />
               <label class="form-label" for="updateProductSIMsInput">Số SIM</label>
             </div>
 
             <div class="form-outline mb-4">
-              <input type="text" id="updateProductCharingInput" class="form-control" name="charging" />
+              <input type="text" id="updateProductCharingInput" class="form-control" name="charging"
+                :value="selectedItem?.specs?.charging" />
               <label class="form-label" for="updateProductCharingInput">Bin</label>
             </div>
 
@@ -282,28 +289,89 @@ const deletionModal = useTemplateRef("deletionModal")
       </tr>
     </template>
     <template #tableColumnDatas="{ rows, selectItem }">
-      <VTr v-for="row in rows" :key="row._id" :row="row" v-slot="{ isSelected, toggle }">
-        <td>{{ row._id }}</td>
-        <td>{{ row.name }}</td>
-        <td>{{ row.price }}</td>
-        <td>{{ row.description }}</td>
-        <td>{{ row.origin?.country }}</td>
-        <td>{{ row.branch?.name }}</td>
-        <td>
-          <p>{{ row }}</p>
-        </td>
-        <td class="text-center">
-          <img :src="hostname + row.img" crossorigin="anonymous" class="img-fluid" style="width: 50px; height: 50px;">
-        </td>
-        <td>
-          <ModalTriggerButton target="updateProductModal" class="me-2 btn btn-warning" @click="selectItem(row)">
-            Sửa
-          </ModalTriggerButton>
-          <ModalTriggerButton target="deleteProductModal" class="btn btn-danger" @click="selectItem(row)">
-            Xóa
-          </ModalTriggerButton>
-        </td>
-      </VTr>
+      <template v-for="row in rows" :key="row._id">
+        <VTr :row="row" v-slot="{ isSelected, toggle }">
+          <td :rowspan="row.specs ? 10 : 1" class="align-middle">{{ row._id }}</td>
+          <td :rowspan="row.specs ? 10 : 1" class="align-middle">{{ row.name }}</td>
+          <td :rowspan="row.specs ? 10 : 1" class="align-middle">{{ row.price }}</td>
+          <td :rowspan="row.specs ? 10 : 1" class="align-middle">{{ row.description }}</td>
+          <td :rowspan="row.specs ? 10 : 1" class="align-middle">{{ row.origin?.country }}</td>
+          <td :rowspan="row.specs ? 10 : 1" class="align-middle">{{ row.branch?.name }}</td>
+
+          <template v-if="!row.specs">
+            <td></td>
+            <td class="text-center">
+              <img :src="hostname + row.img" crossorigin="anonymous" class="img-fluid"
+                style="width: 50px; height: 50px;">
+            </td>
+            <td>
+              <ModalTriggerButton target="updateProductModal" class="me-2 btn btn-warning" @click="selectItem(row)">
+                Sửa
+              </ModalTriggerButton>
+              <ModalTriggerButton target="deleteProductModal" class="btn btn-danger" @click="selectItem(row)">
+                Xóa
+              </ModalTriggerButton>
+            </td>
+          </template>
+        </VTr>
+        <template v-if="row.specs">
+          <VTr :row="row">
+            <td>Màn hình: {{ row.specs.screen }}</td>
+            <td rowspan="10" class="text-center align-middle">
+              <img :src="hostname + row.img" crossorigin="anonymous" class="img-fluid"
+                style="width: 50px; height: 50px;">
+            </td>
+            <td rowspan="10" class="align-middle">
+              <ModalTriggerButton target="updateProductModal" class="me-2 btn btn-warning" @click="selectItem(row)">
+                Sửa
+              </ModalTriggerButton>
+              <ModalTriggerButton target="deleteProductModal" class="btn btn-danger" @click="selectItem(row)">
+                Xóa
+              </ModalTriggerButton>
+            </td>
+          </VTr>
+          <VTr :row="row">
+            <td>
+              Hệ điều hành: {{ row.specs.os }}
+            </td>
+          </VTr>
+          <VTr :row="row">
+            <td>
+              Camera sau: {{ row.specs.backCamera }}
+            </td>
+          </VTr>
+          <VTr :row="row">
+            <td>
+              Camera trước: {{ row.specs.frontCamera }}
+            </td>
+          </VTr>
+          <VTr :row="row">
+            <td>
+              Chip: {{ row.specs.chip }}
+            </td>
+          </VTr>
+          <VTr :row="row">
+            <td>
+              Ram: {{ row.specs.ram }}
+            </td>
+          </VTr>
+          <VTr :row="row">
+            <td>
+              Dung lượng đĩa: {{ row.specs.diskSize }}
+            </td>
+          </VTr>
+          <VTr :row="row">
+            <td>
+              Số sim: {{ row.specs.SIMs }}
+            </td>
+          </VTr>
+          <VTr :row="row">
+            <td>
+              Sạc: {{ row.specs.charging }}
+            </td>
+          </VTr>
+        </template>
+      </template>
     </template>
   </CommonActions>
 </template>

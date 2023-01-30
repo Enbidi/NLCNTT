@@ -27,7 +27,7 @@ const upload = multer({
   storage,
 });
 
-const { parallelValidate } = require("../validate");
+const { parallelValidate, sequentialValidate } = require("../validate");
 
 const {
   body,
@@ -40,6 +40,7 @@ const {
 const productService = require("../services/ProductService");
 const originService = require("../services/OriginService");
 const branchService = require("../services/BranchService");
+const { default: mongoose } = require("mongoose");
 
 const validateProductParam = param("id", "ID sản phẩm không hợp lệ")
   .isMongoId()
@@ -262,6 +263,35 @@ exports.productDelete = [
     });
   },
 ];
+
+exports.deleteProducts = [
+  sequentialValidate(
+    body("ids", "Sản phẩm muốn xóa không được trống")
+      .isArray()
+      .not()
+      .isEmpty()
+      .custom(ids => {
+        for (let id of ids) {
+          if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error("Id không hợp lệ");
+          }
+        }
+        return true;
+      })
+  ),
+  (req, res) => {
+    var ids = req.body.ids;
+    productService.removeMany({ _id: ids }, (err, deletedProducts) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200)
+        .json({
+          deleted: deletedProducts
+        });
+    })
+  }
+]
 
 exports.findProductByNameGet = [
   parallelValidate(

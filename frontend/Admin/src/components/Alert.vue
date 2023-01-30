@@ -1,38 +1,32 @@
-<script>
-export default {
-  inheritAttrs: false,
-  methods: {
-    toggle() {
-      this.isShowing = !this.isShowing
-    }
-  },
-  data() {
-    return {
-      isShowing: false
-    }
-  }
-}
+<script setup>
+import { onMounted } from 'vue'
+import { useAlertsStore } from '../stores/alerts'
+const alertsStore = useAlertsStore()
+onMounted(() => {
+  setTimeout(() => alertsStore.items = [], 10000)
+})
 </script>
 
 <template>
-  <Teleport to="body">
-    <Transition name="slide" mode="out-in">
-      <div v-if="isShowing" class="position-relative">
-        <div class="alert text-white" role="alert" v-bind="$attrs">
-          <span class="close-btn" @click="isShowing = false">&times;</span>
-          <slot></slot>
-        </div>
+  <TransitionGroup v-if="alertsStore.items" name="slide" tag="div" class="alert-container">
+    <template v-for="item in alertsStore.items" :key="item">
+      <div class="alert" :class="'alert-' + item.type ?? 'warning'" role="alert">
+        {{ item.content }}
+        <span class="close-btn" @click="alertsStore.remove(item)">&times;</span>
       </div>
-    </Transition>
-  </Teleport>
+    </template>
+  </TransitionGroup>
 </template>
 
 <style scoped>
+.alert-container {
+  position: fixed;
+  bottom: 20px;
+  right: 10px;
+}
+
 .alert {
   z-index: 999999999999;
-  position: absolute;
-  right: 20px;
-  width: 25%;
 }
 
 .close-btn {
@@ -51,13 +45,18 @@ export default {
 }
 
 .slide-leave-active,
-.slide-enter-active {
+.slide-enter-active,
+.slide-move {
   transition: all .5s ease-out;
+}
+
+.slide-leave-active {
+  position: absolute;
 }
 
 .slide-enter-from,
 .slide-leave-to {
-  transform: translateX(30px);
+  transform: translateX(100%);
   opacity: 0;
 }
 

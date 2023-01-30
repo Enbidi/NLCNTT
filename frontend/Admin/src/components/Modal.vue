@@ -1,9 +1,6 @@
-<script setup>
-defineProps(["id"])
-</script>
-
 <script>
 export default {
+  props: ["id"],
   inheritAttrs: false,
   mounted() {
     this.$refs.modal.querySelectorAll(".form-outline").forEach(
@@ -13,6 +10,11 @@ export default {
     this.instance = mdb.Modal.getInstance(modalRef)
     if (this.instance == undefined) {
       this.instance = new mdb.Modal(modalRef)
+    }
+  },
+  methods: {
+    show() {
+      this.instance.show()
     }
   }
 }

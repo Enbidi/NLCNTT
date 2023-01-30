@@ -29,6 +29,7 @@ const app = createApp(App)
 app.use(pinia)
 
 app.config.globalProperties.hostname = "http://localhost:3000/admin"
+app.config.unwrapInjectedRef = true
 app.provide("hostname", "http://localhost:3000")
 app.use(SmartTable)
 app.use(router)
