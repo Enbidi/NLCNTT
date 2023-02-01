@@ -81,6 +81,14 @@ class BaseService {
       return await this.model.exists(filter);
     }
   }
+  async exists(filter) {
+    switch(typeof filter) {
+    case "string":
+      return await this.model.exists({ _id: filter });
+    case "object":
+      return await this.model.exists(filter);
+    }
+  }
 }
 
 module.exports = BaseService;

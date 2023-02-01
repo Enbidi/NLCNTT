@@ -39,7 +39,7 @@ export default {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          rating: this.ratingStars.value,
+          rating: this.ratingStars,
           content,
           user: this.authStore.id,
           product: this.productId

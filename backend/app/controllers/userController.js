@@ -1,6 +1,6 @@
 const { User, Staff, Admin, Customer } = require("../models/User");
 
-const { parallelValidate } = require("../validate");
+const { parallelValidate, sequentialValidate } = require("../validate");
 
 const mongoose = require("mongoose");
 
@@ -206,6 +206,32 @@ exports.userDelete = [
     });
   },
 ];
+
+exports.deleteUsers = [
+  sequentialValidate(
+    body("ids", "Người dùng để xóa đang trống")
+      .isArray()
+      .custom(ids => {
+        for (let id of ids) {
+          if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error("ID không hợp lệ");
+          }
+        }
+        return true;
+      })
+  ),
+  (req, res, next) => {
+    var ids = req.body.ids;
+    userService.removeMany({ _id: ids }, (err) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200).json({
+        state: "Success"
+      });
+    })
+  }
+]
 
 exports.findUserByNameGet = [
   parallelValidate(

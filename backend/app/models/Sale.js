@@ -6,6 +6,9 @@ const SaleSchema = new Schema(
   {
     start: Date,
     end: Date,
+    percent: Number,
+    content: String,
+    products: [{ type: mongoose.Types.ObjectId, ref: 'Product' }],
   },
   { toJSON: { virtuals: true } }
 );

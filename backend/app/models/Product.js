@@ -51,6 +51,13 @@ ProductSchema.virtual("comments", {
   foreignField: "product"
 });
 
+ProductSchema.virtual("billsCount", {
+  ref: "BillDetail",
+  localField: "_id",
+  foreignField: "product",
+  count: true
+});
+
 const Product = mongoose.model("Product", ProductSchema);
 
 module.exports = { Product };

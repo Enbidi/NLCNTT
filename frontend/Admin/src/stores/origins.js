@@ -1,24 +1,18 @@
 import { defineStore } from 'pinia'
-import { useErrorsStore } from './errors'
+import { useAlertsStore } from './alerts'
+import fetchData from './utils/fetchDataWithAlerts'
 
 export const useOriginsStore = defineStore("origins", {
   state: () => ({ items: [] }),
   getters: {
-    errors() {
-      const errorsStore = useErrorsStore()
-      return errorsStore
-    }
+    alertsStore: () => useAlertsStore()
   },
   actions: {
     async fetchOrigins() {
       if (this.items.length == 0) {
-        const response = await fetch("http://localhost:3000/admin/origin")
-        if (!response.ok) {
-          const err = await response.json()
-          this.errors = err.errors
-          return
-        }
-        this.items = (await response.json()).items
+        var url = "http://localhost:3000/admin/origin"
+        var data = await fetchData(this.alertsStore, url)
+        this.items = data.items
       }
     }
   }

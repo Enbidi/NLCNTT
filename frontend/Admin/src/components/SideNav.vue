@@ -36,6 +36,7 @@ import NavLink from './NavLink.vue'
               <router-link to="" class="nav-link">Bình luận</router-link>
               <router-link to="/branches" class="nav-link">Nhãn hiệu</router-link>
               <router-link to="/origins" class="nav-link">Xuất sứ</router-link>
+              <router-link to="/sales" class="nav-link">Khuyến mãi</router-link>
             </template>
           </Collapse>
           <NavLink class="collapsed" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#demo2"

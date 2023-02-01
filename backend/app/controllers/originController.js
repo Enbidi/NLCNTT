@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const { parallelValidate } = require("../validate");
+const { parallelValidate, sequentialValidate } = require("../validate");
 
 const {
   body,
@@ -85,6 +85,32 @@ exports.deleteOriginGet = [
       }
       res.status(200).json({
         deleted: origin,
+      });
+    });
+  },
+];
+
+exports.deleteOrigins = [
+  sequentialValidate(
+    body("ids", "Xuất sử muốn xóa không được trống")
+      .isArray()
+      .custom((ids) => {
+        for (let id of ids) {
+          if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error("Id không hợp lệ");
+          }
+          return true;
+        }
+      })
+  ),
+  (req, res) => {
+    var ids = req.body.ids;
+    originService.removeMany({ _id: ids }, (err) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200).json({
+        state: "Success",
       });
     });
   },

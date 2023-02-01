@@ -11,6 +11,7 @@ import { useFetch } from './composables/useFetch'
 import { useOriginsStore } from '../stores/origins'
 import { useBranchesStore } from '../stores/branches'
 import { useProductsStore } from '../stores/products'
+import { useSelectedProductsStore } from '../stores/selectedProducts'
 
 const productsStore = useProductsStore()
 const originsStore = useOriginsStore()
@@ -218,17 +219,30 @@ const deletionModal = useTemplateRef("deletionModal")
               <label class="form-label" for="updateProductPriceInput">Hình</label>
             </div>
 
-            <div class="form-outline mb-4">
-              <input type="number" id="updateProductOriginInput" class="form-control" name="origin"
+            <select class="form-select mb-4" aria-label="Chọn xuất sứ" name="origin">
+              <option v-for="origin in originsStore.items" :value="origin._id" :key="origin._id" :selected="origin._id == selectedItem?.origin._id">
+                {{ origin.country }}
+              </option>
+            </select>
+
+            <select class="form-select mb-4" aria-label="Chọn nhãn hiệu" name="branch">
+              <option selected>Chọn nhãn hiệu cho sản phẩm</option>
+              <option v-for="branch in branchesStore.items" :key="branch._id" :value="branch._id" :selected="branch._id == selectedItem?.branch._id">
+                {{ branch.name }}
+              </option>
+            </select>
+
+            <!-- <div class="form-outline mb-4">
+              <input type="text" id="updateProductOriginInput" class="form-control" name="origin"
                 :value="selectedItem?.origin" />
               <label class="form-label" for="updateProductOriginInput">Xuất sứ</label>
             </div>
 
             <div class="form-outline mb-4">
-              <input type="number" id="updateProductBranchInput" class="form-control" name="branch"
+              <input type="text" id="updateProductBranchInput" class="form-control" name="branch"
                 :value="selectedItem?.branch" />
               <label class="form-label" for="updateProductBranchInput">Nhãn hiệu</label>
-            </div>
+            </div> -->
 
             <div class="form-outline mb-4">
               <textarea class="form-control" id="updateProductDescriptionInput" rows="4" name="description"></textarea>

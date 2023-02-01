@@ -18,13 +18,6 @@ mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopol
 // mongoose.set("strictQuery", false);
 
 const { User } = require("./models/User");
-// User.register({
-//   firstname: "Nguyen",
-//   lastname: "Duy",
-//   sex: "Male",
-//   number: "0789526780",
-//   email: "duy.gunny2.1705@gmail.com",
-// }, "123456789");
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -77,6 +70,10 @@ passport.deserializeUser(User.deserializeUser());
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/admin', adminRouter);
+app.use("/dummy", (req, res) => {
+  console.log('logged', req.body)
+  res.send('ok')
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

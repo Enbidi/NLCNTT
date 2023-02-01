@@ -30,7 +30,7 @@ export default {
 </script> -->
 
 <template>
-  <CommonActions :api-url="`${hostname}/bill`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="billsStore">
+  <CommonActions :api-url="`${hostname}/admin/bill`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="billsStore">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addBillModal">
         Thêm hóa đơn

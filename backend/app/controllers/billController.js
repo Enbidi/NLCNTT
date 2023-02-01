@@ -12,6 +12,7 @@ const billService = require("../services/BillService");
 const billDetailService = require("../services/BillDetailService");
 const saleService = require("../services/SaleService");
 const productService = require("../services/ProductService");
+const { default: mongoose } = require("mongoose");
 
 exports.billsGet = [
   parallelValidate(query("limit").default(20)),
@@ -243,6 +244,29 @@ exports.billDelete = [
     });
   },
 ];
+
+exports.deleteBills = [
+  sequentialValidate(
+    body("ids", "Hóa đơn muốn xóa không được trống")
+      .isArray()
+      .custom(ids => {
+        for (let id of ids) {
+          if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error("Id không hợp lệ");
+          }
+        }
+        return true;
+      })
+  ),
+  async (req, res) => {
+    var ids = req.body.ids;
+    await billService.removeMany({ _id: ids });
+    await billDetailService.removeMany({ bill: ids });
+    res.status(200).send({
+      state: "Success"
+    });
+  }
+]
 
 exports.getBillHistory = (req, res, next) => {
   billService.fetchBillsFromUser(req.user._id, (err, bills) => {

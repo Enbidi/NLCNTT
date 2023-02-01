@@ -28,7 +28,9 @@ exports.addSalePost = [
   parallelValidate(
     header("Content-Type").isIn("application/json"),
     body("start", "Ngày bắt đầu không hợp lệ").isISO8601().bail().toDate(),
-    body("end", "Ngày kết thúc không hợp lệ").isISO8601().bail().toDate()
+    body("end", "Ngày kết thúc không hợp lệ").isISO8601().bail().toDate(),
+    body("percent").isNumeric(),
+    body("products").isArray()
   ),
   (req, res, next) => {
     const sale = matchedData(req, { locations: ["body"] });

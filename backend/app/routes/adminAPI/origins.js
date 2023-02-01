@@ -8,6 +8,8 @@ router.get("/", originController.originsGet);
 
 router.post("/add", originController.addOriginPost);
 
+router.delete("/delete", originController.deleteOrigins);
+
 router.patch("/:id/update", originController.updateOriginPost);
 
 router.delete("/:id/delete", originController.deleteOriginGet);

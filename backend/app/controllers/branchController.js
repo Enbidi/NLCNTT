@@ -1,4 +1,4 @@
-const { parallelValidate } = require("../validate");
+const { parallelValidate, sequentialValidate } = require("../validate");
 
 const {
   body,
@@ -9,6 +9,7 @@ const {
 } = require("express-validator");
 
 const branchService = require("../services/BranchService");
+const { default: mongoose } = require("mongoose");
 
 exports.branchesGet = [
   query("limit").default(20),
@@ -26,8 +27,6 @@ exports.branchesGet = [
 
 exports.productsPerBranchGet = [
   (req, res) => {
-    console.log('User: ', req.user)
-    console.log(req.session)
     branchService.fetchProductsPerBranch((err, branches) => {
       if (err) {
         return next(err);
@@ -116,6 +115,32 @@ exports.deleteBranchGet = [
     });
   },
 ];
+
+exports.deleteBranches = [
+  sequentialValidate(
+    body("ids", "Nhãn hiệu muốn xóa không được trống")
+      .isArray()
+      .custom(ids => {
+        for (let id of ids) {
+          if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error("Id không hợp lệ");
+          }
+          return true;
+        }
+      })
+  ),
+  (req, res) => {
+    var ids = req.body.ids;
+    branchService.removeMany({ _id: ids }, (err) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200).json({
+        state: "Success"
+      });
+    });
+  }
+]
 
 exports.findBranchByNameGet = [
   query("keyword", "Tên nhãn hiệu không hợp lệ")

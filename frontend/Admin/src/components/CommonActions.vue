@@ -86,7 +86,7 @@ export default {
       let id = this.selectedItem._id
       let apiURL = `${this.apiUrl}/${id}/update`
       for (const [key, val] of formData.entries()) {
-        if (val == this.selectItem[key]) {
+        if (val == this.selectItem[key] || !val) {
           formData.delete(key)
         }
       }
@@ -105,27 +105,36 @@ export default {
     },
     async deleteSelectedItems() {
       var body = { ids: this.selectedRows.map(row => row._id) }
-      var response = await fetch('http://localhost:3000/admin/product/delete', {
+      var payload = {
         method: "DELETE",
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(body)
-      })
-      var data = await response.json()
-      if (!response.ok) {
-        data.errors?.forEach(error => {
-          this.alertsStore.push({
-            content: error.msg,
-            type: 'danger'
-          })
-        })
-        return
       }
+      var apiURL = `${this.apiUrl}/delete`
+      await this.callAPI(apiURL, payload)
       this.alertsStore.push({
         content: 'Xóa thành công',
         type: 'success'
       })
+      // var response = await fetch('http://localhost:3000/admin/product/delete', {
+      //   method: "DELETE",
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify(body)
+      // })
+      // var data = await response.json()
+      // if (!response.ok) {
+      //   data.errors?.forEach(error => {
+      //     this.alertsStore.push({
+      //       content: error.msg,
+      //       type: 'danger'
+      //     })
+      //   })
+      //   return
+      // }
     },
     updateSelectedItem() {
       if (this.selectedRows.length > 1) {
@@ -148,6 +157,15 @@ export default {
       isLoading: false,
       selectedItem: null,
       errors: null
+    }
+  },
+  watch: {
+    selectedRows(rows) {
+      console.log('Logged', rows)
+      if (!this.fetchedData.selectedItems) {
+        return
+      }
+      this.fetchedData.selectedItems = rows
     }
   }
 }
@@ -186,7 +204,7 @@ export default {
         </div>
         <VTable class="table table-bordered table-hover" :data="fetchedData ? fetchedData.items : []" :filters="filters"
           :page-size="20" v-model:currentPage="currentPage" selectionMode="multiple"
-          @totalPagesChanged="totalPages = $event" @stateChanged="selectedRows = $event.selectedRows"
+          @totalPagesChanged="totalPages = $event" @stateChanged="selectedRows = $event.selectedRows; fetchedData.selectedItems = $event.selectedRows"
           selectedClass="bg-primary bg-gradient bg-opacity-50" ref="table" v-bind="$attrs">
           <template #head>
             <slot name="tableColumnNames" />

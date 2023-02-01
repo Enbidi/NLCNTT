@@ -6,6 +6,8 @@ router.get("/", billController.billsGet);
 
 router.post("/add", billController.addBillPost);
 
+router.delete("/delete", billController.deleteBills);
+
 router.patch("/:id/update", billController.billPatch);
 
 router.delete("/:id/delete", billController.billDelete);

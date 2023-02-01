@@ -11,8 +11,8 @@ class ProductService extends BaseService {
       {
         limit,
         populationOptions: [
-          { path: "origin", select: "country -_id" },
-          { path: "branch", select: "name -_id" },
+          { path: "origin", select: "country _id" },
+          { path: "branch", select: "name _id" },
         ],
       },
       cb
@@ -32,6 +32,21 @@ class ProductService extends BaseService {
   }
   findOne(filter, cb) {
     this.model.findOne(filter).populate("branch").populate("origin").exec(cb);
+  }
+  async getTopPurchasedProducts(top, cb) {
+    if (cb) {
+      this.model.find()
+        .populate("billsCount")
+        .sort("-billsCount")
+        .limit(top)
+        .exec(cb);
+      return;
+    }
+    return await this.model.find()
+      .populate("billsCount")
+      .sort("-billsCount")
+      .limit(top)
+      .exec();
   }
 }
 
