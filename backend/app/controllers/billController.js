@@ -86,30 +86,29 @@ exports.addBillPost = [
       expiration: req.body.creditCard.expiration,
       CVV: req.body.creditCard.cvv,
     };
-    const bill = await billService.addOne({
+    const bill = {
       user: req.user._id,
       sale: req.body.sale,
       note: req.body.note,
       creditCard,
-    });
-    // Awaiting for all details to be saved,
-    // otherwise bill's populating will receive
-    // empty array
-    await Promise.all(
-      req.body.details.map((detail) =>
-        billDetailService.save({
-          quantity: detail.quantity,
-          product: detail.product,
-          bill: bill._id,
-        })
-      )
-    );
-    res.status(200).json({
-      created: {
-        ...bill.toObject(),
-        total: await bill.calcTotal(),
-      },
-    });
+    };
+    await billService.createBill(bill, req.body.details, (err, bill) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200).json({
+        item: bill
+      })
+    })
+    // res.status(200).json({
+    //   state: "Success"
+    // });
+    // res.status(200).json({
+    //   created: {
+    //     ...bill.toObject(),
+    //     total: await bill.calcTotal(),
+    //   },
+    // });
   },
 ];
 

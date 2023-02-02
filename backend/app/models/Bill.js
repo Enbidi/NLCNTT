@@ -3,29 +3,29 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const { BillDetail } = require("./BillDetail");
 const { Product } = require("./Product");
+const { Sale } = require("./Sale");
 
-const CreditCardSchema = new Schema({
-  cardType: String,
-  cardNumber: {
-    type: String,
-    unique: true
+const CreditCardSchema = new Schema(
+  {
+    cardType: String,
+    cardNumber: {
+      type: String,
+      unique: true,
+    },
+    CVV: String,
+    expiration: Date,
   },
-  CVV: String,
-  expiration: Date
-}, { _id: false });
+  { _id: false }
+);
 
 const BillSchema = new Schema(
   {
-    sale: {
-      type: Schema.Types.ObjectId,
-      ref: "Sale",
-    },
     creditCard: CreditCardSchema,
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User"
+      ref: "User",
     },
-    note: String
+    note: String,
   },
   {
     timestamps: true,
@@ -61,10 +61,10 @@ BillSchema.method("calcTotal", async function () {
   );
 });
 
-BillSchema.statics.fetchDetailsWithTotal = function (filter, limit, cb) {
-  this.aggregate([
+BillSchema.statics.fetchDetailsWithTotal = async function (filter, limit, cb) {
+  return await this.aggregate([
     {
-      $match: filter
+      $match: filter,
     },
     {
       $lookup: {
@@ -90,8 +90,27 @@ BillSchema.statics.fetchDetailsWithTotal = function (filter, limit, cb) {
             },
           },
           {
+            $lookup: {
+              from: Sale.collection.collectionName,
+              localField: "sales",
+              foreignField: "_id",
+              as: "saleDetails",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    start: 1,
+                    end: 1,
+                    percent: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
             $project: {
               quantity: 1,
+              saleDetails: 1,
               price: {
                 $arrayElemAt: ["$productDetail.price", 0],
               },
@@ -100,6 +119,37 @@ BillSchema.statics.fetchDetailsWithTotal = function (filter, limit, cb) {
           {
             $project: {
               quantity: 1,
+              saleDetails: 1,
+              price: {
+                $reduce: {
+                  input: "$saleDetails",
+                  initialValue: "$price",
+                  in: {
+                    $subtract: [
+                      "$$value",
+                      {
+                        $cond: {
+                          if: {
+                            "$$this.saleType": {
+                              $eq: "Promotion",
+                            },
+                          },
+                          then: {
+                            $multiply: ["$$value", "$$this.percent"],
+                          },
+                          else: "$$this.value",
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          {
+            $project: {
+              quantity: 1,
+              saleDetails: 1,
               price: 1,
               unitPrice: {
                 $multiply: ["$quantity", "$price"],
@@ -116,12 +166,15 @@ BillSchema.statics.fetchDetailsWithTotal = function (filter, limit, cb) {
         createdAt: 1,
         updatedAt: 1,
         user: 1,
+        saleDetails: 1,
         total: {
           $sum: "$details.unitPrice",
         },
       },
     },
-  ]).limit(limit).exec(cb);
+  ])
+    .limit(limit)
+    .exec(cb);
 };
 
 const Bill = mongoose.model("Bill", BillSchema);

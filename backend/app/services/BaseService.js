@@ -37,11 +37,11 @@ class BaseService {
     }
     return await new this.model(obj).save();
   }
-  async create(obj) {
-    return await new this.model(obj).save();
+  async create(obj, cb) {
+    return await new this.model(obj).save(cb);
   }
-  async save(obj) {
-    await new this.model(obj).save();
+  async save(obj, cb) {
+    return await new this.model(obj).save(cb);
   }
   async addOne(obj) {
     const doc = new this.model(obj);

@@ -1,4 +1,5 @@
 <script>
+import { convertFormDataToJSON } from '../utils'
 import LoadingScreen from './LoadingScreen.vue'
 import { useAlertsStore } from '../stores/alerts'
 
@@ -46,23 +47,20 @@ export default {
       }
       this.errors = []
     },
-    async addHandler(event, includeFile = false) {
+    async addHandler(event, opts) {
+      let url = `${this.apiUrl}/add`
       let form = event.target
       let formData = new FormData(form)
-      let formDataJSON = JSON.stringify(Object.fromEntries(formData.entries()))
-      let url = `${this.apiUrl}/add`
-      let payload = includeFile ? 
-        {
-          method: "POST",
-          body: formData
-        } : {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "appilication/json"
-          },
-          body: formDataJSON
+      var payload = { method: "POST" }
+      if (opts && opts.sendFile) {
+        payload.body = formData
+      }
+      else {
+        payload.headers = {
+          'Content-Type': 'application/json'
         }
+        payload.body = convertFormDataToJSON(formData)
+      }
       this.callAPI(url, payload)
     },
     async deleteHandler() {

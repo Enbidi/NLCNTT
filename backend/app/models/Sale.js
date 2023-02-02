@@ -2,6 +2,19 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
+const options = {
+  discriminatorKey: "saleType",
+  toJSON: { virtuals: true }
+};
+
+const PromotionSchema = new Schema({
+  percent: Number
+});
+
+const DiscountSchema = new Schema({
+  value: Number
+});
+
 const SaleSchema = new Schema(
   {
     start: Date,
@@ -10,7 +23,7 @@ const SaleSchema = new Schema(
     content: String,
     products: [{ type: mongoose.Types.ObjectId, ref: 'Product' }],
   },
-  { toJSON: { virtuals: true } }
+  options
 );
 
 SaleSchema.virtual("isExpired").get(function () {
@@ -18,5 +31,6 @@ SaleSchema.virtual("isExpired").get(function () {
 });
 
 const Sale = mongoose.model("Sale", SaleSchema);
-
-module.exports = { Sale };
+const PromotionSale = Sale.discriminator("Promotion", PromotionSchema, options);
+const DiscountSale = Sale.discriminator("Discount", DiscountSchema, options);
+module.exports = { Sale, PromotionSale, DiscountSale };

@@ -43,7 +43,7 @@ const deletionModal = useTemplateRef("deletionModal")
         <template #modalTitle>
           Thêm sản phẩm
         </template>
-        <form @submit.prevent="addHandler($event, true)" method="POST" enctype="multipart/form-data">
+        <form @submit.prevent="addHandler($event, { sendFile: true })">
           <!-- Name input -->
           <div class="modal-body">
             <div class="form-outline mb-4">

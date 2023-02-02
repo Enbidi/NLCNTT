@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 
 const BillDetailSchema = new Schema({
   quantity: Number,
+  sales: [{ type: mongoose.Types.ObjectId, ref: "Sale" }],
   product: {
     type: Schema.Types.ObjectId,
     ref: "Product",

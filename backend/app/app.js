@@ -71,8 +71,15 @@ app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/admin', adminRouter);
 app.use("/dummy", (req, res) => {
-  console.log('logged', req.body)
-  res.send('ok')
+  const saleService = require("./services/SaleService");
+  saleService.getActiveSales(undefined, (err, sales) => {
+    if (err) {
+      return next(err);
+    }
+    res.status(200).json({
+      items: sales
+    })
+  });
 })
 
 // catch 404 and forward to error handler
