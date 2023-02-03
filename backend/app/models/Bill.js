@@ -102,6 +102,7 @@ BillSchema.statics.fetchDetailsWithTotal = async function (filter, limit, cb) {
                     start: 1,
                     end: 1,
                     percent: 1,
+                    saleType: 1,
                   },
                 },
               ],
@@ -111,7 +112,7 @@ BillSchema.statics.fetchDetailsWithTotal = async function (filter, limit, cb) {
             $project: {
               quantity: 1,
               saleDetails: 1,
-              price: {
+              unitPrice: {
                 $arrayElemAt: ["$productDetail.price", 0],
               },
             },
@@ -119,29 +120,52 @@ BillSchema.statics.fetchDetailsWithTotal = async function (filter, limit, cb) {
           {
             $project: {
               quantity: 1,
+              unitPriceBeforeSale: "$unitPrice",
               saleDetails: 1,
-              price: {
-                $reduce: {
-                  input: "$saleDetails",
-                  initialValue: "$price",
-                  in: {
-                    $subtract: [
-                      "$$value",
-                      {
-                        $cond: {
-                          if: {
-                            "$$this.saleType": {
-                              $eq: "Promotion",
+              unitPrice: {
+                $cond: {
+                  if: {
+                    $cond: {
+                      if: {
+                        $isArray: "$saleDetails"
+                      },
+                      then: { $ne: [ { $size: "$saleDetails" }, 0 ] },
+                      else: false
+                    }
+                  },
+                  then: {
+                    $reduce: {
+                      input: "$saleDetails",
+                      initialValue: "$unitPrice",
+                      in: {
+                        $subtract: [
+                          "$$value",
+                          {
+                            $switch: {
+                              branches: [
+                                {
+                                  case: {
+                                    $eq: ["$$this.saleType", "Promotion"],
+                                  },
+                                  then: {
+                                    $multiply: ["$$value", { $divide: ["$$this.percent", 100] }],
+                                  },
+                                },
+                                {
+                                  case: {
+                                    $eq: ["$$this.saleType", "Discount"],
+                                  },
+                                  then: "$$this.value",
+                                },
+                              ],
+                              default: 0,
                             },
                           },
-                          then: {
-                            $multiply: ["$$value", "$$this.percent"],
-                          },
-                          else: "$$this.value",
-                        },
+                        ],
                       },
-                    ],
+                    },
                   },
+                  else: "$unitPrice"
                 },
               },
             },
@@ -150,9 +174,9 @@ BillSchema.statics.fetchDetailsWithTotal = async function (filter, limit, cb) {
             $project: {
               quantity: 1,
               saleDetails: 1,
-              price: 1,
+              unitPriceBeforeSale: 1,
               unitPrice: {
-                $multiply: ["$quantity", "$price"],
+                $multiply: ["$quantity", "$unitPrice"],
               },
             },
           },
