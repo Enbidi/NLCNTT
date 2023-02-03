@@ -9,9 +9,9 @@ export const useBranchesStore = defineStore("branches", {
   },
   actions: {
     async fetchBranches() {
-      if (this.items.length == 0) {
+      if (this.items && this.items.length == 0) {
         var url = 'http://localhost:3000/admin/branch'
-        var data = fetchData(this.alertsStore, url)
+        var data = await fetchData(this.alertsStore, url)
         this.items = data.items
       }
     }

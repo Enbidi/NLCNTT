@@ -153,7 +153,8 @@ const saleType = ref(0)
       <VTh sortKey="_id">#</VTh>
       <VTh sortKey="start">Ngày bắt đầu</VTh>
       <VTh sortKey="end">Ngày kết thúc</VTh>
-      <VTh sortKey="percent">Phần trăm giảm</VTh>
+      <th>Loại khuyến mãi</th>
+      <VTh sortKey="percent">Phần trăm giảm/Giá trị giảm</VTh>
       <VTh sortKey="content">Nội dung</VTh>
       <th>Các sản phẩm được giảm</th>
     </template>
@@ -162,6 +163,8 @@ const saleType = ref(0)
         <td>{{ row._id }}</td>
         <td>{{ row.start }}</td>
         <td>{{ row.end }}</td>
+        <td>{{ row.saleType == 'Promotion' ? 'Phần trăm' : 'Giảm trực tiếp' }}</td>
+        <td>{{ row.saleType == 'Promotion' ? row.percent : row.value }}</td>
         <td>{{ row.percent + '%' }}</td>
         <td>{{ row.content }}</td>
         <td>

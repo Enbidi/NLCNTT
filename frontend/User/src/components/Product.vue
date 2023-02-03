@@ -3,6 +3,7 @@ import { inject } from 'vue'
 
 import { useProductStore } from '../stores/product'
 import { useCartStore } from '../stores/cart'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   product: {
@@ -14,25 +15,18 @@ const props = defineProps({
 const hostname = inject("hostname")
 const productStore = useProductStore()
 const cartStore = useCartStore()
+const router = useRouter()
 
-productStore.data = props.product
-
-</script>
-
-<script>
-export default {
-  methods: {
-    navigateToDetail() {
-      this.$router.push(
-        {
-          name: "productDetail",
-          params: {
-            id: this.$props.product._id
-          }
-        }
-      )
+function navigateToDetail() {
+  productStore.data = props.product
+  router.push(
+    {
+      name: "productDetail",
+      params: {
+        id: props.product._id
+      }
     }
-  }
+  )
 }
 </script>
 
@@ -46,11 +40,17 @@ export default {
     </div>
     <div class="card-body">
       <h5 class="card-title">{{ product.name }}</h5>
-      <p class="card-text">{{ product.description }}</p>
+      <p class="card-text">
+        <template v-if="product.inSales?.length > 0">
+          <p class="text-success">Sản phẩm đang khuyến mãi</p>
+        </template>
+      <p>{{ product.description }}</p>
+      </p>
       <div class="row">
         <a class="col btn btn-primary d-flex align-items-center justify-content-center" @click="navigateToDetail()">Xem
           chi tiết</a>
-        <a class="col btn btn-primary d-flex align-items-center justify-content-center" @click="cartStore.addToCart(product)">Thêm vào
+        <a class="col btn btn-primary d-flex align-items-center justify-content-center"
+          @click="cartStore.addToCart(product)">Thêm vào
           giỏ hàng</a>
       </div>
     </div>

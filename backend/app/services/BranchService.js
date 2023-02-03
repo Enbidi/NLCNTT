@@ -13,7 +13,10 @@ class BranchService extends BaseService {
 
   async fetchProductsPerBranch(cb) {
     this.model.find({})
-      .populate("products")
+      .populate({
+        path: "products",
+        populate: ["inSales", "origin"]
+      })
       .exec(cb);
   }
 }

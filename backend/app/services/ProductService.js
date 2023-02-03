@@ -6,26 +6,31 @@ class ProductService extends BaseService {
     super(model);
   }
   fetchLimitWithOriginAndBranch(filter, limit, cb) {
-    super.fetch(
-      filter,
-      {
-        limit,
-        populationOptions: [
-          { path: "origin", select: "country _id" },
-          { path: "branch", select: "name _id" },
-        ],
-      },
-      cb
-    );
+    this.model
+      .find(filter)
+      .limit(limit)
+      .populate("origin")
+      .populate("branch")
+      .exec(cb);
+    // super.fetch(x`
+    //   filter,
+    //   {
+    //     limit,
+    //     populationOptions: [
+    //       { path: "origin", select: "country _id" },
+    //       { path: "branch", select: "name _id" },
+    //       { path: "inSales" }
+    //     ],
+    //   },
+    //   cb
+    // );
   }
   async findProductByName(name, cb) {
     Product.findProductByName(name, cb);
   }
   async fetchComments(filter, cb) {
     if (cb) {
-      this.model.findOne(filter, "_id")
-        .populate("comments")
-        .exec(cb);
+      this.model.findOne(filter, "_id").populate("comments").exec(cb);
       return;
     }
     await this.model.findOne(filter, "_id").populate("comments");
@@ -35,14 +40,16 @@ class ProductService extends BaseService {
   }
   async getTopPurchasedProducts(top, cb) {
     if (cb) {
-      this.model.find()
+      this.model
+        .find()
         .populate("billsCount")
         .sort("-billsCount")
         .limit(top)
         .exec(cb);
       return;
     }
-    return await this.model.find()
+    return await this.model
+      .find()
       .populate("billsCount")
       .sort("-billsCount")
       .limit(top)

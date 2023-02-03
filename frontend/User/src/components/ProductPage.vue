@@ -20,25 +20,6 @@ async function changeProducts(newProducts) {
 }
 </script>
 
-<!-- <script>
-export default {
-  inject: ['isLoading'],
-  methods: {
-    async changeProducts(newProducts) {
-      this.isLoading = true
-      await wait(500)
-      this.products = newProducts
-      this.isLoading = false
-    }
-  },
-  data() {
-    return {
-      products: []
-    }
-  }
-}
-</script> -->
-
 <template>
   <div class="container-fluid mt-3">
     <div class="row">

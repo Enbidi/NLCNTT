@@ -211,13 +211,6 @@ export default {
             <slot name="tableColumnDatas" v-bind="{ rows, selectItem }" />
           </template>
         </VTable>
-        <strong>Đang chọn:</strong>
-        <div v-if="selectedRows.length === 0">Không có hàng nào đang chọn</div>
-        <ul>
-          <li v-for="selected in selectedRows">
-            {{ selected[repr] }}
-          </li>
-        </ul>
         <VTPagination v-model:currentPage="currentPage" :total-pages="totalPages" :boundary-link="true"
           class="d-flex justify-content-center" />
       </div>

@@ -127,11 +127,13 @@ export default {
         <VTh class="align-middle" rowspan="2" sortKey="updatedAt">Ngày cập nhật</VTh>
         <VTh class="align-middle" rowspan="2" sortKey="payment">PTTT(Credit Card/Trực tiếp)</VTh>
         <VTh class="align-middle" rowspan="2" sortKey="updatedAt">Tổng phải trả</VTh>
-        <th class="text-center" colspan="3">Chi tiết hóa đơn</th>
+        <th class="text-center" colspan="5">Chi tiết hóa đơn</th>
       </tr>
       <tr class="text-center">
         <VTh sortKey="details.quantity">Số lượng</VTh>
-        <VTh sortKey="details.price">Đơn giá</VTh>
+        <VTh sortKey="details.price">Đơn giá trước khuyến mãi</VTh>
+        <VTh sortKey="details.price">Đơn giá sau khuyến mãi</VTh>
+        <th class="align-middle">Các khuyến mãi đã áp dụng (Nếu có)</th>
         <VTh sortKey="details.unitPrice">Tổng giá</VTh>
       </tr>
     </template>
@@ -153,8 +155,12 @@ export default {
         </VTr>
         <VTr v-for="(detail, index) in row.details" :row="row">
           <td>{{ detail.quantity }}</td>
-          <td>{{ detail.price }}</td>
+          <td>{{ detail.unitPriceBeforeSale }}</td>
           <td>{{ detail.unitPrice }}</td>
+          <td>
+            <p v-for="sale in detail.saleDetails">{{ sale._id }}</p>
+          </td>
+          <td>{{ detail.quantity * detail.unitPrice }}</td>
           <td class="align-middle" :rowspan="row.details.length + 1" v-if="index == 0">
             <ModalTriggerButton target="updateBillModal" class="me-2 btn btn-warning" @click="selectItem(row)">
               Sửa
