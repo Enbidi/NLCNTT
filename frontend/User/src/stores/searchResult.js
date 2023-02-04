@@ -8,7 +8,7 @@ export const useSearchResultStore = defineStore('searchResult', {
     alerts: () => useAlertsStore()
   },
   actions: {
-    async search(keyword) {
+    async fetchData(keyword) {
       var url = new URL('http://localhost:3000/product/find')
       url.searchParams.append('keyword', keyword)
       var data = await this.alerts.callAPI("warning", url)

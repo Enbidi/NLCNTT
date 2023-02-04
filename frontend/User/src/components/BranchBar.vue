@@ -3,7 +3,7 @@ import Branch from './Branch.vue'
 import { useProductsPerBranchStore } from '../stores/productsPerBranch'
 
 const productsPerBranchStore = useProductsPerBranchStore()
-productsPerBranchStore.fetchProductsPerBranch()
+productsPerBranchStore.fetchData()
 </script>
 
 <template>

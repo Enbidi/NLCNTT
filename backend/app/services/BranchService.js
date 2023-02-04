@@ -11,8 +11,8 @@ class BranchService extends BaseService {
     Branch.findBranchByName(name, cb);
   }
 
-  async fetchProductsPerBranch(cb) {
-    this.model.find({})
+  async fetchProductsPerBranch(filter, cb) {
+    this.model.find(filter)
       .populate({
         path: "products",
         populate: ["inSales", "origin"]

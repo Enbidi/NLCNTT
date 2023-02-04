@@ -69,7 +69,8 @@ class ProductService extends BaseService {
       .populate("billsCount")
       .sort("-billsCount")
       .limit(top)
-      .exec(db)
+      .populate("inSales")
+      .exec(cb)
   }
 }
 

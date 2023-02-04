@@ -27,7 +27,7 @@ exports.branchesGet = [
 
 exports.productsPerBranchGet = [
   (req, res) => {
-    branchService.fetchProductsPerBranch((err, branches) => {
+    branchService.fetchProductsPerBranch({}, (err, branches) => {
       if (err) {
         return next(err);
       }

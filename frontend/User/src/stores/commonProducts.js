@@ -7,7 +7,7 @@ export const useCommonProducts = defineStore("commonProducts", {
     alerts: () => useAlertsStore()
   },
   actions: {
-    async fetchProducts() {
+    async fetchData() {
       var url = new URL("http://localhost:3000/product/top_products")
       url.searchParams.append("top", 5)
       var data = await this.alerts.callAPI("warning", url)

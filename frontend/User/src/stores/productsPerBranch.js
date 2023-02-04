@@ -13,7 +13,7 @@ export const useProductsPerBranchStore = defineStore("productsPerBranch", {
     alerts: () => useAlertsStore()
   },
   actions: {
-    async fetchProductsPerBranch() {
+    async fetchData() {
       if (this.items.length == 0) {
         var data = await this.alerts.callAPI("warning", "http://localhost:3000/branch/product")
         if (data == undefined) {
@@ -22,6 +22,9 @@ export const useProductsPerBranchStore = defineStore("productsPerBranch", {
         this.items = data.items
         this.isLoaded = true
       }
+    },
+    getProductsByBranchName(branchName) {
+      return this.items.find(branch => branch.name == branchName)?.products
     }
   }
 })

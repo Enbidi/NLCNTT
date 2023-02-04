@@ -6,7 +6,7 @@ export const useBillStore = defineStore("bill", {
     alerts: () => useAlertsStore()
   },
   actions: {
-    async fetchHistory() {
+    async fetchData() {
       var data = await this.alerts.callAPI("warning", "http://localhost:3000/user/bill")
       if (data == undefined) {
         return

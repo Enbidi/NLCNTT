@@ -4,7 +4,7 @@ import ModalTriggerButton from './ModalTriggerButton.vue'
 import { useBillStore } from '../stores/bill'
 
 const billStore = useBillStore()
-billStore.fetchHistory()
+billStore.fetchData()
 </script>
 
 <template>
