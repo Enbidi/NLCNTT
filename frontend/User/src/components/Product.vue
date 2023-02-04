@@ -1,4 +1,5 @@
 <script setup>
+import SaleInfo from './SaleInfo.vue'
 import { inject } from 'vue'
 
 import { useProductStore } from '../stores/product'
@@ -39,12 +40,14 @@ function navigateToDetail() {
       </a>
     </div>
     <div class="card-body">
+      <template v-if="product.inSales?.length > 0">
+        <SaleInfo>
+          Sản phẩm đăng được khuyến mãi
+        </SaleInfo>
+      </template>
       <h5 class="card-title">{{ product.name }}</h5>
       <p class="card-text">
-        <template v-if="product.inSales?.length > 0">
-          <p class="text-success">Sản phẩm đang khuyến mãi</p>
-        </template>
-      <p>{{ product.description }}</p>
+        {{ product.description }}
       </p>
       <div class="row">
         <a class="col btn btn-primary d-flex align-items-center justify-content-center" @click="navigateToDetail()">Xem

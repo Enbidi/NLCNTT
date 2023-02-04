@@ -3,20 +3,22 @@ import { ref, inject } from 'vue'
 import BranchBar from './BranchBar.vue'
 import ProductsView from './ProductsView.vue'
 import { useSearchResultStore } from '../stores/searchResult'
-import { wait } from '../utils'
+import { useLoad } from './composables/useLoad'
+import { wait, showLoading } from '../utils/'
 
 const searchResultStore = useSearchResultStore()
 var isLoading = inject('isLoading')
 var products = ref(null)
-searchResultStore.$subscribe((_, state) => {
-  products.value = state.items
+searchResultStore.$subscribe(async (_, state) => {
+  showLoading(isLoading, () => {
+    products.value = state.items
+  }, 500)
 })
 
 async function changeProducts(newProducts) {
-  isLoading.value = true
-  await wait(500)
-  products.value = newProducts
-  isLoading.value = false
+  showLoading(isLoading, () => {
+    products.value = newProducts
+  }, 500)
 }
 </script>
 

@@ -1,22 +1,36 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
 export const useAlertsStore = defineStore("alerts", {
   state: () => ({ items: [] }),
   actions: {
     remove(alert) {
-      this.items = this.items.filter(item => item.content != alert.content)
+      this.items = this.items.filter((item) => item.content != alert.content);
     },
-    push(alert, type='warning') {
-      switch(typeof alert) {
-      case 'object':
-        this.items.push(alert)
-        break
-      case 'string':
-        this.items.push({ content: alert, type })
+    push(alert, type = "warning") {
+      switch (typeof alert) {
+        case "object":
+          this.items.push(alert);
+          break;
+        case "string":
+          this.items.push({ content: alert, type });
       }
     },
     clear() {
-      this.items = []
-    }
-  }
-})
+      this.items = [];
+    },
+    async callAPI(url, opts) {
+      var response = await fetch(url, opts);
+      var data = await response.json();
+      if (!response.ok) {
+        for (let err of data.errors) {
+          this.items.push({
+            content: err,
+            type: "danger",
+          });
+        }
+        return;
+      }
+      return data;
+    },
+  },
+});

@@ -77,25 +77,32 @@ export default {
       // Update UI
       this.fetchedData.items = this.fetchedData.items.filter(item => item._id != id)
     },
-    async updateHandler(event) {
+    async updateHandler(event, opts) {
+      if (this.selectedItem == null) { return }
       this.isLoading = true
       let form = event.target
       let formData = new FormData(form)
       let id = this.selectedItem._id
       let apiURL = `${this.apiUrl}/${id}/update`
-      for (const [key, val] of formData.entries()) {
-        if (val == this.selectItem[key] || !val) {
+      var entries = [...formData]
+      for (const [key, val] of entries) {
+        if (val == this.selectedItem[key] || this.selectedItem && this.selectedItem[key] != val && !val) {
           formData.delete(key)
         }
       }
       let formDataJSON = JSON.stringify(Object.fromEntries(formData.entries()))
-      let payload = {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: formDataJSON
-      }
+      let payload = opts && opts.sendFile
+        ? {
+          method: "PATCH",
+          body: formData
+        }
+        : {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: formDataJSON
+        }
       this.callAPI(apiURL, payload)
     },
     selectItem(item) {
@@ -116,23 +123,6 @@ export default {
         content: 'Xóa thành công',
         type: 'success'
       })
-      // var response = await fetch('http://localhost:3000/admin/product/delete', {
-      //   method: "DELETE",
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify(body)
-      // })
-      // var data = await response.json()
-      // if (!response.ok) {
-      //   data.errors?.forEach(error => {
-      //     this.alertsStore.push({
-      //       content: error.msg,
-      //       type: 'danger'
-      //     })
-      //   })
-      //   return
-      // }
     },
     updateSelectedItem() {
       if (this.selectedRows.length > 1) {
@@ -202,7 +192,8 @@ export default {
         </div>
         <VTable class="table table-bordered table-hover" :data="fetchedData ? fetchedData.items : []" :filters="filters"
           :page-size="20" v-model:currentPage="currentPage" selectionMode="multiple"
-          @totalPagesChanged="totalPages = $event" @stateChanged="selectedRows = $event.selectedRows; fetchedData.selectedItems = $event.selectedRows"
+          @totalPagesChanged="totalPages = $event"
+          @stateChanged="selectedRows = $event.selectedRows; fetchedData.selectedItems = $event.selectedRows"
           selectedClass="bg-primary bg-gradient bg-opacity-50" ref="table" v-bind="$attrs">
           <template #head>
             <slot name="tableColumnNames" />

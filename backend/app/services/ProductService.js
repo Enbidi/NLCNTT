@@ -1,9 +1,30 @@
-const { Product } = require("../models/Product");
-const BaseService = require("./BaseService");
+const { Product, ProductSchema, SpecsSchema } = require("../models/Product")
+const BaseService = require("./BaseService")
 
+// const productSchemaFields = Object.keys(ProductSchema.paths)
+const productSchemaFields = [
+  "name",
+  "price",
+  "img",
+  "description",
+  "origin",
+  "branch",
+]
+// const specsSchemaFields = Object.keys(SpecsSchema.paths)
+const specsSchemaFields = [
+  "screen",
+  "os",
+  "frontCamera",
+  "backCamera",
+  "chip",
+  "SIMs",
+  "charging",
+  "RAM",
+  "diskSize",
+]
 class ProductService extends BaseService {
   constructor(model) {
-    super(model);
+    super(model)
   }
   fetchLimitWithOriginAndBranch(filter, limit, cb) {
     this.model
@@ -11,50 +32,45 @@ class ProductService extends BaseService {
       .limit(limit)
       .populate("origin")
       .populate("branch")
-      .exec(cb);
-    // super.fetch(x`
-    //   filter,
-    //   {
-    //     limit,
-    //     populationOptions: [
-    //       { path: "origin", select: "country _id" },
-    //       { path: "branch", select: "name _id" },
-    //       { path: "inSales" }
-    //     ],
-    //   },
-    //   cb
-    // );
+      .exec(cb)
+  }
+  _adjustProductFromFlattenObj(product, obj) {
+    for (let [key, val] of Object.entries(obj)) {
+      if (productSchemaFields.includes(key)) {
+        product[key] = val
+      } else if (specsSchemaFields.includes(key)) {
+        product.specs[key] = val
+      }
+    }
+  }
+  async updateProduct(id, obj, cb) {
+    var product = await super.findOne({ _id: id })
+    this._adjustProductFromFlattenObj(product, obj)
+    return await product.save(cb)
+  }
+  async createProduct(obj, cb) {
+    var product = new this.model()
+    product.specs = {}
+    this._adjustProductFromFlattenObj(product, obj)
+    return await product.save(cb)
   }
   async findProductByName(name, cb) {
-    Product.findProductByName(name, cb);
+    Product.findProductByName(name, cb)
   }
   async fetchComments(filter, cb) {
-    if (cb) {
-      this.model.findOne(filter, "_id").populate("comments").exec(cb);
-      return;
-    }
-    await this.model.findOne(filter, "_id").populate("comments");
+    await this.model.findOne(filter, "_id").populate("comments").exec(cb)
   }
   findOne(filter, cb) {
-    this.model.findOne(filter).populate("branch").populate("origin").exec(cb);
+    this.model.findOne(filter).populate("branch").populate("origin").exec(cb)
   }
   async getTopPurchasedProducts(top, cb) {
-    if (cb) {
-      this.model
-        .find()
-        .populate("billsCount")
-        .sort("-billsCount")
-        .limit(top)
-        .exec(cb);
-      return;
-    }
     return await this.model
       .find()
       .populate("billsCount")
       .sort("-billsCount")
       .limit(top)
-      .exec();
+      .exec(db)
   }
 }
 
-module.exports = new ProductService(Product);
+module.exports = new ProductService(Product)

@@ -111,75 +111,31 @@ exports.addProductPost = [
   upload.single("img"),
   validateSchema(creationSchema),
   (req, res) => {
-    // const productData = matchedData(req, { locations: ["body"] });
-    const product = {
-      name: req.body.name,
-      price: req.body.price,
-      img: req.body.img,
-      description: req.body.description,
-      origin: req.body.origin,
-      branch: req.body.branch,
-      specs: {
-        screen: req.body.screen,
-        os: req.body.os,
-        frontCamera: req.body.frontCamera,
-        backCamera: req.body.backCamera,
-        chip: req.body.chip,
-        SIMs: req.body.sims,
-        charging: req.body.charging,
-        RAM: req.body.ram,
-        diskSize: req.body.diskSize,
-      },
-    };
-    productService.createOne(product, (err, product) => {
+    const product = matchedData(req, { locations: ["body"] });
+    productService.createProduct(product, (err, product) => {
       if (err) {
         return next(err);
       }
       res.status(200).json({
         created: product,
       });
-    });
+    })
   },
 ];
 
 exports.productPatch = [
+  upload.single("img"),
   validateSchema(updationSchema),
   (req, res) => {
-    // const product = matchedData(req, {
-    //   locations: ["body"],
-    // });
-    const product = {
-      name: req.body.name,
-      price: req.body.price,
-      img: req.body.img,
-      description: req.body.description,
-      origin: req.body.origin,
-      branch: req.body.branch,
-      specs: {
-        screen: req.body.screen,
-        os: req.body.os,
-        frontCamera: req.body.frontCamera,
-        backCamera: req.body.backCamera,
-        chip: req.body.chip,
-        SIMs: req.body.sims,
-        charging: req.body.charging,
-        RAM: req.body.ram,
-        diskSize: req.body.diskSize,
-      },
-    };
-    productService.updateOne(
-      { _id: req.param.id },
-      product,
-      { new: true },
-      (err, product) => {
-        if (err) {
-          return next(err);
-        }
-        res.status(200).json({
-          updated: product,
-        });
+    var product = matchedData(req, { locations: ['body'] })
+    productService.updateProduct(req.params.id, product, (err, product) => {
+      if (err) {
+        return next(err);
       }
-    );
+      res.status(200).json({
+        updated: product,
+      });
+    })
   },
 ];
 

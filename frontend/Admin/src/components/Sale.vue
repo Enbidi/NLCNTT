@@ -24,14 +24,14 @@ const saleType = ref(0)
     :fetched-data="salesStore">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addOriginModal">
-        Thêm xuất sứ
+        Thêm khuyến mãi
       </ModalTriggerButton>
     </template>
 
     <template #additionModal="{ addHandler, errors }">
       <Modal id="addOriginModal">
         <template #modalTitle>
-          Thêm xuất sứ
+          Thêm khuyến mãi
         </template>
         <form @submit.prevent="addHandler($event, { sendRaw: true })" method="POST">
           <!-- Name input -->
@@ -84,7 +84,7 @@ const saleType = ref(0)
     <template #updationModal="{ updateHandler, errors, selectedItem }">
       <Modal id="updateOriginModal" ref="updationModal">
         <template #modalTitle>
-          Sửa xuất sứ
+          Sửa khuyến mãi
         </template>
         <form @submit.prevent="updateHandler($event)" method="POST">
           <!-- Name input -->
@@ -127,7 +127,7 @@ const saleType = ref(0)
     <template #deletionModal="{ deleteHandler, errors }">
       <Modal id="deleteOriginModal" ref="deletionModal">
         <template #modalTitle>
-          Xóa xuất sứ
+          Xóa khuyến mãi
         </template>
         <div class="modal-body">
           <dir>
@@ -155,18 +155,17 @@ const saleType = ref(0)
       <VTh sortKey="end">Ngày kết thúc</VTh>
       <th>Loại khuyến mãi</th>
       <VTh sortKey="percent">Phần trăm giảm/Giá trị giảm</VTh>
-      <VTh sortKey="content">Nội dung</VTh>
+      <VTh sortKey="content">Trạng thái</VTh>
       <th>Các sản phẩm được giảm</th>
     </template>
     <template #tableColumnDatas="{ rows, selectItem }">
       <VTr v-for="row in rows" :row="row">
-        <td>{{ row._id }}</td>
-        <td>{{ row.start }}</td>
-        <td>{{ row.end }}</td>
-        <td>{{ row.saleType == 'Promotion' ? 'Phần trăm' : 'Giảm trực tiếp' }}</td>
-        <td>{{ row.saleType == 'Promotion' ? row.percent : row.value }}</td>
-        <td>{{ row.percent + '%' }}</td>
-        <td>{{ row.content }}</td>
+        <td class="align-middle">{{ row._id }}</td>
+        <td class="align-middle">{{ row.start }}</td>
+        <td class="align-middle">{{ row.end }}</td>
+        <td class="align-middle">{{ row.saleType == 'Promotion' ? 'Phần trăm' : 'Giảm trực tiếp' }}</td>
+        <td class="align-middle">{{ row.saleType == 'Promotion' ? row.percent : row.value }}</td>
+        <td class="align-middle">{{ row.isExpired == true ? 'Hết hạn' : 'Hoạt động' }}</td>
         <td>
           <ul class="list-group list-group-light">
             <li v-for="product in row.products" class="list-group-item">

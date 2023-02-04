@@ -82,7 +82,7 @@ const deletionModal = useTemplateRef("deletionModal")
             </div>
 
             <div class="form-outline mb-4">
-              <input type="number" id="addProductRAMInput" class="form-control" name="ram" />
+              <input type="number" id="addProductRAMInput" class="form-control" name="RAM" />
               <label class="form-label" for="addProductRAMInput">RAM</label>
             </div>
 
@@ -92,7 +92,7 @@ const deletionModal = useTemplateRef("deletionModal")
             </div>
 
             <div class="form-outline mb-4">
-              <input type="text" id="addProductSIMsInput" class="form-control" name="sims" />
+              <input type="text" id="addProductInput" class="form-control" name="SIMs" />
               <label class="form-label" for="addProductSIMsInput">Số SIM</label>
             </div>
 
@@ -146,7 +146,7 @@ const deletionModal = useTemplateRef("deletionModal")
         <template #modalTitle>
           Thêm sản phẩm
         </template>
-        <form @submit.prevent="updateHandler($event)" method="POST">
+        <form @submit.prevent="updateHandler($event, { sendFile: true })" method="POST">
           <!-- Name input -->
           <div class="modal-body">
             <div class="form-outline mb-4">
@@ -191,7 +191,7 @@ const deletionModal = useTemplateRef("deletionModal")
             </div>
 
             <div class="form-outline mb-4">
-              <input type="number" id="updateProductRAMInput" class="form-control" name="ram"
+              <input type="number" id="updateProductRAMInput" class="form-control" name="RAM"
                 :value="selectedItem?.specs?.RAM" />
               <label class="form-label" for="updateProductRAMInput">RAM</label>
             </div>
@@ -203,7 +203,7 @@ const deletionModal = useTemplateRef("deletionModal")
             </div>
 
             <div class="form-outline mb-4">
-              <input type="text" id="updateProductSIMsInput" class="form-control" name="sims"
+              <input type="text" id="updateProductSIMsInput" class="form-control" name="SIMs"
                 :value="selectedItem?.specs?.SIMs" />
               <label class="form-label" for="updateProductSIMsInput">Số SIM</label>
             </div>
@@ -366,7 +366,7 @@ const deletionModal = useTemplateRef("deletionModal")
           </VTr>
           <VTr :row="row">
             <td>
-              Ram: {{ row.specs.ram }}
+              RAM: {{ row.specs.RAM }}
             </td>
           </VTr>
           <VTr :row="row">

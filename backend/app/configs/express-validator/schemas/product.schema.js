@@ -163,7 +163,7 @@ const creationSchema = {
       errorMessage: "Thông số chip không được trống"
     }
   },
-  sims : {
+  SIMs : {
     notEmpty: {
       errorMessage: "Thông số sim đang trống"
     }
@@ -173,7 +173,7 @@ const creationSchema = {
       errorMessage: "Thông số sạc không được trống"
     }
   },
-  ram: {
+  RAM: {
     isInt: true,
     errorMessage: "Thông số RAM không hợp lệ"
   },

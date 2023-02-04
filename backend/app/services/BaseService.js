@@ -6,11 +6,7 @@ class BaseService {
     this.model.findOneAndRemove(filter, cb);
   }
   async updateOne(filter, obj, options = {}, cb) {
-    if (cb !== undefined) {
-      this.model.findOneAndUpdate(filter, obj, options, cb);
-      return;
-    } 
-    return await this.model.findOneAndUpdate(filter, obj, options).exec();
+    return await this.model.findOneAndUpdate(filter, obj, options).exec(cb);
   }
   async update(filter, obj, options = {}) {
     return await this.model.findOneAndUpdate(filter, obj, options).exec();
@@ -67,11 +63,7 @@ class BaseService {
     this.model.find(filter, cb);
   }
   async findOne(filter, cb) {
-    if (cb) {
-      this.model.findOne(filter, cb);
-      return;
-    }
-    return await this.modal.findOne(filter).exec();
+    return await this.model.findOne(filter).exec(cb);
   }
   async isExist(filter) {
     switch(typeof filter) {

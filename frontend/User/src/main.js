@@ -5,7 +5,9 @@ import router from './router'
 import { createPinia } from 'pinia'
 import './assets/main.css'
 import 'animate.css'
-
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+AOS.init()
 // const routes = [
 //   { path: "/products", component: ProductView },
 //   { path: "/product/detail", component: import("./components/ProductDetail.vue")},

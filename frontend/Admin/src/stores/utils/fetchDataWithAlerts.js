@@ -1,7 +1,5 @@
 import { useAlertsStore } from "../alerts";
 
-const alertsStore = 1;
-
 export default async (alertsStore, url, opts) => {
   var response = await fetch(url, opts);
   var data = await response.json();

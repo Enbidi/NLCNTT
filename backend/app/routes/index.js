@@ -1,12 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-const authController = require("../controllers/authController");
 const connectEnsureLogin = require("connect-ensure-login");
-const productAPI = require("../controllers/productController");
-const branchAPI = require("../controllers/branchController");
 /* GET home page. */
-
 router.use(require("./publicAPI"));
 
 router.get('/', function(req, res, next) {
