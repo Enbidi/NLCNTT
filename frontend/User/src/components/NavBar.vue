@@ -55,9 +55,9 @@ export default {
           <NavItem path="/product">
             Sản phẩm
           </NavItem>
-          <NavItem path="/product/:id">
+          <!-- <NavItem path="/product/:id">
             Chi tiết sản phẩm
-          </NavItem>
+          </NavItem> -->
           <NavItem path="/cart">
             Giỏ hàng
           </NavItem>

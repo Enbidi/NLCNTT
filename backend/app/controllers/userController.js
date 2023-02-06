@@ -13,6 +13,7 @@ const {
 } = require("express-validator");
 
 const userService = require("../services/UserService");
+const { validate } = require("../middlewares/express-validator.middleware");
 
 function getValidationChains(optionals) {
   const chains = [];
@@ -78,6 +79,22 @@ function getValidationChains(optionals) {
         ])
   );
 }
+
+exports.getMonthlyRegisterdUserStatistic = [
+  validate(
+    query("no_month")
+  ),
+  (req, res, next) => {
+    userService.getMonthlyRegisteredUsers(req.query.no_month, (err, users) => {
+      if (err) {
+        return next(err)
+      }
+      res.status(200).json({
+        items: users
+      })
+    })
+  }
+]
 
 exports.usersGet = async (req, res) => {
   User.find().then((users) => {

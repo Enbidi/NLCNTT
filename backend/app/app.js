@@ -70,16 +70,16 @@ passport.deserializeUser(User.deserializeUser());
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/admin', adminRouter);
-app.use("/dummy", (req, res) => {
-  const saleService = require("./services/SaleService");
-  saleService.getActiveSales(undefined, (err, sales) => {
+app.use("/dummy", (req, res, next) => {
+  var billService = require("./services/BillService");
+  billService.getMonthlyStatistics((err, bills) => {
     if (err) {
       return next(err);
     }
     res.status(200).json({
-      items: sales
-    })
-  });
+      items: bills
+    });
+  })
 })
 
 // catch 404 and forward to error handler

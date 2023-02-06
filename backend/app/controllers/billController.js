@@ -13,6 +13,25 @@ const billDetailService = require("../services/BillDetailService");
 const saleService = require("../services/SaleService");
 const productService = require("../services/ProductService");
 const { default: mongoose } = require("mongoose");
+const { validate } = require("../middlewares/express-validator.middleware");
+
+exports.getMonthlyStatistic = [
+  validate(
+    query("no_month")
+      .isNumeric()
+      .toInt()
+  ),
+  (req, res) => {
+    billService.getMonthlyStatistics(req.query.no_month, (err, bills) => {
+      if (err) {
+        return next(err)
+      }
+      res.status(200).json({
+        items: bills
+      })
+    })
+  }
+]
 
 exports.billsGet = [
   parallelValidate(query("limit").default(20)),

@@ -1,9 +1,8 @@
 <script setup>
-import { onMounted } from 'vue'
 import { useAlertsStore } from '../stores/alerts'
 const alertsStore = useAlertsStore()
-onMounted(() => {
-  setTimeout(() => alertsStore.items = [], 10000)
+alertsStore.$subscribe(() => {
+  setTimeout(alertsStore.clear, 5000)
 })
 </script>
 

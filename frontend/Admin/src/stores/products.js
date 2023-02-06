@@ -11,7 +11,7 @@ export const useProductsStore = defineStore("products", {
     async fetchProducts() {
       if (this.items && this.items.length == 0) {
         var url = "http://localhost:3000/admin/product"
-        var data = await fetchData(this.alertsStore, url)
+        var data = await this.alertsStore.callAPI("danger", url)
         this.items = data.items
       }
     }

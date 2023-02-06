@@ -46,6 +46,9 @@ class BillService extends BaseService {
     return await this.model.fetchDetailsWithTotal({ _id: bill._id }, 1)
     // return bill;
   }
+  async getMonthlyStatistics(limit, cb) {
+    await Bill.getMonthlyRevenue(limit, cb);
+  }
 }
 
 module.exports = new BillService(Bill);

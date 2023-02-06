@@ -5,7 +5,8 @@ const { Schema } = mongoose;
 
 const options = { 
   discriminatorKey: "role",
-  toJSON: { virtuals: true }
+  toJSON: { virtuals: true },
+  timestamps: true
 };
 
 const UserSchema = new Schema({
@@ -23,6 +24,19 @@ const UserSchema = new Schema({
 UserSchema.virtual("name").get(function() {
   return `${this.firstname} ${this.lastname}`;
 })
+
+UserSchema.statics.getMonthlyRegisteredUsers = async function(limit, cb) {
+  return await this.aggregate([
+    { $sort: { createdAt: -1 } },
+    { $limit: limit },
+    {
+      $group: {
+        _id: { $month: "$createdAt" },
+        count: { $count: {} }
+      }
+    }
+  ]).exec(cb)
+}
 
 UserSchema.statics.findUserByEmail = function(email, cb) {
   return this.where("email", email).exec(cb);

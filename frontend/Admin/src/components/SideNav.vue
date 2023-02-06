@@ -17,7 +17,7 @@ import NavLink from './NavLink.vue'
             <template v-slot:icon>
               <i class="fas fa-tachometer-alt"></i>
             </template>
-            Dashboard
+            <router-link to="/" class="nav-link">Dashboard</router-link>
           </NavLink>
           <div class="sb-sidenav-menu-heading">Interface</div>
           <NavLink class="collapsed" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#demoCollapse"

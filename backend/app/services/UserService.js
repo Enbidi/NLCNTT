@@ -13,6 +13,10 @@ class UserService extends BaseService {
     await this.model.findOne({ email }).exec();
   }
 
+  async getMonthlyRegisteredUsers(limit, cb) {
+    return await User.getMonthlyRegisteredUsers(limit, cb)
+  }
+
   // async deleteOne(id, cb) {
   //   super.deleteOne(id).then(cb);
   // }

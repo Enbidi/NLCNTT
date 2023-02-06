@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 const { BillDetail } = require("./BillDetail");
-const { Product } = require("./Product");
+const { Product, ProductSchema } = require("./Product");
 const { Sale } = require("./Sale");
 
 const CreditCardSchema = new Schema(
@@ -127,11 +127,11 @@ BillSchema.statics.fetchDetailsWithTotal = async function (filter, limit, cb) {
                   if: {
                     $cond: {
                       if: {
-                        $isArray: "$saleDetails"
+                        $isArray: "$saleDetails",
                       },
-                      then: { $ne: [ { $size: "$saleDetails" }, 0 ] },
-                      else: false
-                    }
+                      then: { $ne: [{ $size: "$saleDetails" }, 0] },
+                      else: false,
+                    },
                   },
                   then: {
                     $reduce: {
@@ -148,7 +148,10 @@ BillSchema.statics.fetchDetailsWithTotal = async function (filter, limit, cb) {
                                     $eq: ["$$this.saleType", "Promotion"],
                                   },
                                   then: {
-                                    $multiply: ["$$value", { $divide: ["$$this.percent", 100] }],
+                                    $multiply: [
+                                      "$$value",
+                                      { $divide: ["$$this.percent", 100] },
+                                    ],
                                   },
                                 },
                                 {
@@ -165,7 +168,7 @@ BillSchema.statics.fetchDetailsWithTotal = async function (filter, limit, cb) {
                       },
                     },
                   },
-                  else: "$unitPrice"
+                  else: "$unitPrice",
                 },
               },
             },
@@ -199,6 +202,68 @@ BillSchema.statics.fetchDetailsWithTotal = async function (filter, limit, cb) {
   ])
     .limit(limit)
     .exec(cb);
+};
+
+BillSchema.statics.getMonthlyRevenue = async function (limit, cb) {
+  return await this.aggregate([
+    { 
+      $sort: {
+        createdAt: -1
+      }
+    },
+    {
+      $limit: limit
+    },
+    {
+      $lookup: {
+        from: BillDetail.collection.collectionName,
+        localField: "_id",
+        foreignField: "bill",
+        as: "details",
+        pipeline: [
+          {
+            $lookup: {
+              from: Product.collection.collectionName,
+              localField: "product",
+              foreignField: "_id",
+              as: "unitPrice",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 0,
+                    price: 1,
+                  },
+                }
+              ]
+            },
+          },
+          {
+            $set: { unitPrice: { $mergeObjects: ["$unitPrice"] } }
+          },
+          {
+            $set: { unitPrice: "$unitPrice.price"}
+          },
+          {
+            $set: { subtotal: { $multiply: ["$unitPrice", "$quantity"] } }
+          }
+        ],
+      }
+    },
+    {
+      $set: {
+        total: {
+          $sum: "$details.subtotal"
+        }
+      }
+    },
+    {
+      $group: {
+        _id: { $month: "$createdAt" },
+        bills: { $push: "$$ROOT" },
+        revenueInMonth: { $sum: "$total" }
+      },
+    },
+  ]).exec(cb)
 };
 
 const Bill = mongoose.model("Bill", BillSchema);

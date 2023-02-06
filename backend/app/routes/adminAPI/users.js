@@ -13,4 +13,6 @@ router.delete("/:id/delete", userController.userDelete);
 
 router.get("/find", userController.findUserByNameGet);
 
+router.get("/statistic", userController.getMonthlyRegisterdUserStatistic);
+
 module.exports = router;

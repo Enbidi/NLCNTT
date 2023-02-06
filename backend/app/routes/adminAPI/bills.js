@@ -12,4 +12,6 @@ router.patch("/:id/update", billController.billPatch);
 
 router.delete("/:id/delete", billController.billDelete);
 
+router.get("/statistic", billController.getMonthlyStatistic)
+
 module.exports = router;
