@@ -81,6 +81,9 @@ class BaseService {
       return await this.model.exists(filter);
     }
   }
+  size(cb) {
+    return this.model.countDocuments().exec(cb)
+  }
 }
 
 module.exports = BaseService;

@@ -39,4 +39,6 @@ router.delete("/:id/delete", productController.productDelete);
 
 router.get("/find", productController.findProductByNameGet);
 
+router.get("/size", productController.getSize);
+
 module.exports = router;

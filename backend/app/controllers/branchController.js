@@ -11,6 +11,15 @@ const {
 const branchService = require("../services/BranchService");
 const { default: mongoose } = require("mongoose");
 
+exports.getSize = (req, res) => {
+  branchService.size((err, size) => {
+    if (err) {
+      return next(err);
+    }
+    res.status(200).json(size);
+  })
+}
+
 exports.branchesGet = [
   query("limit").default(20),
   async (req, res) => {

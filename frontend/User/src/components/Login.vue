@@ -1,7 +1,7 @@
 <script>
 import { useAuthStore } from '../stores/auth'
 import { useAlertsStore } from '../stores/alerts'
-import { wait } from '../utils'
+import { convertFormDataToJSON, wait } from '../utils'
 export default {
   inject: ['isLoading'],
   setup() {
@@ -22,22 +22,21 @@ export default {
   methods: {
     async loginAPI(event) {
       this.isLoading = true
-      var form = event.target
-      var formData = new FormData(form)
-      var formDataJSON = JSON.stringify(Object.fromEntries(formData.entries()))
+      var formData = new FormData(event.target)
+      var formDataJSON = convertFormDataToJSON(formData)
       var [response, _] = await Promise.all([fetch('http://localhost:3000/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: formDataJSON
-        }), wait(700)])
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: formDataJSON
+      }), wait(700)])
       this.isLoading = false
       if (!response.ok) {
         this.alertsStore.push(
           response.status == 401
-          ? { content: 'Tên đăng nhập hoặc mật khẩu không đúng', type: 'danger'}
-          : { content: 'Gặp lỗi gì rồi', type: 'danger'}
+            ? { content: 'Tên đăng nhập hoặc mật khẩu không đúng', type: 'danger' }
+            : { content: 'Gặp lỗi gì rồi', type: 'danger' }
         )
         return
       }
@@ -52,7 +51,7 @@ export default {
         replace: true
       })
     }
-  }
+  },
 };
 </script>
 
@@ -94,7 +93,7 @@ export default {
               </div>
 
               <div>
-                <p class="mb-0">Không có tài khoản? <a href="#!" class="text-white-50 fw-bold">Đăng ký</a>
+                <p class="mb-0">Không có tài khoản? <a href="javascript:void(0)" class="text-white-50 fw-bold" @click="isLogging=false">Đăng ký</a>
                 </p>
               </div>
 

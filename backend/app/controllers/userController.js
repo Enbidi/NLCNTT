@@ -15,74 +15,22 @@ const {
 const userService = require("../services/UserService");
 const { validate } = require("../middlewares/express-validator.middleware");
 
-function getValidationChains(optionals) {
-  const chains = [];
-  chains.push(header("Content-Type").isIn(["application/json"]));
-  chains.push(
-    optionals.firstname
-      ? body("firstname").optional().trim().isLength({ min: 1 }).escape()
-      : body("firstname").trim().isLength({ min: 1 }).escape()
-  );
-  chains.push(
-    optionals.lastname
-      ? body("lastname").optional().trim().isLength({ min: 1 }).escape()
-      : body("lastname").trim().isLength({ min: 1 }).escape()
-  );
-  chains.push(
-    optionals.number
-      ? body("number", "Số điiện thoại không được để trống")
-          .optional()
-          .trim()
-          .isLength({ min: 10, max: 10 })
-          .escape()
-      : body("number", "Số điiện thoại không được để trống")
-          .trim()
-          .isLength({ min: 10, max: 10 })
-          .escape()
-  );
-  chains.push(
-    optionals.email
-      ? body("email", "Email không hợp lệ")
-          .optional()
-          .isEmail()
-          .normalizeEmail()
-      : body("email", "Email không hợp lệ").isEmail().normalizeEmail()
-  );
-  chains.push(
-    optionals.sex
-      ? body("sex", "Giới tính không được để trống")
-          .optional()
-          .isIn(["Male", "Female"])
-      : body("sex", "Giới tính không được để trống").isIn(["Male", "Female"])
-  );
-  chains.push(
-    optionals.password
-      ? body("password", "Mật khẩu không được để trống")
-          .optional()
-          .trim()
-          .isLength({ min: 5 })
-          .escape()
-      : body("password", "Mật khẩu không được để trống")
-          .trim()
-          .isLength({ min: 5 })
-          .escape()
-  );
-  chains.push(
-    optionals.role
-      ? body("role", "Xác định vai trò của người dụng được tạo")
-          .optional()
-          .isIn(["admin", "staff", "customer"])
-      : body("role", "Xác định vai trò của người dụng được tạo").isIn([
-          "admin",
-          "staff",
-          "customer",
-        ])
-  );
+exports.getSize = (req, res, next) => {
+  userService.size((err, size) => {
+    if (err) {
+      return next(err)
+    }
+    res.status(200).json(size)
+  })
 }
 
 exports.getMonthlyRegisterdUserStatistic = [
   validate(
     query("no_month")
+      .default(12)
+      .isNumeric()
+      .bail()
+      .toInt()
   ),
   (req, res, next) => {
     userService.getMonthlyRegisteredUsers(req.query.no_month, (err, users) => {

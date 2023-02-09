@@ -18,19 +18,20 @@ export const useAlertsStore = defineStore("alerts", {
     clear() {
       this.items = []
     },
-    async callAPI(alertType, url, opts) {
+    async callAPI(alertType, url, opts, json=true) {
       var response = await fetch(url, opts)
+      console.log(response)
       var data = await response.json();
-      if (!response.ok) {
+      if (!response.ok && data && data.errors) {
         for (let err of data.errors) {
           this.items.push({
-            content: err,
+            content: err.msg,
             type: alertType,
           })
         }
-        return;
+        return
       }
-      return data;
+      return json ? data : response
     },
   }
 })

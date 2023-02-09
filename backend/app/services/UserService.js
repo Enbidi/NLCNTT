@@ -2,8 +2,6 @@ const BaseService = require("./BaseService");
 
 const { User } = require("../models/User");
 
-const billService = require("./BillService");
-
 class UserService extends BaseService {
   constructor(model) {
     super(model);
@@ -14,7 +12,8 @@ class UserService extends BaseService {
   }
 
   async getMonthlyRegisteredUsers(limit, cb) {
-    return await User.getMonthlyRegisteredUsers(limit, cb)
+    var res = await User.getMonthlyRegisteredUsers(limit, cb)
+    return res
   }
 
   // async deleteOne(id, cb) {

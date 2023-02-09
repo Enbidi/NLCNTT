@@ -87,7 +87,7 @@ module.exports.signupPost = [
       return true;
     })
   ),
-  (req, res) => {
+  async (req, res, next) => {
     const { firstname, lastname, number, email, password, sex } = matchedData(req, 
       { locations: ["body"] });
     User.register(
@@ -98,7 +98,15 @@ module.exports.signupPost = [
         email,
         sex,
       },
-      password
+      password,
+      (err) => {
+        if (err) {
+          return next(err);
+        }
+        res.status(200).json({
+          state: "Success"
+        })
+      }
     );
   },
 ];

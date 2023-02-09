@@ -31,19 +31,14 @@ const validateProductParam = param("id", "ID sản phẩm không hợp lệ")
     return true;
   });
 
-const customOriginValidation = async (originId) => {
-  if (!(await originService.isExist(originId))) {
-    throw new Error("Id xuất sứ không tồn tại");
-  }
-  return true;
-};
-
-const customBranchValidation = async (branchId) => {
-  if (!(await branchService.isExist(branchId))) {
-    throw new Error("Id nhãn hiệu không tồn tại");
-  }
-  return true;
-};
+exports.getSize = (req, res, next) => {
+  productService.size((err, size) => {
+    if (err) {
+      return next(err)
+    }
+    res.status(200).json(size)
+  })
+}
 
 exports.topPurchasedProducts = [
   validate(

@@ -1,13 +1,54 @@
+<script setup>
+import { inject } from 'vue'
+import { useAuthStore } from '../stores/auth'
+import { useAlertsStore } from '../stores/alerts'
+import { convertFormDataToJSON, wait } from '../utils'
+import { useRouter } from 'vue-router'
+
+const alertsStore = useAlertsStore()
+const authStore = useAuthStore()
+const isLoading = inject('isLoading')
+const router = useRouter()
+async function signUp(event) {
+  isLoading.value = true
+  var url = 'http://localhost:3000/auth/signup'
+  var formData = new FormData(event.target)
+  var formDataJSON = convertFormDataToJSON(formData)
+  var fetchOpts = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: formDataJSON
+  }
+  var [response, _] = await Promise.all([alertsStore.callAPI('warning', url, fetchOpts, false), wait(700)])
+  isLoading.value = false
+  if (response == undefined || !response.ok) {
+    return
+  }
+  alertsStore.clear()
+  authStore.isAuthenticated = true
+  alertsStore.push({
+    content: 'Đăng kí thành công',
+    type: 'success'
+  })
+  router.push({
+    name: 'login',
+    replace: true
+  })
+}
+</script>
+
 <script>
 export default {
-  mounted: function () {
+  mounted() {
     this.$el.querySelectorAll('.form-outline').forEach(
       formOutline => {
         new mdb.Input(formOutline).init();
       }
     )
   }
-};
+}
 </script>
 
 <template>
@@ -23,7 +64,7 @@ export default {
                 <h2 class="fw-bold mb-2 text-uppercase">Đăng nhập</h2>
                 <p class="text-white-50 mb-5">Vui lòng nhập email và mật khẩu!</p>
 
-                <form action="/signup" method="POST">
+                <form @submit.prevent="signUp($event)" method="POST">
                   <div class="form-outline form-white mb-4">
                     <input type="text" id="firstname" class="form-control form-control-lg" name="firstname" />
                     <label class="form-label" for="firstname">Họ</label>
@@ -66,11 +107,6 @@ export default {
                   <a class="text-white"><i class="fab fa-google fa-lg"></i></a>
                 </div>
 
-              </div>
-
-              <div>
-                <p class="mb-0">Không có tài khoản? <a href="#!" class="text-white-50 fw-bold">Đăng ký</a>
-                </p>
               </div>
 
             </div>

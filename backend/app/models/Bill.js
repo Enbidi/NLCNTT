@@ -266,6 +266,67 @@ BillSchema.statics.getMonthlyRevenue = async function (limit, cb) {
   ]).exec(cb)
 };
 
+
+BillSchema.statics.getRevenueInSpecificMonth = async function (month, cb) {
+  return this.aggregate([
+    {
+      $match: {
+        $expr: {
+          $eq: [{ $month: "$createdAt"}, month]
+        }
+      }
+    },
+    {
+      $lookup: {
+        from: BillDetail.collection.collectionName,
+        localField: "_id",
+        foreignField: "bill",
+        as: "details",
+        pipeline: [
+          {
+            $lookup: {
+              from: Product.collection.collectionName,
+              localField: "product",
+              foreignField: "_id",
+              as: "unitPrice",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 0,
+                    price: 1,
+                  },
+                }
+              ]
+            },
+          },
+          {
+            $set: { unitPrice: { $mergeObjects: ["$unitPrice"] } }
+          },
+          {
+            $set: { unitPrice: "$unitPrice.price"}
+          },
+          {
+            $set: { subtotal: { $multiply: ["$unitPrice", "$quantity"] } }
+          }
+        ],
+      }
+    },
+    {
+      $set: {
+        total: {
+          $sum: "$details.subtotal"
+        }
+      }
+    },
+    {
+      $group: {
+        _id: { $month: "$createdAt" },
+        revenueInMonth: { $sum: "$total" }
+      },
+    },
+  ]).exec(cb)
+};
+
 const Bill = mongoose.model("Bill", BillSchema);
 
 module.exports = { Bill };

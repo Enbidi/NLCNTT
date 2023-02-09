@@ -13,4 +13,6 @@ router.delete("/:id/delete", branchController.deleteBranchGet);
 
 router.get("/find", branchController.findBranchByNameGet);
 
+router.get("/size", branchController.getSize);
+
 module.exports = router;

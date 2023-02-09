@@ -15,4 +15,6 @@ router.get("/find", userController.findUserByNameGet);
 
 router.get("/statistic", userController.getMonthlyRegisterdUserStatistic);
 
+router.get("/size", userController.getSize);
+
 module.exports = router;

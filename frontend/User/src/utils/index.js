@@ -18,12 +18,33 @@ export const wait = function(millis) {
 
 export const showLoading = async function(isLoading, work, millis) {
   isLoading.value = true
-  if (work.constructor.name == 'AsyncFuncion') {
-    await Promise.all([wait(millis), work()])
-  }
-  else {
-    await wait(millis)
-    work()
+  var _, result
+  if (work instanceof Function) {
+    if (work.constructor.name == 'AsyncFuncion') {
+      [_, result] = await Promise.all([wait(millis), work()])
+    }
+    else {
+      await wait(millis)
+      work()
+    }
+  } else if (work instanceof Promise) {
+    [_, result] = await work
   }
   isLoading.value = false
+  return result
+}
+
+export const convertFormDataToJSON = function(formData) {
+  var obj = {}
+  for (let [key, val] of formData.entries()) {
+    if (obj[key] == undefined) {
+      obj[key] = val
+    } else {
+      if (!(obj[key] instanceof Array)) {
+        obj[key] = [obj[key]]
+      }
+      obj[key].push(val)
+    }
+  }
+  return JSON.stringify(obj)
 }

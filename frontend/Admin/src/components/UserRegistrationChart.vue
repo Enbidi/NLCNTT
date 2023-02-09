@@ -11,21 +11,24 @@ const statisticsStore = useStatisticsStore()
 
 const data = computed(() => {
   return {
-    labels: statisticsStore.bills.map(bill => `Tháng ${bill._id}`),
+    labels: statisticsStore.users.map(user => `Tháng ${user._id}`),
     datasets: [{
-      label: 'Doanh thu',
+      label: 'Số lượt đăng kí',
       backgroundColor: '#f87979',
-      data: statisticsStore.bills.map(bill => bill.revenueInMonth)
+      data: statisticsStore.users.map(user => user.count)
     }]
   }
 })
-statisticsStore.fetchBills()
+statisticsStore.$subscribe((_, state) => {
+  console.log('Logged', state)
+})
+statisticsStore.fetchUsers()
 </script>
 
 <template>
   <ChartWrapper>
     <Suspense>
-      <Line id="revenueLineChart" :data="data" />
+      <Line id="userCreationChart" :data="data" />
     </Suspense>
     <!-- <Line v-if="statisticsStore.bills && statisticsStore.bills.length != 0" id="revenueLineChart" :data="data"/> -->
   </ChartWrapper>

@@ -1,6 +1,12 @@
 <script setup>
 import StatisticCard from './StatisticCard.vue'
 import RevenueChart from './RevenueChart.vue'
+import UserRegistrationChart from './UserRegistrationChart.vue'
+import { useSizesStore } from '../stores/sizes'
+import { useStatisticsStore } from '../stores/statistics'
+const sizesStore = useSizesStore()
+const statisticsStore = useStatisticsStore()
+statisticsStore.fetchNumericalDatas()
 </script>
 
 <template>
@@ -11,24 +17,18 @@ import RevenueChart from './RevenueChart.vue'
     </ol>
     <div class="row">
       <div class="col-xl-3 col-md-6">
-        <StatisticCard class="bg-primary">
-          Primary Card
+        <StatisticCard class="bg-primary" content="Tổng số người dùng" :title="statisticsStore.totalUser">
         </StatisticCard>
       </div>
       <div class="col-xl-3 col-md-6">
-        <StatisticCard class="bg-warning">
-          Warning Card
+        <StatisticCard class="bg-warning" content="Lợi nhuận trong tháng này" :title="statisticsStore.revenueInCurrentMonth">
         </StatisticCard>
       </div>
       <div class="col-xl-3 col-md-6">
-        <StatisticCard class="bg-success">
-          Success Card
-        </StatisticCard>
+        <StatisticCard class="bg-success" content="Tổng số sản phẩm" :title="statisticsStore.totalProduct"/>
       </div>
       <div class="col-xl-3 col-md-6">
-        <StatisticCard class="bg-danger">
-          Danger Card
-        </StatisticCard>
+        <StatisticCard class="bg-danger" content="Tổng số nhãn hiệu" :title="statisticsStore.totalBranch"/>
       </div>
     </div>
     <div class="row">
@@ -36,13 +36,7 @@ import RevenueChart from './RevenueChart.vue'
         <RevenueChart/>
       </div>
       <div class="col-xl-6">
-        <div class="card mb-4">
-          <div class="card-header">
-            <i class="fas fa-chart-bar me-1"></i>
-            Bar Chart Example
-          </div>
-          <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
-        </div>
+        <UserRegistrationChart/>
       </div>
     </div>
   </div>

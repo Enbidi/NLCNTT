@@ -33,6 +33,15 @@ exports.getMonthlyStatistic = [
   }
 ]
 
+exports.getRevenueInCurrentMonth = (req, res, next) => {
+  billService.getRevenueInCurrentMonth((err, revenue) => {
+    if (err) {
+      return next(err)
+    }
+    res.status(200).json(revenue[0].revenueInMonth)
+  })
+}
+
 exports.billsGet = [
   parallelValidate(query("limit").default(20)),
   async (req, res, next) => {

@@ -47,7 +47,12 @@ class BillService extends BaseService {
     // return bill;
   }
   async getMonthlyStatistics(limit, cb) {
-    await Bill.getMonthlyRevenue(limit, cb);
+    return await Bill.getMonthlyRevenue(limit, cb);
+  }
+  getRevenueInCurrentMonth(cb) {
+    var date = new Date()
+    var currentMonth = date.getMonth() + 1
+    return Bill.getRevenueInSpecificMonth(currentMonth, cb)
   }
 }
 

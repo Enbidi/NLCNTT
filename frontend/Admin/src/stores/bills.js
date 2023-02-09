@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { useAlertsStore } from './alerts'
-import fetchData from './utils/fetchDataWithAlerts'
 
 export const useBillsStore = defineStore("bills", {
   state: () => ({ items: [] }),
