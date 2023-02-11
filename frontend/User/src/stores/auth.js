@@ -15,7 +15,7 @@ export const useAuthStore = defineStore("auth", {
   },
   actions: {
     async fetchAuthInfo() {
-      var data = await this.alerts.callAPI("warning", "http://localhost:3000/auth/user_info")
+      var data = await this.alerts.callAPI("warning", import.meta.env.VITE_USER_INFO_URL)
       if (data == undefined) {
         return
       }

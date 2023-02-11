@@ -1,8 +1,9 @@
 <script>
+import { Dropdown } from 'mdb-ui-kit'
 export default {
   props: ['btnName'],
   mounted() {
-    this.toggleBtn = new mdb.Dropdown(this.$refs.dropdownBtn)
+    this.toggleBtn = new Dropdown(this.$refs.dropdownBtn)
   }
 }
 </script>

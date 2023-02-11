@@ -7,7 +7,8 @@ const routes = [
   { path: "/bills", component: () => import("./components/Bill.vue") },
   { path: '/users', component: () => import("./components/User.vue") },
   { path: '/branches', component: () => import("./components/Branch.vue") },
-  { path: '/sales', component: () => import('./components/Sale.vue') }
+  { path: '/sales', component: () => import('./components/Sale.vue') },
+  { path: '/expenditure', component: () => import('./components/Expenditure.vue')}
 ]
 
 export const router = createRouter({

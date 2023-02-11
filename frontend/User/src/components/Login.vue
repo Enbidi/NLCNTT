@@ -1,4 +1,5 @@
 <script>
+import { Input } from 'mdb-ui-kit'
 import { useAuthStore } from '../stores/auth'
 import { useAlertsStore } from '../stores/alerts'
 import { convertFormDataToJSON, wait } from '../utils'
@@ -15,7 +16,7 @@ export default {
   mounted: function () {
     this.$el.querySelectorAll('.form-outline').forEach(
       formOutline => {
-        new mdb.Input(formOutline).init();
+        new Input(formOutline).init();
       }
     )
   },
@@ -24,7 +25,7 @@ export default {
       this.isLoading = true
       var formData = new FormData(event.target)
       var formDataJSON = convertFormDataToJSON(formData)
-      var [response, _] = await Promise.all([fetch('http://localhost:3000/auth/login', {
+      var [response, _] = await Promise.all([fetch(import.meta.env.VITE_LOGIN_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

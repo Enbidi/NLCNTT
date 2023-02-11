@@ -1,0 +1,1 @@
+import{_ as c,c as s,o as t,a as e}from"./index-ed47b571.js";const o={},a=e("h1",{class:"mt-4"},"Quản lí thu chi",-1),n=e("ol",{class:"breadcrumb mb-4"},[e("li",{class:"breadcrumb-item active"},"Thu chỉ")],-1),r=e("div",{class:"row"},null,-1),_=[a,n,r];function l(i,d){return t(),s("div",null,_)}const h=c(o,[["render",l]]);export{h as default};

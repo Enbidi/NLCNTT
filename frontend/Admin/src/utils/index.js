@@ -12,7 +12,3 @@ export const convertFormDataToJSON = function(formData) {
   }
   return JSON.stringify(obj)
 }
-
-export const buildFetchOpt = function(opts) {
-  
-}

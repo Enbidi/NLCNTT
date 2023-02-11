@@ -3,22 +3,13 @@ import 'mdb-vue-ui-kit/css/mdb.min.css';
 import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
+import 'mdb-ui-kit/css/mdb.min.css'
 import './assets/main.css'
 import 'animate.css'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 AOS.init()
-// const routes = [
-//   { path: "/products", component: ProductView },
-//   { path: "/product/detail", component: import("./components/ProductDetail.vue")},
-//   { path: "/cart", component: Cart }
-// ]
 
-
-// const router = createRouter({
-//   history: createWebHashHistory(),
-//   routes
-// })
 const pinia = createPinia()
 const app = createApp(App)
 app.config.unwrapInjectedRef = true

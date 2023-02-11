@@ -7,23 +7,24 @@ var session = require('express-session');
 var passport = require('passport');
 var logger = require('morgan');
 var helmet = require('helmet');
+var { ensureLoggedIn } = require("connect-ensure-login");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
+var { usePassport } = require("./configs/passport");
 
 var app = express();
 const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 // mongoose.set("strictQuery", false);
-
 const { User } = require("./models/User");
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(helmet());
+// app.use(helmet());
 
 app.use(logger('dev'));
 
@@ -35,18 +36,13 @@ app.use(cookieParser());
 app.use(session({
   secret: "thisisasecret",
   saveUninitialized: true,
-  resave: false,
+  resave: true,
   cookie: { maxAge: 60 * 60 * 100 },
 }));
 
-app.use(passport.initialize());
+usePassport(app);
 
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(passport.session());
-
-passport.use(User.createStrategy());
-passport.serializeUser(User.serializeUser());
 // passport.serializeUser(function(user, cb) {
 //   process.nextTick(User.serializeUser(), user, cb);
 // });
@@ -60,7 +56,6 @@ passport.serializeUser(User.serializeUser());
 //     })
 //   })
 // })
-passport.deserializeUser(User.deserializeUser());
 // passport.deserializeUser(function(user, cb) {
 //   process.nextTick(() => {
 //     return cb(null, user);
@@ -68,7 +63,9 @@ passport.deserializeUser(User.deserializeUser());
 // })
 
 app.use('/', indexRouter);
+app.use("/user_ui", express.static(path.join(__dirname, 'user_files')));
 app.use('/user', usersRouter);
+app.use('/admin_ui', ensureLoggedIn('/auth/login'), express.static(path.join(__dirname, 'admin_files')));
 app.use('/admin', adminRouter);
 app.use("/dummy", (req, res, next) => {
   var billService = require("./services/BillService");

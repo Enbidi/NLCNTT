@@ -11,7 +11,7 @@ const isLoading = inject('isLoading')
 const router = useRouter()
 async function signUp(event) {
   isLoading.value = true
-  var url = 'http://localhost:3000/auth/signup'
+  var url = import.meta.env.VITE_SIGNUP_URL
   var formData = new FormData(event.target)
   var formDataJSON = convertFormDataToJSON(formData)
   var fetchOpts = {
@@ -40,11 +40,12 @@ async function signUp(event) {
 </script>
 
 <script>
+import { Input } from 'mdb-ui-kit'
 export default {
   mounted() {
     this.$el.querySelectorAll('.form-outline').forEach(
       formOutline => {
-        new mdb.Input(formOutline).init();
+        new Input(formOutline).init();
       }
     )
   }

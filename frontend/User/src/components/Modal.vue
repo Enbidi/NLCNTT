@@ -1,15 +1,16 @@
 <script>
+import { Input, Modal } from 'mdb-ui-kit'
 export default {
   props: ["id", "title"],
   inheritAttrs: false,
   mounted() {
     this.$refs.modal.querySelectorAll(".form-outline").forEach(
-      formOutline => new mdb.Input(formOutline).init()
+      formOutline => new Input(formOutline).init()
     )
     let modalRef = this.$refs.modal
-    this.instance = mdb.Modal.getInstance(modalRef)
+    this.instance = Modal.getInstance(modalRef)
     if (this.instance == undefined) {
-      this.instance = new mdb.Modal(modalRef)
+      this.instance = new Modal(modalRef)
     }
   },
   methods: {

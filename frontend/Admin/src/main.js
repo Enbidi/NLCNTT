@@ -6,7 +6,8 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { createPinia } from 'pinia'
 import { router } from './router'
 import './assets/main.css'
-
+import 'bootstrap/dist/css/bootstrap.css'
+import 'mdb-ui-kit/css/mdb.min.css'
 
 const pinia = createPinia()
 const app = createApp(App)

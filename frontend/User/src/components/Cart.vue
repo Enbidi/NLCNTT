@@ -30,7 +30,7 @@ async function order() {
     expiration: expirationDate,
     cvv: cvv.value
   }
-  var response = await fetch('http://localhost:3000/user/bill/add', {
+  var response = await fetch(import.meta.env.VITE_USER_URL + '/bill/add', {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

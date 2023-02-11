@@ -4,6 +4,8 @@ const router = require("express").Router();
 const authController = require("../../controllers/authController");
 /* GET home page. */
 
+router.get("/user/login", authController.userLoginGet);
+
 router.get("/login", authController.loginGet);
 
 router.get("/signup", authController.signupGet);

@@ -8,8 +8,8 @@ export const useSearchResultStore = defineStore('searchResult', {
     alerts: () => useAlertsStore()
   },
   actions: {
-    async fetchData(keyword) {
-      var url = new URL('http://localhost:3000/product/find')
+    async search(keyword) {
+      var url = new URL(import.meta.env.VITE_FIND_PRODUCT_URL)
       url.searchParams.append('keyword', keyword)
       var data = await this.alerts.callAPI("warning", url)
       if (data == undefined) {

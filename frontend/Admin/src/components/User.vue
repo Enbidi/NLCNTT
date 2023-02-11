@@ -1,11 +1,10 @@
 <script setup>
 import { inject } from 'vue'
 
+import useTemplateRef from './composables/useTemplateRef'
 import CommonActions from './CommonActions.vue'
 import Modal from './Modal.vue'
 import ModalTriggerButton from './ModalTriggerButton.vue'
-
-import { useTemplateRef } from './composables/useTemplateRef'
 import { useUsersStore } from '../stores/users'
 
 const usersStore = useUsersStore()
@@ -169,9 +168,9 @@ export default {
           Xóa người dùng
         </template>
         <div class="modal-body">
-          <dir>
+          <div>
             <p class="text-warning text-center">Bạn có chắc muốn xóa người dùng này</p>
-          </dir>
+          </div>
 
           <div v-if="errors && errors.length != 0" class="alert alert-danger">
             <p v-for="error in errors">{{ error.msg }}</p>

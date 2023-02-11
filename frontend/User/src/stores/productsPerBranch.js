@@ -15,7 +15,7 @@ export const useProductsPerBranchStore = defineStore("productsPerBranch", {
   actions: {
     async fetchData() {
       if (this.items.length == 0) {
-        var data = await this.alerts.callAPI("warning", "http://localhost:3000/branch/product")
+        var data = await this.alerts.callAPI("warning", import.meta.env.VITE_PRODUCT_PER_BRANCH_URL)
         if (data == undefined) {
           return
         }

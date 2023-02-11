@@ -7,7 +7,7 @@ export const useBillStore = defineStore("bill", {
   },
   actions: {
     async fetchData() {
-      var data = await this.alerts.callAPI("warning", "http://localhost:3000/user/bill")
+      var data = await this.alerts.callAPI("warning", import.meta.env.VITE_BILL_HISTORY_URL)
       if (data == undefined) {
         return
       }

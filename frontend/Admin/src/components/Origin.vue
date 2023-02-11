@@ -2,7 +2,7 @@
 import CommonActions from './CommonActions.vue'
 import Modal from './Modal.vue'
 import ModalTriggerButton from './ModalTriggerButton.vue'
-import { useTemplateRef } from './composables/useTemplateRef'
+import useTemplateRef from './composables/useTemplateRef'
 
 import { useOriginsStore } from '../stores/origins'
 

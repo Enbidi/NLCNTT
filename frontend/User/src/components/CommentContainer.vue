@@ -1,5 +1,6 @@
 <script>
 import { watch } from 'vue'
+import { Input } from 'mdb-ui-kit'
 import Comment from './Comment.vue'
 import Rating from './Rating.vue'
 import RatingInput from './RatingInput.vue'
@@ -19,8 +20,8 @@ export default {
     }
   },
   async mounted() {
-    this.$el.querySelectorAll(".form-outline").forEach(input => new mdb.Input(input).init())
-    var response = await fetch(`http://localhost:3000/product/${this.productId}/comment`)
+    this.$el.querySelectorAll(".form-outline").forEach(input => new Input(input).init())
+    var response = await fetch(import.meta.env.VITE_PRODUCT_URL + `/${this.productId}/comment`)
     if (!response.ok) {
       console.error(await response.json())
       return
@@ -33,7 +34,7 @@ export default {
       if (!this.authStore.isAuthenticated) {
         return
       }
-      const response = await fetch("http://localhost:3000/user/comment/add", {
+      const response = await fetch(import.meta.env.VITE_USER_URL + "/comment/add", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'

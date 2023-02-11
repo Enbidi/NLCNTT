@@ -1,6 +1,6 @@
 import { ref, onMounted, getCurrentInstance } from 'vue'
 
-export function useTemplateRef(refKey) {
+export default function(refKey) {
   const templateRef = ref(null)
   onMounted(() => {
     const currentInstance = getCurrentInstance()

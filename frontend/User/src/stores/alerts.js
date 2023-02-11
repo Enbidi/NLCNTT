@@ -20,7 +20,6 @@ export const useAlertsStore = defineStore("alerts", {
     },
     async callAPI(alertType, url, opts, json=true) {
       var response = await fetch(url, opts)
-      console.log(response)
       var data = await response.json();
       if (!response.ok && data && data.errors) {
         for (let err of data.errors) {

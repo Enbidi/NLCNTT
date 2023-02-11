@@ -6,28 +6,30 @@ const { parallelValidate } = require("../validate");
 
 const userService = require("../services/UserService");
 
-var path = require('path');
-
+var path = require("path");
+const { ensureLoggedIn } = require("connect-ensure-login");
 const { User } = require("../models/User");
 
 module.exports.loginGet = (req, res) => {
-  res.sendFile(path.join(process.env.VIEW_DIR, 'static/login.html'));
+  res.sendFile(path.join(process.env.VIEW_DIR, "static/login.html"));
 };
 
-module.exports.loginPost = [
-  passport.authenticate("local", { failureUrl: "/login" }),
-  (req, res) => {
-    console.log(req.session)
-    res.render('homepage');
-  },
-];
+module.exports.userLoginGet = (req, res) => {
+  res.sendFile(path.join(process.env.VIEW_DIR, "static/user/login.html"));
+}
+
+module.exports.loginPost = passport.authenticate("local", {
+  successReturnToOrRedirect: "/admin/index.html",
+  failureUrl: "/auth/login",
+  keepSessionInfo: true,
+});
 
 module.exports.logoutGet = (req, res, next) => {
   req.logout((err) => {
     if (err) {
       return next(err);
     }
-    res.redirect('/login');
+    res.redirect("/auth/login");
   });
 };
 
@@ -35,19 +37,19 @@ module.exports.getAuthInfo = [
   (req, res) => {
     if (req.user) {
       res.status(200).json({
-        item: req.user
+        item: req.user,
       });
     } else {
       res.status(401).json({
-        errors: ['Người dùng chưa đăng nhập']
+        errors: ["Người dùng chưa đăng nhập"],
       });
     }
-  }
-]
+  },
+];
 
 module.exports.signupGet = (req, res) => {
-  res.sendFile(path.join(process.env.VIEW_DIR, 'static/signup.html'));
-}
+  res.sendFile(path.join(process.env.VIEW_DIR, "static/signup.html"));
+};
 
 module.exports.signupPost = [
   parallelValidate(
@@ -66,7 +68,7 @@ module.exports.signupPost = [
     body("email", "Email không hợp lệ")
       .isEmail()
       .normalizeEmail()
-      .custom(async email => {
+      .custom(async (email) => {
         if (await userService.findUserByEmail(email)) {
           throw new Error("Email đã tồn tại");
         }
@@ -88,8 +90,10 @@ module.exports.signupPost = [
     })
   ),
   async (req, res, next) => {
-    const { firstname, lastname, number, email, password, sex } = matchedData(req, 
-      { locations: ["body"] });
+    const { firstname, lastname, number, email, password, sex } = matchedData(
+      req,
+      { locations: ["body"] }
+    );
     User.register(
       {
         firstname,
@@ -104,8 +108,8 @@ module.exports.signupPost = [
           return next(err);
         }
         res.status(200).json({
-          state: "Success"
-        })
+          state: "Success",
+        });
       }
     );
   },

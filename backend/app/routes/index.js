@@ -5,10 +5,6 @@ const connectEnsureLogin = require("connect-ensure-login");
 /* GET home page. */
 router.use(require("./publicAPI"));
 
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
 // router.get("/product/:id", productAPI.productGetById);
 
 // router.get("/product/:id/comment", productAPI.getComments);

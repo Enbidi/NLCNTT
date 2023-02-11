@@ -21,7 +21,7 @@ statisticsStore.fetchNumericalDatas()
         </StatisticCard>
       </div>
       <div class="col-xl-3 col-md-6">
-        <StatisticCard class="bg-warning" content="Lợi nhuận trong tháng này" :title="statisticsStore.revenueInCurrentMonth">
+        <StatisticCard class="bg-warning" content="Doanh thu trong tháng này" :title="statisticsStore.revenueInCurrentMonth">
         </StatisticCard>
       </div>
       <div class="col-xl-3 col-md-6">

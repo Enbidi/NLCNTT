@@ -8,7 +8,7 @@ export const useCommonProducts = defineStore("commonProducts", {
   },
   actions: {
     async fetchData() {
-      var url = new URL("http://localhost:3000/product/top_products")
+      var url = new URL(import.meta.env.VITE_COMMON_PRODUCTS_URL)
       url.searchParams.append("top", 5)
       var data = await this.alerts.callAPI("warning", url)
       if (data == undefined) {

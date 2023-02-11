@@ -3,7 +3,7 @@ import CommonActions from './CommonActions.vue'
 import Modal from './Modal.vue'
 import ModalTriggerButton from './ModalTriggerButton.vue'
 
-import { useTemplateRef } from './composables/useTemplateRef'
+import useTemplateRef from './composables/useTemplateRef'
 import { inject } from 'vue'
 
 import { useBillsStore } from '../stores/bills'

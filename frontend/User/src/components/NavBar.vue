@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     async logout() {
-      let res = await fetch('http://localhost:3000/auth/logout')
+      let res = await fetch(import.meta.env.VITE_LOGOUT_URL)
       if (!res.ok) {
         let err = await res.json()
         console.log(err)

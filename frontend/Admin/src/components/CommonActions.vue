@@ -2,6 +2,7 @@
 import { convertFormDataToJSON } from '../utils'
 import LoadingScreen from './LoadingScreen.vue'
 import { useAlertsStore } from '../stores/alerts'
+import { Input } from 'mdb-ui-kit'
 
 export default {
   components: {
@@ -17,7 +18,7 @@ export default {
   mounted() {
     this.$el.querySelectorAll('.form-outline').forEach(
       formOutline => {
-        new mdb.Input(formOutline).init();
+        new Input(formOutline).init();
       }
     )
   },

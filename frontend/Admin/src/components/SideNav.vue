@@ -8,24 +8,20 @@ import NavLink from './NavLink.vue'
     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
       <div class="sb-sidenav-menu">
         <div class="nav">
-          <div class="sb-sidenav-menu-heading">Core</div>
-          <a class="nav-link" href="index.html">
-            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-            Dashboard
-          </a>
+          <div class="sb-sidenav-menu-heading">Chủ yếu</div>
           <NavLink>
             <template v-slot:icon>
               <i class="fas fa-tachometer-alt"></i>
             </template>
             <router-link to="/" class="nav-link">Dashboard</router-link>
           </NavLink>
-          <div class="sb-sidenav-menu-heading">Interface</div>
+          <div class="sb-sidenav-menu-heading">DỮ LIỆU</div>
           <NavLink class="collapsed" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#demoCollapse"
             aria-expanded="false" aria-controls="demoCollapse">
             <template v-slot:icon>
               <i class="fas fa-columns"></i>
             </template>
-            Bảng Dữ Liệu
+            Bảng dữ liệu
             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
           </NavLink>
           <Collapse id="demoCollapse" parentId="sidenavAccordion">
@@ -39,7 +35,7 @@ import NavLink from './NavLink.vue'
               <router-link to="/sales" class="nav-link">Khuyến mãi</router-link>
             </template>
           </Collapse>
-          <NavLink class="collapsed" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#demo2"
+          <!-- <NavLink class="collapsed" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#demo2"
             aria-expanded="false" aria-controls="demo2">
             <template v-slot:icon>
               <i class="fas fa-book-open"></i>
@@ -68,13 +64,13 @@ import NavLink from './NavLink.vue'
               <a class="nav-link" href="404.html">404 Page</a>
               <a class="nav-link" href="500.html">500 Page</a>
             </Collapse>
-          </Collapse>
-          <div class="sb-sidenav-menu-heading">Addons</div>
+          </Collapse> -->
+          <div class="sb-sidenav-menu-heading">Quản lí thu chi</div>
           <NavLink>
             <template v-slot:icon>
               <i class="fas fa-chart-area"></i>
             </template>
-            Charts
+            Chi trả
           </NavLink>
           <NavLink>
             <template v-slot:icon>
