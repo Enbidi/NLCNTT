@@ -4,7 +4,11 @@ import CartItem from './CartItem.vue'
 
 import { useCartStore } from '../stores/cart'
 import { useAlertsStore } from '../stores/alerts'
+import GoogleMap from './GoogleMap.vue';
 const cartStore = useCartStore()
+cartStore.$subscribe((mutation, state) => {
+  console.log(state);
+});
 
 const cardType = ref(null)
 const cardNumber = ref(null)
@@ -71,59 +75,18 @@ async function order() {
                       <p class="mb-0">Bạn có {{ cartStore?.items.length }} trong giỏ hàng</p>
                     </div>
                     <div>
-                      <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!" class="text-body">price <i
+                      <p class="mb-0"><span class="text-muted">Sắp xếp theo:</span> <a href="javascript:void(0)"
+                          class="text-body" @click="cartStore.sortByPrice()">Giá <i
                             class="fas fa-angle-down mt-1"></i></a></p>
                     </div>
                   </div>
-                  <CartItem v-for="item in cartStore.items" :product="item" :key="item._id" />
-                  <!-- 
-                  <CartItem img-src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
-                    name="Iphone 11 pro"
-                    description="256GB, Navy Blue"/>
-
-                  <CartItem img-src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img2.webp"
-                    name="Samsung galaxy Note 10"
-                    description="256GB, Navy Blue"/> -->
-
-                  <!-- <CartItem img-src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img3.webp" name="Canon EOS M50" description="Onyx Black"/> -->
-
-                  <!-- <div class="card mb-3 mb-lg-0">
-                    <div class="card-body">
-                      <div class="d-flex justify-content-between">
-                        <div class="d-flex flex-row align-items-center">
-                          <div>
-                            <img
-                              src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img4.webp"
-                              class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
-                          </div>
-                          <div class="ms-3">
-                            <h5>MacBook Pro</h5>
-                            <p class="small mb-0">1TB, Graphite</p>
-                          </div>
-                        </div>
-                        <div class="d-flex flex-row align-items-center">
-                          <div style="width: 50px;">
-                            <h5 class="fw-normal mb-0">1</h5>
-                          </div>
-                          <div style="width: 80px;">
-                            <h5 class="mb-0">$1799</h5>
-                          </div>
-                          <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>
-                        </div>
-                      </div>
-                    </div>
-                  </div> -->
+                  <TransitionGroup  name="cart-item">
+                    <CartItem v-for="item in cartStore.items" :product="item" :key="item._id" />
+                  </TransitionGroup>
                 </div>
 
-                <!-- Pills navs -->
-                <!-- Pills navs -->
-
-                <!-- Pills content -->
-
-                <!-- Pills content -->
-
                 <div class="col-lg-5">
-                  <div class="card bg-primary text-white rounded-3">
+                  <div class="card bg-primary text-white rounded-3 h-100" style="min-height: 600px;">
                     <div class="card-header">
                       <ul class="nav nav-pills mb-3 row" id="pMethods" role="tablist">
                         <li class="nav-item col px-0" role="presentation">
@@ -138,7 +101,7 @@ async function order() {
                       </ul>
                     </div>
                     <div class="card-body">
-                      <div class="tab-content" id="pMethods-content">
+                      <div class="tab-content h-100" id="pMethods-content">
                         <div class="tab-pane fade show active" id="pMethods-pills-1" role="tabpanel"
                           aria-labelledby="pMethods-tab-1">
                           <div class="d-flex justify-content-between align-items-center mb-4">
@@ -175,8 +138,8 @@ async function order() {
                                 </label>
                               </div>
                               <div class="form-check float-start">
-                                <input class="form-check-input" type="radio" name="cardType" value="paypal" id="pOption4"
-                                  checked v-model="cardType">
+                                <input class="form-check-input" type="radio" name="cardType" value="paypal"
+                                  id="pOption4" checked v-model="cardType">
                                 <label class="form-check-label" for="pOption4">
                                   <a href="javascript:void(0)" type="submit" class="text-white"><i
                                       class="fab fa-cc-paypal fa-2x"></i></a>
@@ -191,7 +154,7 @@ async function order() {
 
                             <div class="form-outline form-white mb-4">
                               <input type="text" id="cardNumber" class="form-control form-control-lg" siez="17"
-                                placeholder="1234 5678 9012 3457" minlength="19" maxlength="19" v-model="cardNumber"/>
+                                placeholder="1234 5678 9012 3457" minlength="19" maxlength="19" v-model="cardNumber" />
                               <label class="form-label" for="cardNumber">Số thẻ</label>
                             </div>
 
@@ -199,7 +162,7 @@ async function order() {
                               <div class="col-md-6">
                                 <div class="form-outline form-white">
                                   <input type="text" id="expiration" class="form-control form-control-lg"
-                                    placeholder="MM/YYYY" size="7" minlength="7" maxlength="12" v-model="expiration"/>
+                                    placeholder="MM/YYYY" size="7" minlength="7" maxlength="12" v-model="expiration" />
                                   <label class="form-label" for="expiration">Expiration</label>
                                 </div>
                               </div>
@@ -207,7 +170,7 @@ async function order() {
                                 <div class="form-outline form-white">
                                   <input type="password" id="cvv" class="form-control form-control-lg"
                                     placeholder="&#9679;&#9679;&#9679;" size="1" minlength="3" maxlength="3"
-                                    v-model="cvv"/>
+                                    v-model="cvv" />
                                   <label class="form-label" for="cvv">Cvv</label>
                                 </div>
                               </div>
@@ -239,9 +202,9 @@ async function order() {
                             </div>
                           </button>
                         </div>
-                        <div class="tab-pane fade" id="pMethods-pills-2" role="tabpanel"
+                        <div class="tab-pane fade h-100" id="pMethods-pills-2" role="tabpanel"
                           aria-labelledby="pMethods-tab-2">
-                          Tab 2 content
+                          <GoogleMap/>
                         </div>
                       </div>
                     </div>
@@ -259,3 +222,24 @@ async function order() {
     </div>
   </section>
 </template>
+
+<style scoped>
+.cart-item-move, /* apply transition to moving elements */
+.cart-item-enter-active,
+.cart-item-leave-active {
+  transition: all 0.5s ease;
+}
+
+.cart-item-enter-from,
+.cart-item-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+/* ensure leaving items are taken out of layout flow so that moving
+   animations can be calculated correctly. */
+.cart-item-leave-active {
+  position: absolute;
+}
+
+</style>
