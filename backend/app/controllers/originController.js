@@ -123,13 +123,13 @@ exports.findOriginByNameGet = [
       .isLength({ min: 1 })
       .escape()
   ),
-  (req, res) => {
-    originService.findOriginByCountry(req.query, keyword, (err, origins) => {
+  (req, res, next) => {
+    originService.findOriginByCountry(req.query.keyword, (err, origins) => {
       if (err) {
         return next(err);
       }
       res.status(200).json({
-        origins,
+        items: origins
       });
     });
   },

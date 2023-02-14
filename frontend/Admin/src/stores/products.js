@@ -10,7 +10,7 @@ export const useProductsStore = defineStore("products", {
   actions: {
     async fetchProducts() {
       if (this.items && this.items.length == 0) {
-        var url = "http://localhost:3000/admin/product"
+        var url = import.meta.env.VITE_PRODUCT_URL
         var data = await this.alertsStore.callAPI("danger", url)
         this.items = data.items
       }

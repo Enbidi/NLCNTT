@@ -6,8 +6,9 @@ import CommonActions from './CommonActions.vue'
 import Modal from './Modal.vue'
 import ModalTriggerButton from './ModalTriggerButton.vue'
 import { useUsersStore } from '../stores/users'
-
+import { useSearch } from './composables/useSearch'
 const usersStore = useUsersStore()
+const { result } = useSearch(import.meta.env.VITE_USER_URL, usersStore)
 usersStore.fetchUsers()
 const hostname = inject("hostname")
 const updationModal = useTemplateRef("updationModal")
@@ -28,7 +29,7 @@ export default {
 </script> -->
 
 <template>
-  <CommonActions :api-url="`${hostname}/admin/user`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="usersStore">
+  <CommonActions :api-url="`${hostname}/admin/user`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addUserModal">
         Thêm người dùng

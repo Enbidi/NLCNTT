@@ -11,7 +11,7 @@ OriginSchema.statics.findOriginByCountry = function (country, cb) {
     country: {
       $regex: `.*${country}.*`,
     },
-  }).then(cb);
+  }).exec(cb);
 };
 
 const Origin = mongoose.model("Origin", OriginSchema);

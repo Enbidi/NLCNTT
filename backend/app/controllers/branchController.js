@@ -162,7 +162,7 @@ exports.findBranchByNameGet = [
         return next(err);
       }
       res.status(200).json({
-        branches,
+        items: branches,
       });
     });
   },

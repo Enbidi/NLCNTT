@@ -9,9 +9,13 @@ const {
   parallelValidate,
   sequentialValidate,
   validateSchema,
-  validate
+  validate,
 } = require("../middlewares/express-validator.middleware");
-const { creationSchema, updationSchema, productParamExistenceSchema } = require("../configs/express-validator/schemas/product.schema");
+const {
+  creationSchema,
+  updationSchema,
+  productParamExistenceSchema,
+} = require("../configs/express-validator/schemas/product.schema");
 
 const {
   body,
@@ -34,16 +38,14 @@ const validateProductParam = param("id", "ID sản phẩm không hợp lệ")
 exports.getSize = (req, res, next) => {
   productService.size((err, size) => {
     if (err) {
-      return next(err)
+      return next(err);
     }
-    res.status(200).json(size)
-  })
-}
+    res.status(200).json(size);
+  });
+};
 
 exports.topPurchasedProducts = [
-  validate(
-    query("top").isNumeric()
-  ),
+  validate(query("top").isNumeric()),
   (req, res, next) => {
     var top = req.query.top;
     productService.getTopPurchasedProducts(top, (err, products) => {
@@ -51,11 +53,11 @@ exports.topPurchasedProducts = [
         return next(err);
       }
       res.status(200).json({
-        items: products
+        items: products,
       });
-    })
-  }
-]
+    });
+  },
+];
 
 exports.productsGet = [
   query("limit").default(20).isNumeric().toFloat(),
@@ -74,7 +76,7 @@ exports.productsGet = [
 ];
 
 exports.productGetById = [
-  validateProductParam,
+  validateSchema(productParamExistenceSchema),
   (req, res, next) => {
     productService.findOne({ _id: req.params.id }, (err, product) => {
       if (err) {
@@ -114,7 +116,7 @@ exports.addProductPost = [
       res.status(200).json({
         created: product,
       });
-    })
+    });
   },
 ];
 
@@ -122,7 +124,7 @@ exports.productPatch = [
   upload.single("img"),
   validateSchema(updationSchema),
   (req, res) => {
-    var product = matchedData(req, { locations: ['body'] })
+    var product = matchedData(req, { locations: ["body"] });
     productService.updateProduct(req.params.id, product, (err, product) => {
       if (err) {
         return next(err);
@@ -130,7 +132,7 @@ exports.productPatch = [
       res.status(200).json({
         updated: product,
       });
-    })
+    });
   },
 ];
 
@@ -185,14 +187,32 @@ exports.findProductByNameGet = [
       .escape()
   ),
   (req, res, next) => {
-    productService.findProductByName(req.query.keyword, (err, products) => {
-      if (err) {
-        return next(err);
+    var keyword = req.query.keyword;
+    productService.fetchLimitWithOriginAndBranch(
+      {
+        name: {
+          $regex: `.*${keyword}.*`,
+        },
+      },
+      10,
+      (err, products) => {
+        if (err) {
+          return next(err);
+        }
+        res.status(200).json({
+          items: products,
+          keyword: req.query.keyword,
+        });
       }
-      res.status(200).json({
-        items: products,
-        keyword: req.query.keyword,
-      });
-    });
+    );
+    // productService.findProductByName(req.query.keyword, (err, products) => {
+    //   if (err) {
+    //     return next(err);
+    //   }
+    //   res.status(200).json({
+    //     items: products,
+    //     keyword: req.query.keyword,
+    //   });
+    // });
   },
 ];

@@ -1,11 +1,13 @@
-<script>
-export default {
-  methods: {
-    toggleSideBar() {
-      document.body.classList.toggle("sb-sidenav-toggled");
-    }
-  }
-};
+<script setup>
+import { ref } from 'vue'
+import { useSearchStore } from '../stores/search';
+
+const searchVal = ref('');
+
+const searchStore = useSearchStore();
+const toggleSideBar = () => {
+  document.body.classList.toggle("sb-sidenav-toggled");
+}
 </script>
 
 <template>
@@ -18,9 +20,9 @@ export default {
     <!-- Navbar Search-->
     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
       <div class="input-group">
-        <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
-          aria-describedby="btnNavbarSearch" />
-        <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+        <input class="form-control" type="text" placeholder="Tìm kiếm bằng tên..." aria-label="Search for..."
+          aria-describedby="btnNavbarSearch" v-model.lazy="searchVal"/>
+        <button class="btn btn-primary" id="btnNavbarSearch" type="button" @click="searchStore.val=searchVal"><i class="fas fa-search"></i></button>
       </div>
     </form>
     <!-- Navbar-->

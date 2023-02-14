@@ -9,7 +9,8 @@ export default {
     LoadingScreen
   },
   props: ['apiUrl', 'deletionModal', 'updationModal', 'fetchedData'],
-  setup() {
+  setup(props) {
+    console.log(props);
     var alertsStore = useAlertsStore()
     return {
       alertsStore
@@ -150,7 +151,6 @@ export default {
   },
   watch: {
     selectedRows(rows) {
-      console.log('Logged', rows)
       if (!this.fetchedData.selectedItems) {
         return
       }
@@ -194,7 +194,7 @@ export default {
         <VTable class="table table-bordered table-hover" :data="fetchedData ? fetchedData.items : []" :filters="filters"
           :page-size="20" v-model:currentPage="currentPage" selectionMode="multiple"
           @totalPagesChanged="totalPages = $event"
-          @stateChanged="selectedRows = $event.selectedRows; fetchedData.selectedItems = $event.selectedRows"
+          @stateChanged="selectedRows = $event.selectedRows"
           selectedClass="bg-primary bg-gradient bg-opacity-50" ref="table" v-bind="$attrs">
           <template #head>
             <slot name="tableColumnNames" />

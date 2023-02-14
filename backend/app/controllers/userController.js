@@ -208,7 +208,7 @@ exports.findUserByNameGet = [
   (req, res) => {
     User.findUserByFullname(req.query.keyword, (users) => {
       res.status(200).json({
-        users
+        items: users
       });
     });
   },

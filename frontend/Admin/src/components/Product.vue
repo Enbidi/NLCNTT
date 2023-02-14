@@ -1,37 +1,49 @@
 <script setup>
-import { inject, watch } from 'vue'
+import { inject, reactive, watch, ref, onUnmounted } from 'vue'
 
 import CommonActions from './CommonActions.vue'
 import Modal from './Modal.vue'
 import ModalTriggerButton from './ModalTriggerButton.vue'
 
 import useTemplateRef from './composables/useTemplateRef'
-import { useFetch } from './composables/useFetch'
 
-import { useOriginsStore } from '../stores/origins'
-import { useBranchesStore } from '../stores/branches'
-import { useProductsStore } from '../stores/products'
-import { useSelectedProductsStore } from '../stores/selectedProducts'
+import { useSearchStore } from '../stores/search';
+import { useOriginsStore } from '../stores/origins';
+import { useBranchesStore } from '../stores/branches';
+import { useProductsStore } from '../stores/products';
+import { useSearch } from './composables/useSearch';
+import { useSelectedProductsStore } from '../stores/selectedProducts';
 
 const productsStore = useProductsStore()
 const originsStore = useOriginsStore()
 const branchesStore = useBranchesStore()
+const searchStore = useSearchStore()
+// var items = ref(null)
+const { result } = useSearch(import.meta.env.VITE_PRODUCT_URL, productsStore)
 
 productsStore.fetchProducts()
 originsStore.fetchOrigins()
 branchesStore.fetchBranches()
 
+// productsStore.$subscribe((_, state) => {
+//   result.value = state;
+// }, { immediate: true });
+
+
+
 const hostname = inject("hostname")
 const updationModal = useTemplateRef("updationModal")
 const deletionModal = useTemplateRef("deletionModal")
-// const originData = useFetch(`${hostname}/admin/origin`)
-// const branchData = useFetch(`${hostname}/admin/branch`)
+// searchStore.$subscribe(async (_, state) => {
+//   fetch(`${import.meta.env.VITE_PRODUCT_URL}/find?keyword=${state.val}`)
+//     .then(res => res.json())
+//     .then(data => items.value.items = data.items)
+// })
 </script>
 
-
 <template>
-  <CommonActions :api-url="`${hostname}/admin/product`" :deletion-modal="deletionModal" :updation-modal="updationModal"
-    :fetched-data="productsStore">
+  <CommonActions v-if="result" :api-url="`${hostname}/admin/product`" :deletion-modal="deletionModal" :updation-modal="updationModal"
+    :fetched-data="result">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addProductModal">
         Thêm sản phẩm
@@ -168,7 +180,8 @@ const deletionModal = useTemplateRef("deletionModal")
             </div>
 
             <div class="form-outline mb-4">
-              <input type="text" id="updateProductOSInput" class="form-control" name="os" :value="selectedItem?.specs?.os" />
+              <input type="text" id="updateProductOSInput" class="form-control" name="os"
+                :value="selectedItem?.specs?.os" />
               <label class="form-label" for="updateProductOSInput">Hệ điều hành</label>
             </div>
 
@@ -220,14 +233,16 @@ const deletionModal = useTemplateRef("deletionModal")
             </div>
 
             <select class="form-select mb-4" aria-label="Chọn xuất sứ" name="origin">
-              <option v-for="origin in originsStore.items" :value="origin._id" :key="origin._id" :selected="origin._id == selectedItem?.origin._id">
+              <option v-for="origin in originsStore.items" :value="origin._id" :key="origin._id"
+                :selected="origin._id == selectedItem?.origin._id">
                 {{ origin.country }}
               </option>
             </select>
 
             <select class="form-select mb-4" aria-label="Chọn nhãn hiệu" name="branch">
               <option selected>Chọn nhãn hiệu cho sản phẩm</option>
-              <option v-for="branch in branchesStore.items" :key="branch._id" :value="branch._id" :selected="branch._id == selectedItem?.branch._id">
+              <option v-for="branch in branchesStore.items" :key="branch._id" :value="branch._id"
+                :selected="branch._id == selectedItem?.branch._id">
                 {{ branch.name }}
               </option>
             </select>

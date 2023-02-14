@@ -5,8 +5,11 @@ import ModalTriggerButton from './ModalTriggerButton.vue'
 import useTemplateRef from './composables/useTemplateRef'
 
 import { useOriginsStore } from '../stores/origins'
+import { useSearchStore } from '../stores/search'
+import { useSearch } from './composables/useSearch'
 
 const originsStore = useOriginsStore()
+const { result } = useSearch(import.meta.env.VITE_ORIGIN_URL, originsStore);
 originsStore.fetchOrigins()
 
 const updationModal = useTemplateRef("updationModal")
@@ -29,7 +32,7 @@ export default {
 </script> -->
 
 <template>
-  <CommonActions :api-url="`${hostname}/origin`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="originsStore">
+  <CommonActions v-if="result" :api-url="`${hostname}/origin`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addOriginModal">
         Thêm xuất sứ
