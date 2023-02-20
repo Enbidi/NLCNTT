@@ -68,13 +68,13 @@ app.use('/user', usersRouter);
 app.use('/admin_ui', ensureLoggedIn('/auth/login'), express.static(path.join(__dirname, 'admin_files')));
 app.use('/admin', adminRouter);
 app.use("/dummy", (req, res, next) => {
-  var billService = require("./services/BillService");
-  billService.getMonthlyStatistics((err, bills) => {
+  var commentService = require("./services/CommentService");
+  commentService.getComments({}, 100, (err, comments) => {
     if (err) {
       return next(err);
     }
     res.status(200).json({
-      items: bills
+      items: comments
     });
   })
 })

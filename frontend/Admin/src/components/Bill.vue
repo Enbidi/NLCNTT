@@ -7,7 +7,7 @@ import useTemplateRef from './composables/useTemplateRef'
 import { inject } from 'vue'
 
 import { useBillsStore } from '../stores/bills'
-
+import { formatDate } from '../utils'
 const billsStore = useBillsStore()
 billsStore.fetchBills()
 
@@ -101,10 +101,10 @@ export default {
           Xóa hóa đơn
         </template>
         <div class="modal-body">
-          <dir>
+          <div>
             <p class="text-warning text-center">Bạn có chắc muốn xóa hóa đơn này</p>
-          </dir>
-
+          </div>
+          
           <div v-if="errors && errors.length != 0" class="alert alert-danger">
             <p v-for="error in errors">{{ error.msg }}</p>
           </div>

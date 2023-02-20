@@ -8,9 +8,8 @@ export default {
   components: {
     LoadingScreen
   },
-  props: ['apiUrl', 'deletionModal', 'updationModal', 'fetchedData'],
+  props: ['apiUrl', 'deletionModal', 'updationModal', 'fetchedData', 'filter'],
   setup(props) {
-    console.log(props);
     var alertsStore = useAlertsStore()
     return {
       alertsStore
@@ -138,9 +137,9 @@ export default {
   data() {
     return {
       // fetchedData: null,
-      filters: {
-        name: { value: '', keys: ['name'] }
-      },
+      // filters: {
+      //   name: { value: '', keys: ['name'] }
+      // },
       selectedRows: [],
       currentPage: 1,
       totalPages: 1,
@@ -185,13 +184,14 @@ export default {
             <slot name="deletionModal" v-bind="{ deleteHandler, errors, selectedItem }" />
           </div>
           <div class="col-md-2">
-            <div class="form-outline">
-              <input type="text" class="form-control" id="filter" v-model="filters.name.value" />
+            <!-- <div class="form-outline">
+              <input type="text" class="form-control" id="filter" v-model="filter.name.value"/>
               <label class="form-label" for="filter">Lọc bằng tên</label>
-            </div>
+            </div> -->
+            <slot name="filter"/>
           </div>
         </div>
-        <VTable class="table table-bordered table-hover" :data="fetchedData ? fetchedData.items : []" :filters="filters"
+        <VTable class="table table-bordered table-hover" :data="fetchedData ? fetchedData.items : []" :filters="filter"
           :page-size="20" v-model:currentPage="currentPage" selectionMode="multiple"
           @totalPagesChanged="totalPages = $event"
           @stateChanged="selectedRows = $event.selectedRows"

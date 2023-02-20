@@ -1,5 +1,5 @@
 <script setup>
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
 
 import useTemplateRef from './composables/useTemplateRef'
 import CommonActions from './CommonActions.vue'
@@ -13,6 +13,15 @@ usersStore.fetchUsers()
 const hostname = inject("hostname")
 const updationModal = useTemplateRef("updationModal")
 const deletionModal = useTemplateRef("deletionModal")
+
+const filter = ref({
+  name: {
+    value: '', custom: (value, row) => {
+      var reg = new RegExp(`.*${value}.*`)
+      return value == '' || reg.test(row.firstname ?? '') || reg.test(row.lastname ?? '')
+    }
+  }
+})
 </script>
 
 <!-- <script>
@@ -29,11 +38,18 @@ export default {
 </script> -->
 
 <template>
-  <CommonActions :api-url="`${hostname}/admin/user`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result">
+  <CommonActions :api-url="`${hostname}/admin/user`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result" :filter="filter">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addUserModal">
         Thêm người dùng
       </ModalTriggerButton>
+    </template>
+    
+    <template #filter>
+      <div class="form-outline">
+        <input type="text" class="form-control" id="filter" v-model="filter.name.value" />
+        <label class="form-label" for="filter">Lọc bằng tên</label>
+      </div>
     </template>
 
     <template #additionModal="{ addHandler, errors }">

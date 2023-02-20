@@ -25,14 +25,22 @@ const validateCommentParam = param("id", "Id bình luận không hợp lệ")
 exports.commentsGet = [
   query("limit").default(20),
   async (req, res, next) => {
-    commentService.fetchLimit({}, req.query.limit, (err, comments) => {
+    // commentService.fetchLimit({}, req.query.limit, (err, comments) => {
+    //   if (err) {
+    //     return next(err);
+    //   }
+    //   res.status(200).json({
+    //     items: comments
+    //   });
+    // });
+    commentService.getComments({}, 100, (err, comments) => {
       if (err) {
         return next(err);
       }
       res.status(200).json({
-        comments,
+        items: comments
       });
-    });
+    })
   },
 ];
 

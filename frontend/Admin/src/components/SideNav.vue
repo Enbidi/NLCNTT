@@ -28,8 +28,8 @@ import NavLink from './NavLink.vue'
             <template v-slot:default>
               <router-link to="/users" class="nav-link">Người dùng</router-link>
               <router-link to="/products" class="nav-link">Sản phẩm</router-link>
-              <router-link to="bills" class="nav-link">Hóa Đơn</router-link>
-              <router-link to="" class="nav-link">Bình luận</router-link>
+              <router-link to="/bills" class="nav-link">Hóa Đơn</router-link>
+              <router-link to="/comments" class="nav-link">Bình luận</router-link>
               <router-link to="/branches" class="nav-link">Nhãn hiệu</router-link>
               <router-link to="/origins" class="nav-link">Xuất sứ</router-link>
               <router-link to="/sales" class="nav-link">Khuyến mãi</router-link>

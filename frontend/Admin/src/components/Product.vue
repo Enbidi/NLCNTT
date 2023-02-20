@@ -34,6 +34,11 @@ branchesStore.fetchBranches()
 const hostname = inject("hostname")
 const updationModal = useTemplateRef("updationModal")
 const deletionModal = useTemplateRef("deletionModal")
+const filter = ref({
+  name: {
+    value: '', keys: ['name']
+  }
+});
 // searchStore.$subscribe(async (_, state) => {
 //   fetch(`${import.meta.env.VITE_PRODUCT_URL}/find?keyword=${state.val}`)
 //     .then(res => res.json())
@@ -42,12 +47,19 @@ const deletionModal = useTemplateRef("deletionModal")
 </script>
 
 <template>
-  <CommonActions v-if="result" :api-url="`${hostname}/admin/product`" :deletion-modal="deletionModal" :updation-modal="updationModal"
-    :fetched-data="result">
+  <CommonActions v-if="result" :api-url="`${hostname}/admin/product`" :deletion-modal="deletionModal"
+    :updation-modal="updationModal" :fetched-data="result" :filter="filter">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addProductModal">
         Thêm sản phẩm
       </ModalTriggerButton>
+    </template>
+
+    <template #filter>
+      <div class="form-outline">
+        <input type="text" class="form-control" id="filter" v-model="filter.name.value" />
+        <label class="form-label" for="filter">Lọc bằng tên</label>
+      </div>
     </template>
 
     <template #additionModal="{ addHandler, errors }">
@@ -248,16 +260,16 @@ const deletionModal = useTemplateRef("deletionModal")
             </select>
 
             <!-- <div class="form-outline mb-4">
-              <input type="text" id="updateProductOriginInput" class="form-control" name="origin"
-                :value="selectedItem?.origin" />
-              <label class="form-label" for="updateProductOriginInput">Xuất sứ</label>
-            </div>
+                <input type="text" id="updateProductOriginInput" class="form-control" name="origin"
+                  :value="selectedItem?.origin" />
+                <label class="form-label" for="updateProductOriginInput">Xuất sứ</label>
+              </div>
 
-            <div class="form-outline mb-4">
-              <input type="text" id="updateProductBranchInput" class="form-control" name="branch"
-                :value="selectedItem?.branch" />
-              <label class="form-label" for="updateProductBranchInput">Nhãn hiệu</label>
-            </div> -->
+              <div class="form-outline mb-4">
+                <input type="text" id="updateProductBranchInput" class="form-control" name="branch"
+                  :value="selectedItem?.branch" />
+                <label class="form-label" for="updateProductBranchInput">Nhãn hiệu</label>
+              </div> -->
 
             <div class="form-outline mb-4">
               <textarea class="form-control" id="updateProductDescriptionInput" rows="4" name="description"></textarea>
@@ -286,9 +298,9 @@ const deletionModal = useTemplateRef("deletionModal")
           Xóa xuất sứ
         </template>
         <div class="modal-body">
-          <dir>
+          <div>
             <p class="text-warning text-center">Bạn có chắc muốn xóa sản phẩm này</p>
-          </dir>
+          </div>
 
           <div v-if="errors && errors.length != 0" class="alert alert-danger">
             <p v-for="error in errors">{{ error.msg }}</p>
@@ -330,8 +342,7 @@ const deletionModal = useTemplateRef("deletionModal")
           <template v-if="!row.specs">
             <td></td>
             <td class="text-center">
-              <img :src="hostname + row.img" crossorigin="anonymous" class="img-fluid"
-                style="width: 50px; height: 50px;">
+              <img :src="hostname + row.img" crossorigin="anonymous" class="img-fluid" style="width: 50px; height: 50px;">
             </td>
             <td>
               <ModalTriggerButton target="updateProductModal" class="me-2 btn btn-warning" @click="selectItem(row)">
@@ -347,8 +358,7 @@ const deletionModal = useTemplateRef("deletionModal")
           <VTr :row="row">
             <td>Màn hình: {{ row.specs.screen }}</td>
             <td rowspan="10" class="text-center align-middle">
-              <img :src="hostname + row.img" crossorigin="anonymous" class="img-fluid"
-                style="width: 50px; height: 50px;">
+              <img :src="hostname + row.img" crossorigin="anonymous" class="img-fluid" style="width: 50px; height: 50px;">
             </td>
             <td rowspan="10" class="align-middle">
               <ModalTriggerButton target="updateProductModal" class="me-2 btn btn-warning" @click="selectItem(row)">

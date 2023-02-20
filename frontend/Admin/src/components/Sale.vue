@@ -7,6 +7,7 @@ import useTemplateRef from './composables/useTemplateRef'
 
 import { useSalesStore } from '../stores/sales'
 import { useProductsStore } from '../stores/products'
+import { formatDate } from '../utils';
 
 const salesStore = useSalesStore()
 const productsStore = useProductsStore()
@@ -130,9 +131,9 @@ const saleType = ref(0)
           Xóa khuyến mãi
         </template>
         <div class="modal-body">
-          <dir>
+          <div>
             <p class="text-warning text-center">Bạn có chắc muốn xóa xuât sứ này</p>
-          </dir>
+          </div>
 
           <div v-if="errors && errors.length != 0" class="alert alert-danger">
             <p v-for="error in errors">{{ error.msg }}</p>
@@ -161,8 +162,8 @@ const saleType = ref(0)
     <template #tableColumnDatas="{ rows, selectItem }">
       <VTr v-for="row in rows" :row="row">
         <td class="align-middle">{{ row._id }}</td>
-        <td class="align-middle">{{ row.start }}</td>
-        <td class="align-middle">{{ row.end }}</td>
+        <td class="align-middle">{{ formatDate(row.start) }}</td>
+        <td class="align-middle">{{ formatDate(row.end) }}</td>
         <td class="align-middle">{{ row.saleType == 'Promotion' ? 'Phần trăm' : 'Giảm trực tiếp' }}</td>
         <td class="align-middle">{{ row.saleType == 'Promotion' ? row.percent : row.value }}</td>
         <td class="align-middle">{{ row.isExpired == true ? 'Hết hạn' : 'Hoạt động' }}</td>

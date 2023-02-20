@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import SmartTable from 'vuejs-smart-table'
 import { Line } from 'vue-chartjs'
-import { createRouter, createWebHashHistory } from 'vue-router'
 import { createPinia } from 'pinia'
 import { router } from './router'
 import './assets/main.css'
@@ -17,6 +16,6 @@ app.config.globalProperties.hostname = "http://localhost:3000/admin"
 app.config.unwrapInjectedRef = true
 app.provide("hostname", "http://localhost:3000")
 app.use(SmartTable)
-app.use(Line)
+// app.use(Line)
 app.use(router)
 app.mount("#app")

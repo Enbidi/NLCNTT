@@ -12,3 +12,14 @@ export const convertFormDataToJSON = function(formData) {
   }
   return JSON.stringify(obj)
 }
+
+export const formatDate = function(date) {
+  date = date instanceof Date ? date : new Date(date);
+  if (isNaN(date)) {
+    return
+  }
+  var d = String.prototype.padStart.call(date.getDate(), 2, '0')
+  var m = String.prototype.padStart.call(date.getMonth(), 2, '0')
+  var y = date.getFullYear()
+  return `${d}-${m}-${y}`
+}

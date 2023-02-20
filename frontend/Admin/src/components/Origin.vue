@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue'
 import CommonActions from './CommonActions.vue'
 import Modal from './Modal.vue'
 import ModalTriggerButton from './ModalTriggerButton.vue'
@@ -14,6 +15,12 @@ originsStore.fetchOrigins()
 
 const updationModal = useTemplateRef("updationModal")
 const deletionModal = useTemplateRef("deletionModal")
+
+const filter = ref({
+  country: {
+    val: '', keys: ['country']
+  }
+})
 </script>
 
 <!-- <script>
@@ -32,11 +39,18 @@ export default {
 </script> -->
 
 <template>
-  <CommonActions v-if="result" :api-url="`${hostname}/origin`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result">
+  <CommonActions v-if="result" :api-url="`${hostname}/origin`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result" :filter="filter">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addOriginModal">
         Thêm xuất sứ
       </ModalTriggerButton>
+    </template>
+
+    <template #filter>
+      <div class="form-outline">
+        <input type="text" class="form-control" id="filter" v-model="filter.country.value" />
+        <label class="form-label" for="filter">Lọc bằng tên</label>
+      </div>
     </template>
 
     <template #additionModal="{ addHandler, errors }">
@@ -109,9 +123,9 @@ export default {
           Xóa xuất sứ
         </template>
         <div class="modal-body">
-          <dir>
+          <div>
             <p class="text-warning text-center">Bạn có chắc muốn xóa xuât sứ này</p>
-          </dir>
+          </div>
 
           <div v-if="errors && errors.length != 0" class="alert alert-danger">
             <p v-for="error in errors">{{ error.msg }}</p>

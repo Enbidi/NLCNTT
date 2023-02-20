@@ -5,53 +5,42 @@ import Modal from './Modal.vue'
 import ModalTriggerButton from './ModalTriggerButton.vue'
 import useTemplateRef from './composables/useTemplateRef'
 import { useSearch } from './composables/useSearch'
-import { useBranchesStore } from '../stores/branches'
+import { useCommentsStore } from '../stores/comments'
 
-const branchesStore = useBranchesStore()
-const { result } = useSearch(import.meta.env.VITE_BRANCH_URL, branchesStore)
-branchesStore.fetchBranches()
+const commentsStore = useCommentsStore()
+const { result } = useSearch(import.meta.env.VITE_BRANCH_URL, commentsStore)
+commentsStore.fetchData()
 const updationModal = useTemplateRef("updationModal")
 const deletionModal = useTemplateRef("deletionModal")
 
 const filter = ref({
-  name: {
-    val: '', keys: ['name']
+  content: {
+    value: '', custom: (value, row) => {
+      var reg = new RegExp(`.*${value}.*`, 'i')
+      return value == '' || reg.test(row.content)
+    }
   }
 })
 </script>
 
-<!-- <script>
-export default {
-  mounted() {
-    this.$data.deletionModal = this.$refs.deletionModal
-    this.$data.updationModal = this.$refs.updationModal
-  },
-  data() {
-    return {
-      deletionModal: {},
-      updationModal: {}
-    }
-  }
-}
-</script> -->
-
 <template>
-  <CommonActions v-if="result" :api-url="`${hostname}/branch`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result" :filter="filter">
+  <CommonActions v-if="result" :api-url="`${hostname}/comment`" :deletion-modal="deletionModal"
+    :updation-modal="updationModal" :fetched-data="result" :filter="filter">
     <template #modalTriggerButtons>
-      <ModalTriggerButton target="addOriginModal">
+      <ModalTriggerButton target="addCommentModal">
         Thêm nhãn hiệu
       </ModalTriggerButton>
     </template>
 
     <template #filter>
       <div class="form-outline">
-        <input type="text" class="form-control" id="filter" v-model="filter.name.value" />
+        <input type="text" class="form-control" id="filter" v-model="filter.content.value" />
         <label class="form-label" for="filter">Lọc bằng tên</label>
       </div>
     </template>
 
     <template #additionModal="{ addHandler, errors }">
-      <Modal id="addOriginModal">
+      <Modal id="addCommentModal">
         <template #modalTitle>
           Thêm nhãn hiệu
         </template>
@@ -87,15 +76,16 @@ export default {
         <form @submit.prevent="updateHandler($event)" method="POST">
           <!-- Name input -->
           <div class="modal-body">
-            
+
             <div class="form-outline mb-4">
-              <input type="text" id="updateOriginIdInput" class="form-control" name="name" disabled :value="selectedItem?._id"/>
-              <label class="form-label" for="updateOriginIdInput">Nhãn hiệu Id</label>
+              <input type="text" id="updateCommentIdInput" class="form-control" name="name" disabled
+                :value="selectedItem?._id" />
+              <label class="form-label" for="updateCommentIdInput">Nhãn hiệu Id</label>
             </div>
 
             <div class="form-outline mb-4">
-              <input type="text" id="updateOriginNameInput" class="form-control" name="name" />
-              <label class="form-label" for="updateOriginNamInput">Tên nhãn hiệu</label>
+              <input type="text" id="updateCommentNameInput" class="form-control" name="name" />
+              <label class="form-label" for="updateCommentNamInput">Tên nhãn hiệu</label>
             </div>
 
             <div v-if="errors && errors.length != 0" class="alert alert-danger">
@@ -142,18 +132,35 @@ export default {
     <template #tableColumnNames>
       <tr>
         <VTh sortKey="_id">#</VTh>
-        <VTh class="text-center" sortKey="country">Nhãn hiệu</VTh>
+        <VTh class="text-center" sortKey="rating">Đánh giá</VTh>
+        <VTh class="text-center" sortKey="product">Sản phẩm</VTh>
+        <VTh class="text-center" sortKey="user">Người dùng</VTh>
+        <VTh class="text-center" sortKey="content">Nội dung</VTh>
       </tr>
     </template>
     <template #tableColumnDatas="{ rows, selectItem }">
-      <VTr v-for="row in rows" :row="row">
-        <td>{{ row._id }}</td>
-        <td>{{ row.name }}</td>
-        <td>
-          <ModalTriggerButton target="updateBranchModal" class="me-2 btn btn-warning" @click="selectItem(row)">Sửa</ModalTriggerButton>
-          <ModalTriggerButton target="deleteBranchModal" class="btn btn-danger" @click="selectItem(row)">Xóa</ModalTriggerButton>
-        </td>
-      </VTr>
+      <template v-for="row in rows">
+        <VTr :row="row">
+          <td rowspan="4">{{ row._id }}</td>
+          <td rowspan="4">{{ row.rating }}</td>
+          <td>Mã sản phẩm: {{ row.product?._id }}</td>
+          <td>Mã người dùng: {{ row.user?._id }}</td>
+          <td rowspan="4">{{ row.content }}</td>
+          <td rowspan="4">
+            <!-- <ModalTriggerButton target="updateBranchModal" class="me-2 btn btn-warning" @click="selectItem(row)">Sửa</ModalTriggerButton> -->
+            <ModalTriggerButton target="deleteBranchModal" class="btn btn-danger" @click="selectItem(row)">Xóa
+            </ModalTriggerButton>
+          </td>
+        </VTr>
+        <VTr :row="row">
+          <td>Sản phẩm: {{ row.product?.name }}</td>
+        </VTr>
+        <VTr :row="row">
+          <td>Xuất sứ: {{ row.product?.origin.country }}</td>
+        </VTr>
+        <VTr :row="row">
+          <td>Nhãn hiệu: {{ row.product?.branch.name }}</td>
+        </VTr>
+      </template>
     </template>
-  </CommonActions>
-</template>
+</CommonActions></template>
