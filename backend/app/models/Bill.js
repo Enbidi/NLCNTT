@@ -13,7 +13,7 @@ const CreditCardSchema = new Schema(
       unique: true,
     },
     CVV: String,
-    expiration: Date,
+    expiration: Date
   },
   { _id: false }
 );
@@ -26,6 +26,7 @@ const BillSchema = new Schema(
       ref: "User",
     },
     note: String,
+    address: String
   },
   {
     timestamps: true,

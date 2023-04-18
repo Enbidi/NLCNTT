@@ -23,7 +23,7 @@ class BillService extends BaseService {
   populateDetailsWithTotal(filter, limit, cb) {
     Bill.fetchDetailsWithTotal(filter, limit, cb);
   }
-  async createBill(bill, details) {
+  async createBill(bill, details, cb) {
     var bill = new this.model(bill);
     var activeSales = await saleService.getActiveSales("_id products");
     if (Array.isArray(activeSales) && activeSales.length != 0) {
@@ -43,8 +43,7 @@ class BillService extends BaseService {
       );
     }
     await bill.save();
-    return await this.model.fetchDetailsWithTotal({ _id: bill._id }, 1)
-    // return bill;
+    return await this.model.fetchDetailsWithTotal({ _id: bill._id }, 1, cb)
   }
   async getMonthlyStatistics(limit, cb) {
     return await Bill.getMonthlyRevenue(limit, cb);

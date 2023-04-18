@@ -14,6 +14,7 @@ const saleService = require("../services/SaleService");
 const productService = require("../services/ProductService");
 const { default: mongoose } = require("mongoose");
 const { validate } = require("../middlewares/express-validator.middleware");
+const RequireAuth = require("../middlewares/checkAuth");
 
 exports.getMonthlyStatistic = [
   validate(
@@ -37,6 +38,10 @@ exports.getRevenueInCurrentMonth = (req, res, next) => {
   billService.getRevenueInCurrentMonth((err, revenue) => {
     if (err) {
       return next(err)
+    }
+    if (revenue.length == 0) {
+        res.status(204).send()
+        return
     }
     res.status(200).json(revenue[0].revenueInMonth)
   })
@@ -72,6 +77,7 @@ exports.billsGet = [
 ];
 
 exports.addBillPost = [
+  // RequireAuth,
   parallelValidate(
     header("Content-Type").isIn("application/json"),
     body("sale")
@@ -105,7 +111,8 @@ exports.addBillPost = [
     body("creditCard.cardType", "Loại thẻ không hợp lệ").not().isEmpty(),
     body("creditCard.cardNumber", "Số thẻ không hợp lệ").isCreditCard(),
     body("creditCard.cvv", "CVV không hợp lệ").not().isEmpty(),
-    body("creditCard.expiration", "Thời hạn không hợp lệ").isISO8601()
+    body("creditCard.expiration", "Thời hạn không hợp lệ").isISO8601(),
+    body("address", "Phải cung cấp địa chỉa").not().isEmpty()
   ),
   async (req, res, next) => {
     const creditCard = {
@@ -115,9 +122,10 @@ exports.addBillPost = [
       CVV: req.body.creditCard.cvv,
     };
     const bill = {
-      user: req.user._id,
+      user: req.user?._id,
       sale: req.body.sale,
       note: req.body.note,
+      address: req.body.address,
       creditCard,
     };
     await billService.createBill(bill, req.body.details, (err, bill) => {
@@ -128,15 +136,6 @@ exports.addBillPost = [
         item: bill
       })
     })
-    // res.status(200).json({
-    //   state: "Success"
-    // });
-    // res.status(200).json({
-    //   created: {
-    //     ...bill.toObject(),
-    //     total: await bill.calcTotal(),
-    //   },
-    // });
   },
 ];
 

@@ -5,10 +5,11 @@ export const useCartStore = defineStore("cart", {
     var storedCart = localStorage.getItem("cart");
     storedCart = storedCart ? JSON.parse(storedCart) : undefined
     if (storedCart && storedCart.items instanceof Array) {
-      return storedCart
+      return { ...storedCart, position: null }
     }
     return {
-      items: []
+      items: [],
+      position: null
     }
   },
   getters: {
@@ -33,6 +34,9 @@ export const useCartStore = defineStore("cart", {
     remove(removedItem) {
       var index = this.items.findIndex((item) => item._id == removedItem._id);
       this.items.splice(index, 1);
+    },
+    setPosition(position) {
+        this.position = position;
     },
     sortByPrice(asc = true) {
       this.items = this.items.sort((a, b) => {

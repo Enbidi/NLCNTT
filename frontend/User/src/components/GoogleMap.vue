@@ -1,7 +1,8 @@
 <script setup>
-import { onMounted, getCurrentInstance } from 'vue';
+import { onMounted, getCurrentInstance, defineEmits } from 'vue';
 import { Loader } from 'google-maps';
 const loader = new Loader("AIzaSyDgo9VZPNj_SevLe1Lsb3Os2qzsvpseqfA");
+const emit = defineEmits(['positionChanged']);
 
 var map, infoWindow, google;
 onMounted(async () => {
@@ -47,7 +48,9 @@ const _initMap = () => {
           fetch(reverGeocodingAPI_URL(pos.lat, pos.lng))
             .then(res => res.json())
             .then(data => {
-              scrollToAndShowInfoWindow(pos, getAddressString(data));
+              const addressString = getAddressString(data);
+              emit('positionChanged', addressString);
+              scrollToAndShowInfoWindow(pos, addressString);
             })
         },
         () => {
@@ -94,8 +97,7 @@ const reverGeocodingAPI_URL = (lat, lng) => {
 </script>
 
 <template>
-  <div id="googlemap" ref="googleMap" class="text-black">
-
+  <div id="googlemap" ref="googleMap" class="text-black" style="height: 400px">
   </div>
 </template>
 

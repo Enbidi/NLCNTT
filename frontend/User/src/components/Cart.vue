@@ -6,13 +6,12 @@ import { useCartStore } from '../stores/cart'
 import { useAlertsStore } from '../stores/alerts'
 import GoogleMap from './GoogleMap.vue';
 const cartStore = useCartStore()
-cartStore.$subscribe((mutation, state) => {
-  console.log(state);
-});
+const alertStore = useAlertsStore()
 
 const cardType = ref(null)
 const cardNumber = ref(null)
 const expiration = ref(null)
+
 var expirationDate
 watch(expiration, newVal => {
   if (isNaN(Date.parse(expiration.value))) {
@@ -24,6 +23,10 @@ watch(expiration, newVal => {
 const cvv = ref(null)
 
 async function order() {
+  if (cartStore.position == null) {
+    alertStore.push("Bạn chưa cung cấp vị trí", "warning")
+    return
+  }
   const details = cartStore.items.map(item => ({
     product: item._id,
     quantity: item.quantity
@@ -44,7 +47,8 @@ async function order() {
       cardNumber: cardNumber.value,
       expiration: expirationDate,
       details,
-      creditCard
+      creditCard,
+      address: cartStore.position
     })
   })
   if (!response.ok) {
@@ -95,8 +99,7 @@ async function order() {
                         </li>
                         <li class="nav-item col px-0" role="presentation">
                           <a class="nav-link" id="pMethods-tab-2" data-mdb-toggle="pill" href="#pMethods-pills-2"
-                            role="tab" aria-controls="ex1-pills-2" aria-selected="false" style="font-size: 11px">Thanh
-                            toán khi nhận hàng</a>
+                            role="tab" aria-controls="ex1-pills-2" aria-selected="false" style="font-size: 11px">Lấy vị trí</a>
                         </li>
                       </ul>
                     </div>
@@ -178,7 +181,7 @@ async function order() {
 
                           </form>
 
-                          <hr class="my-4">
+                          <!-- <hr class="my-4"> -->
 
                           <div class="d-flex justify-content-between">
                             <p class="mb-2">Hóa đơn</p>
@@ -197,14 +200,14 @@ async function order() {
 
                           <button type="button" class="btn btn-info btn-block btn-lg" @click="order()">
                             <div class="d-flex justify-content-between">
-                              <span>$4818.00</span>
+                              <span>{{ cartStore.totalPrice + 200 }}</span>
                               <span>Checkout <i class="fas fa-long-arrow-alt-right ms-2"></i></span>
                             </div>
                           </button>
                         </div>
                         <div class="tab-pane fade h-100" id="pMethods-pills-2" role="tabpanel"
                           aria-labelledby="pMethods-tab-2">
-                          <GoogleMap/>
+                          <GoogleMap @positionChanged="position => cartStore.setPosition(position)"/>
                         </div>
                       </div>
                     </div>

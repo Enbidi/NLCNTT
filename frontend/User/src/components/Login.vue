@@ -25,7 +25,7 @@ export default {
       this.isLoading = true
       var formData = new FormData(event.target)
       var formDataJSON = convertFormDataToJSON(formData)
-      var [response, _] = await Promise.all([fetch(import.meta.env.VITE_LOGIN_URL, {
+      var [response, _] = await Promise.all([fetch(import.meta.env.VITE_SIGNIN_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

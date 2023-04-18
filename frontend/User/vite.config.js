@@ -5,17 +5,20 @@ import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
+  const common = {
+    plugins: [vue()],
+    base: './',
+    resolve: {
+      alias: {
+        "@": fileURLToPath(new URL("./src", import.meta.url)),
+      },
+    }
+  }
   switch (mode) {
     case "development":
       return {
-        plugins: [vue()],
-        base: "./",
-        resolve: {
-          alias: {
-            "@": fileURLToPath(new URL("./src", import.meta.url)),
-          },
-        },
-      };
+        ...common
+      }
     case "production":
       return {
         plugins: [vue()],

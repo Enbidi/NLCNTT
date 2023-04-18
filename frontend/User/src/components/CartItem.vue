@@ -2,6 +2,7 @@
 import { useCartStore } from '../stores/cart'
 defineProps(['product'])
 const cartStore = useCartStore()
+const BASE_URL = import.meta.env.VITE_BASE_URL
 </script>
 
 <template>
@@ -10,8 +11,8 @@ const cartStore = useCartStore()
       <div class="d-flex justify-content-between">
         <div class="d-flex flex-row align-items-center">
           <div>
-            <img :src="product.img"
-              class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
+            <img :src="BASE_URL + product.img"
+              class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;" crossorigin="anonymous">
           </div>
           <div class="ms-3">
             <h5>{{ product.name }}</h5>

@@ -24,6 +24,10 @@ module.exports.loginPost = passport.authenticate("local", {
   keepSessionInfo: true,
 });
 
+// module.exports.loginPost = (req, res) => {
+//     req.status(200).json("OK")
+// }
+
 module.exports.logoutGet = (req, res, next) => {
   req.logout((err) => {
     if (err) {
