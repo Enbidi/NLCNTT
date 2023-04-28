@@ -22,6 +22,7 @@ export default {
   },
   methods: {
     async loginAPI(event) {
+      console.log("Login")
       this.isLoading = true
       var formData = new FormData(event.target)
       var formDataJSON = convertFormDataToJSON(formData)
@@ -37,9 +38,8 @@ export default {
         this.alertsStore.push(
           response.status == 401
             ? { content: 'Tên đăng nhập hoặc mật khẩu không đúng', type: 'danger' }
-            : { content: 'Gặp lỗi gì rồi', type: 'danger' }
+            : { content: 'Đăng nhập thành công', type: 'success' }
         )
-        return
       }
       this.alertsStore.clear()
       this.alertsStore.push({

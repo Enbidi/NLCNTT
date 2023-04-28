@@ -5,6 +5,8 @@ import Comment from './Comment.vue'
 import Rating from './Rating.vue'
 import RatingInput from './RatingInput.vue'
 import { useAuthStore } from '../stores/auth'
+import { useAlertsStore } from '../stores/alerts'
+
 export default {
   inject: ['ratingStars'],
   props: ['productId'],
@@ -14,9 +16,12 @@ export default {
     RatingInput
   },
   setup() {
+    console.log(useAlertsStore)
     const authStore = useAuthStore()
+    const alertsStore = useAlertsStore()
     return {
-      authStore
+      authStore,
+      alertsStore
     }
   },
   async mounted() {
@@ -32,6 +37,7 @@ export default {
   methods: {
     async addComment(content) {
       if (!this.authStore.isAuthenticated) {
+        this.alertsStore.push("Bạn phải đăng nhập để có thể bình luận")
         return
       }
       const response = await fetch(import.meta.env.VITE_USER_URL + "/comment/add", {
@@ -82,7 +88,7 @@ export default {
             <Comment v-for="comment in comments" :rating-stars="comment.rating"
               avt="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(4).webp"
               :content="comment.content"
-              username="Martha" 
+              :username="authStore.lastname" 
               :key="comment._id"/>
           </TransitionGroup>
         </div>

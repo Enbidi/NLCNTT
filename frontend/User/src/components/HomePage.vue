@@ -44,6 +44,6 @@ productsPerBranchStore.fetchData()
 
 <style scoped>
 section {
-  height: 100vh;
+  height: 130vh;
 }
 </style>

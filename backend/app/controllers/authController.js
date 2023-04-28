@@ -18,15 +18,20 @@ module.exports.userLoginGet = (req, res) => {
   res.sendFile(path.join(process.env.VIEW_DIR, "static/user/login.html"));
 }
 
-module.exports.loginPost = passport.authenticate("local", {
-  successReturnToOrRedirect: "/admin/index.html",
-  failureUrl: "/auth/login",
-  keepSessionInfo: true,
-});
-
-// module.exports.loginPost = (req, res) => {
-//     req.status(200).json("OK")
-// }
+module.exports.loginPost = [
+  passport.authenticate("local", {
+    // successReturnToOrRedirect: "/",
+    // failureUrl: "/auth/login",
+    // failureRedirect: '/login', failureMessage: true,
+    keepSessionInfo: true,
+  }),
+  (req, res, next) => {
+    res.json({
+      state: "Success",
+      message: "Successful Login"
+    })
+  }
+];
 
 module.exports.logoutGet = (req, res, next) => {
   req.logout((err) => {

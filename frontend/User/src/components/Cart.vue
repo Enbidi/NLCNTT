@@ -70,7 +70,7 @@ async function order() {
 
                 <div class="col-lg-7">
                   <h5 class="mb-3"><a href="#!" class="text-body"><i
-                        class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
+                        class="fas fa-long-arrow-alt-left me-2"></i>Quan lại sản phẩm</a></h5>
                   <hr>
 
                   <div class="d-flex justify-content-between align-items-center mb-4">

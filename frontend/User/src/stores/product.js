@@ -9,6 +9,9 @@ export const useProductStore = defineStore("product", {
         return
       }
       var price = state.data.price
+      if (!data.inSales) {
+        return
+      }
       for (let sale of data.inSales) {
         switch(sale.saleType) {
         case 'Promotion':

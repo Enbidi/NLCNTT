@@ -47,6 +47,7 @@ export default {
         return
       }
       this.errors = []
+      return data
     },
     async addHandler(event, opts) {
       let url = `${this.apiUrl}/add`
@@ -62,7 +63,10 @@ export default {
         }
         payload.body = convertFormDataToJSON(formData)
       }
-      this.callAPI(url, payload)
+      try {
+        let result = await this.callAPI(url, payload)
+        this.fetchedData.items.push(result.created)
+      } catch(err) {}
     },
     async deleteHandler() {
       let id = this.selectedItem._id
@@ -104,7 +108,8 @@ export default {
           },
           body: formDataJSON
         }
-      this.callAPI(apiURL, payload)
+      let result = await this.callAPI(apiURL, payload)
+      this.fetchedData.items = this.fetchedData.items.map(item => item._id != id ? item : result.updated)
     },
     selectItem(item) {
       this.selectedItem = item
@@ -119,11 +124,14 @@ export default {
         body: JSON.stringify(body)
       }
       var apiURL = `${this.apiUrl}/delete`
-      await this.callAPI(apiURL, payload)
-      this.alertsStore.push({
-        content: 'Xóa thành công',
-        type: 'success'
-      })
+      try {
+        await this.callAPI(apiURL, payload)
+        this.fetchedData.items = this.fetchedData.items.filter(item => !(item._id in body.ids))
+        this.alertsStore.push({
+          content: 'Xóa thành công',
+          type: 'success'
+        })
+      } catch(err) {}
     },
     updateSelectedItem() {
       if (this.selectedRows.length > 1) {

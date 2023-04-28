@@ -20,21 +20,6 @@ const filter = ref({
 })
 </script>
 
-<!-- <script>
-export default {
-  mounted() {
-    this.$data.deletionModal = this.$refs.deletionModal
-    this.$data.updationModal = this.$refs.updationModal
-  },
-  data() {
-    return {
-      deletionModal: {},
-      updationModal: {}
-    }
-  }
-}
-</script> -->
-
 <template>
   <CommonActions v-if="result" :api-url="`${hostname}/branch`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result" :filter="filter">
     <template #modalTriggerButtons>

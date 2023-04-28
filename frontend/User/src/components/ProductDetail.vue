@@ -38,9 +38,26 @@ authStore.fetchAuthInfo()
             </div>
           </template>
           <div class="fs-5 mb-5">
-            <span class="text-decoration-line-through me-2">{{ productStore.data.price }}</span>
+            <template v-if="productStore.data.inSales && productStore.data.inSales.length != 0">
+              <span class="text-decoration-line-through me-2">{{ productStore.data.price }}</span>
+            </template>
             <span>{{ productStore.finalPrice }}</span>
           </div>
+          <p class="lead">
+            <span class="fw-bold">Màn hình</span>: {{ productStore.data.specs.screen }}
+          </p>
+          <p class="lead">
+            <span class="fw-bold">Hệ điều hành</span>: {{ productStore.data.specs.os }}
+          </p>
+          <p class="lead">
+            <span class="fw-bold">Camera sau</span>: {{ productStore.data.specs.backCamera }}
+          </p>
+          <p class="lead">
+            <span class="fw-bold">Camera trước</span>: {{ productStore.data.specs.frontCamera }}
+          </p>
+          <p class="lead">
+            <span class="fw-bold">CPU</span>: {{ productStore.data.specs.chip }}
+          </p>
           <p class="lead">
             {{ productStore.data.description }}
           </p>
@@ -54,7 +71,7 @@ authStore.fetchAuthInfo()
           </div>
         </div>
       </div>
-      <div class="col-12">
+      <div class="col-12 mt-5">
         <CommentContainer :product-id="productStore.data._id" />
       </div>
     </div>

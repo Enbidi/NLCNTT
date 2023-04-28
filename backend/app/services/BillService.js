@@ -41,6 +41,16 @@ class BillService extends BaseService {
           });
         })
       );
+    } else {
+      await Promise.all(
+        details.map(async detail => {
+          await billDetailService.save({
+            quantity: detail.quantity,
+            product: detail.product,
+            bill: bill._id,
+          });
+        })
+      );
     }
     await bill.save();
     return await this.model.fetchDetailsWithTotal({ _id: bill._id }, 1, cb)

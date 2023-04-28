@@ -43,6 +43,7 @@ app.use(session({
 usePassport(app);
 
 app.use(express.static(path.join(__dirname, 'public')));
+
 // passport.serializeUser(function(user, cb) {
 //   process.nextTick(User.serializeUser(), user, cb);
 // });

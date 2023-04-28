@@ -16,8 +16,8 @@
         <img src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(15).webp" class="d-block w-100"
           alt="Sunset Over the City" />
         <div class="carousel-caption d-none d-md-block">
-          <h5>First slide label</h5>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+          <h5>Kết nối mọi người</h5>
+          <p>Sản phẩm vượt thời đại.</p>
         </div>
       </div>
 
@@ -26,8 +26,8 @@
         <img src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(22).webp" class="d-block w-100"
           alt="Canyon at Nigh" />
         <div class="carousel-caption d-none d-md-block">
-          <h5>Second slide label</h5>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          <h5>Nắm bắt mọi khoảnh khắc</h5>
+          <p>Cả thé giới qua màn ảnh nhỏ.</p>
         </div>
       </div>
 
@@ -36,8 +36,8 @@
         <img src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(23).webp" class="d-block w-100"
           alt="Cliff Above a Stormy Sea" />
         <div class="carousel-caption d-none d-md-block">
-          <h5>Third slide label</h5>
-          <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+          <h5>Ghi lại hành trình</h5>
+          <p>Không bỏ lỡ bất kì khoảnh khắc nào.</p>
         </div>
       </div>
     </div>

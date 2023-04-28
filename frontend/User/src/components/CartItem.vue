@@ -20,10 +20,10 @@ const BASE_URL = import.meta.env.VITE_BASE_URL
           </div>
         </div>
         <div class="d-flex flex-row align-items-center">
-          <div style="width: 50px;">
+          <div class="ms-1" style="width: 50px;">
             <h5 class="fw-normal mb-0">{{ product.quantity }}</h5>
           </div>
-          <div style="width: 80px;">
+          <div style="width: 100px;">
             <h5 class="mb-0">{{ product.price }}</h5>
           </div>
           <a href="javascript:void(0)" @click="cartStore.remove(product)" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>

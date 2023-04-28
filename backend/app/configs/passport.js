@@ -7,6 +7,22 @@ const usePassport = (app) => {
   passport.use(User.createStrategy());
   passport.serializeUser(User.serializeUser());
   passport.deserializeUser(User.deserializeUser());
+
+  // passport.serializeUser(function(user, cb) {
+  //   process.nextTick(function() {
+  //     return cb(null, {
+  //       id: user._id,
+  //       email: user.email,
+  //       firstname: user.firstname,
+  //       lastname: user.lastname
+  //     })
+  //   })
+  // })
+  // passport.deserializeUser(function(user, cb) {
+  //   process.nextTick(() => {
+  //     return cb(null, user);
+  //   })
+  // })
 }
 
 module.exports = {
