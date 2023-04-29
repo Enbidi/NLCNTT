@@ -33,13 +33,22 @@ module.exports.loginPost = [
   }
 ];
 
-module.exports.oauth2Get = passport.authenticate('google')
+module.exports.oauth2GoogleGet = passport.authenticate('google')
 
-module.exports.oauth2Redirect = [
+module.exports.oauth2GoogleRedirect = [
   passport.authenticate('google', {
     successReturnToOrRedirect: 'http://localhost:5174/',
     failureRedirect: 'http://localhost:5174/#/login'
   }),
+  (req, res) => {
+    res.json("OK")
+  }
+]
+
+module.exports.oauth2FacebookGet = passport.authenticate('facebook')
+
+module.exports.oauth2FacebookRedirect = [
+  passport.authenticate('facebook'),
   (req, res) => {
     res.json("OK")
   }

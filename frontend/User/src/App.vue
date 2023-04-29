@@ -11,6 +11,8 @@ import NavItem from './components/NavItem.vue';
 import LoadingScreen from './components/LoadingScreen.vue';
 import Alert from './components/Alert.vue'
 import { useCartStore } from './stores/cart'
+import { useAuthStore } from './stores/auth'
+useAuthStore().tryFetch()
 const cartStore = useCartStore()
 const isLoading = ref(false)
 provide('isLoading', isLoading)

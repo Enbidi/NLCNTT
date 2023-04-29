@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "passport": "^0.6.0"
+    "passport": "^0.6.0",
+    "passport-facebook": "^3.0.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.15",

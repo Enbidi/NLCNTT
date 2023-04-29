@@ -86,7 +86,7 @@ export default {
                 </form>
 
                 <div class="d-flex justify-content-center text-center mt-4 pt-1">
-                  <a class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                  <a href="http://localhost:3000/oauth2/login/federated/facebook" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
                   <a class="text-white"><i class="fab fa-twitter fa-lg mx-4 px-2"></i></a>
                   <a href="http://localhost:3000/oauth2/login/federated/google" class="text-white"><i class="fab fa-google fa-lg"></i></a>
                 </div>

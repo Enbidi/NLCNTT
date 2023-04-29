@@ -14,6 +14,14 @@ export const useAuthStore = defineStore("auth", {
     alerts: () => useAlertsStore()
   },
   actions: {
+    async tryFetch() {
+      var response = await fetch(import.meta.env.VITE_USER_INFO_URL)
+      console.log(response)
+      if (!response.ok) return
+      this.isAuthenticated = true
+      var data = response.json()
+      Object.assign(this, data.item)
+    },
     async fetchAuthInfo() {
       if (!this.isAuthenticated) {
         return
