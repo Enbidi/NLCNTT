@@ -33,6 +33,18 @@ module.exports.loginPost = [
   }
 ];
 
+module.exports.oauth2Get = passport.authenticate('google')
+
+module.exports.oauth2Redirect = [
+  passport.authenticate('google', {
+    successReturnToOrRedirect: 'http://localhost:5174/',
+    failureRedirect: 'http://localhost:5174/#/login'
+  }),
+  (req, res) => {
+    res.json("OK")
+  }
+]
+
 module.exports.logoutGet = (req, res, next) => {
   req.logout((err) => {
     if (err) {
