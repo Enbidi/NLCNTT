@@ -48,7 +48,7 @@ const filter = ref({
 
 <template>
   <CommonActions v-if="result" :api-url="`${hostname}/admin/product`" :deletion-modal="deletionModal"
-    :updation-modal="updationModal" :fetched-data="result" :filter="filter">
+    :updation-modal="updationModal" :fetched-data="result" :filter="filter" title="Sản phẩm" title-description="Dữ liệu các sản phẩm">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addProductModal">
         Thêm sản phẩm

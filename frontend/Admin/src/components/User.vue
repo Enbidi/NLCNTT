@@ -38,7 +38,7 @@ export default {
 </script> -->
 
 <template>
-  <CommonActions :api-url="`${hostname}/admin/user`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result" :filter="filter">
+  <CommonActions :api-url="`${hostname}/admin/user`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result" :filter="filter" title="Người dùng" title-description="Dữ liệu người dùng">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addUserModal">
         Thêm người dùng
@@ -121,7 +121,7 @@ export default {
     <template #updationModal="{ updateHandler, errors }">
       <Modal id="updateUserModal" ref="updationModal">
         <template #modalTitle>
-          Thêm người dùng
+          Sửa người dùng
         </template>
         <form @submit.prevent="updateHandler($event)" method="POST">
           <!-- Name input -->

@@ -17,6 +17,7 @@ export default {
   },
   setup() {
     const authStore = useAuthStore()
+    // authStore.$subscribe((a, b) => console.log(a, b), { detached: true })
     const searchResultStore = useSearchResultStore()
     authStore.fetchAuthInfo()
     return {

@@ -25,7 +25,7 @@ const filter = ref({
 
 <template>
   <CommonActions v-if="result" :api-url="`${hostname}/comment`" :deletion-modal="deletionModal"
-    :updation-modal="updationModal" :fetched-data="result" :filter="filter">
+    :updation-modal="updationModal" :fetched-data="result" :filter="filter" title="Bình luận" title-description="Các bình luận hiện có">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addCommentModal">
         Thêm nhãn hiệu
@@ -71,7 +71,7 @@ const filter = ref({
     <template #updationModal="{ errors, updateHandler, selectedItem }">
       <Modal id="updateBranchModal" ref="updationModal">
         <template #modalTitle>
-          Sửa nhãn hiệu
+          Sửa bình luận
         </template>
         <form @submit.prevent="updateHandler($event)" method="POST">
           <!-- Name input -->
@@ -107,11 +107,11 @@ const filter = ref({
     <template #deletionModal="{ deleteHandler, errors }">
       <Modal id="deleteBranchModal" ref="deletionModal">
         <template #modalTitle>
-          Xóa nhãn hiệu
+          Xóa bình luận
         </template>
         <div class="modal-body">
           <div>
-            <p class="text-warning text-center">Bạn có chắc muốn xóa nhãn hiệu này</p>
+            <p class="text-warning text-center">Bạn có chắc muốn xóa bình luận này</p>
           </div>
 
           <div v-if="errors && errors.length != 0" class="alert alert-danger">

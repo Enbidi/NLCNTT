@@ -21,7 +21,8 @@ const filter = ref({
 </script>
 
 <template>
-  <CommonActions v-if="result" :api-url="`${hostname}/branch`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result" :filter="filter">
+  <CommonActions v-if="result" :api-url="`${hostname}/branch`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result" :filter="filter" 
+    title="Nhãn hiệu" title-description="Dữ liệu các nhẫn hiệu">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addOriginModal">
         Thêm nhãn hiệu

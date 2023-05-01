@@ -22,7 +22,7 @@ const saleType = ref(0)
 
 <template>
   <CommonActions :api-url="`${hostname}/sale`" :deletion-modal="deletionModal" :updation-modal="updationModal"
-    :fetched-data="salesStore">
+    :fetched-data="salesStore" title="Khuyến mãi" title-description="Thông tin các khuyến mãi">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addOriginModal">
         Thêm khuyến mãi
@@ -132,14 +132,14 @@ const saleType = ref(0)
         </template>
         <div class="modal-body">
           <div>
-            <p class="text-warning text-center">Bạn có chắc muốn xóa xuât sứ này</p>
+            <p class="text-warning text-center">Bạn có chắc muốn xóa khuyến mãi này</p>
           </div>
 
           <div v-if="errors && errors.length != 0" class="alert alert-danger">
             <p v-for="error in errors">{{ error.msg }}</p>
           </div>
           <div v-else-if="errors && errors.length == 0" class="alert alert-success">
-            Xóa xuất sứ thành công
+            Xóa khuyến mãi thành công
           </div>
         </div>
 

@@ -39,7 +39,7 @@ export default {
 </script> -->
 
 <template>
-  <CommonActions v-if="result" :api-url="`${hostname}/origin`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result" :filter="filter">
+  <CommonActions v-if="result" :api-url="`${hostname}/origin`" :deletion-modal="deletionModal" :updation-modal="updationModal" :fetched-data="result" :filter="filter" title="Nhà cung cấp" title-description="Dữ liệu các nhà cung cấp">
     <template #modalTriggerButtons>
       <ModalTriggerButton target="addOriginModal">
         Thêm xuất sứ

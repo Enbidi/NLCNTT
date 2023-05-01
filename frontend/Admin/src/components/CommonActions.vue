@@ -8,7 +8,7 @@ export default {
   components: {
     LoadingScreen
   },
-  props: ['apiUrl', 'deletionModal', 'updationModal', 'fetchedData', 'filter'],
+  props: ['apiUrl', 'deletionModal', 'updationModal', 'fetchedData', 'filter', 'title', 'titleDescription'],
   setup(props) {
     var alertsStore = useAlertsStore()
     return {
@@ -169,9 +169,9 @@ export default {
 
 <template>
   <div>
-    <h1 class="mt-4">Sản phẩm</h1>
+    <h1 class="mt-4">{{ title }}</h1>
     <ol class="breadcrumb mb-4">
-      <li class="breadcrumb-item active">Dữ liệu các sản phẩm</li>
+      <li class="breadcrumb-item active">{{ titleDescription }}</li>
     </ol>
     <LoadingScreen v-if="isLoading" />
     <div class="card mb-4">
