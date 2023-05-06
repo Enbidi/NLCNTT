@@ -2,7 +2,7 @@ const passport = require("passport");
 
 const { body, validationResult, matchedData } = require("express-validator");
 
-const { parallelValidate } = require("../validate");
+const { parallelValidate, sequentialValidate } = require("../validate");
 
 const userService = require("../services/UserService");
 
@@ -20,7 +20,7 @@ module.exports.userLoginGet = (req, res) => {
 
 module.exports.loginPost = [
   passport.authenticate("local", {
-    // successReturnToOrRedirect: "/",
+    // successReturnToOrRedirect: "http://localhost:5173/",
     // failureUrl: "/auth/login",
     // failureRedirect: '/login', failureMessage: true,
     keepSessionInfo: true,
@@ -32,6 +32,41 @@ module.exports.loginPost = [
     })
   }
 ];
+
+module.exports.changePassword = [
+  sequentialValidate(
+    body('old_password', 'Mật khẩu cũ không được trống')
+      .isString()
+      .not()
+      .isEmpty(),
+    body('new_password', 'Mật khẩu mới không được trống')
+      .isString()
+      .not()
+      .isEmpty(),
+    body('confirm_password', 'Mật khẩu mới không hớp')
+      .custom(async (value, { req }) => {
+        if (value != req.body['new_password']) return false
+        return true
+      })
+  ),
+  (req, res) => {
+    const oldPassword = req.body['old_password']
+    const newPassword = req.body['new_password']
+    req.user.changePassword(oldPassword, newPassword, (err) => {
+      if (err) {
+        res.status(400).json({
+          status: 'Failed',
+          message: 'Mật khẩu không khớp'
+        })
+        return
+      }
+      res.json({
+        status: 'Successed',
+        message: 'Password is successfully updated'
+      })
+    })
+  }
+]
 
 module.exports.oauth2GoogleGet = passport.authenticate('google')
 

@@ -70,7 +70,7 @@ UserSchema.virtual("bills", {
 
 UserSchema.plugin(passportLocalMongoose, {
   usernameUnique: false,
-  // usernameQueryFields: ["email"],
+  usernameQueryFields: ["email"],
   populateFields: "email",
   usernameField: "email",
   selectFields: "firstname lastname email number sex"

@@ -54,22 +54,22 @@ const usePassport = (app) => {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  passport.use(new GoogleStrategy({
-    clientID: process.env['GOOGLE_CLIENT_ID'],
-    clientSecret: process.env['GOOGLE_CLIENT_SECRET'],
-    callbackURL: '/oauth2/redirect/google',
-    scope: [ 'profile', 'email' ]
-  }, (issuer, profile, cb) => {
-    handle(issuer, profile, cb)
-  }))
+  // passport.use(new GoogleStrategy({
+  //   clientID: process.env['GOOGLE_CLIENT_ID'],
+  //   clientSecret: process.env['GOOGLE_CLIENT_SECRET'],
+  //   callbackURL: '/oauth2/redirect/google',
+  //   scope: [ 'profile', 'email' ]
+  // }, (issuer, profile, cb) => {
+  //   handle(issuer, profile, cb)
+  // }))
 
-  passport.use(new FacebookStrategy({
-    clientID: process.env['FACEBOOK_CLIENT_ID'],
-    clientSecret: process.env['FACEBOOK_CLIENT_SECRET'],
-    callbackURL: '/oauth2/redirect/google',
-  }, (accessToken, refreshToken, profile, cb) => {
-    handle(profile.provider, profile, cb)
-  }))
+  // passport.use(new FacebookStrategy({
+  //   clientID: process.env['FACEBOOK_CLIENT_ID'],
+  //   clientSecret: process.env['FACEBOOK_CLIENT_SECRET'],
+  //   callbackURL: '/oauth2/redirect/google',
+  // }, (accessToken, refreshToken, profile, cb) => {
+  //   handle(profile.provider, profile, cb)
+  // }))
 
   passport.use(User.createStrategy());
 

@@ -22,7 +22,6 @@ export default {
   },
   methods: {
     async loginAPI(event) {
-      console.log("Login")
       this.isLoading = true
       var formData = new FormData(event.target)
       var formDataJSON = convertFormDataToJSON(formData)
@@ -46,7 +45,8 @@ export default {
         content: 'Đăng nhập thành công',
         type: 'success'
       })
-      this.authStore.isAuthenticated = true
+      // this.authStore.isAuthenticated = true
+      this.authStore.fetchAuthInfo()
       this.$router.push({
         name: 'product',
         replace: true
