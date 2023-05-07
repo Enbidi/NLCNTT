@@ -30,9 +30,9 @@ function handle(issuer, profile, cb) {
           userId: id,
           displayName: profile.displayName,
           name: {
-            familyName: profile.familyName,
-            givenName: profile.givenName,
-            middleName: profile.middleName,
+            familyName: profile.name.familyName,
+            givenName: profile.name.givenName,
+            middleName: profile.name.middleName,
           },
           emails: profile.emails
         }
