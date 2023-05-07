@@ -1,1 +1,0 @@
-import{d as e,u as i}from"./index-b7eedab6.js";const a=e("origins",{state:()=>({items:[]}),getters:{alertsStore:()=>i()},actions:{async fetchOrigins(){if(this.items&&this.items.length==0){var t="http://localhost:3000/admin/origin",s=await this.alertsStore.callAPI("danger",t);this.items=s.items}}}});export{a as u};

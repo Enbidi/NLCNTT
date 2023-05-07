@@ -1,1 +1,0 @@
-import{d as s,u as r}from"./index-ed47b571.js";const o=s("products",{state:()=>({items:[],selectedItems:[]}),getters:{alertsStore:()=>r()},actions:{async fetchProducts(){if(this.items&&this.items.length==0){var t="http://localhost:3000/admin/product",e=await this.alertsStore.callAPI("danger",t);this.items=e.items}}}});export{o as u};

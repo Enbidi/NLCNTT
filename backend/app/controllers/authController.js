@@ -8,7 +8,7 @@ const userService = require("../services/UserService");
 
 var path = require("path");
 const { ensureLoggedIn } = require("connect-ensure-login");
-const { User } = require("../models/User");
+const { User, Customer, Admin } = require("../models/User");
 
 module.exports.loginGet = (req, res) => {
   res.sendFile(path.join(process.env.VIEW_DIR, "static/login.html"));
@@ -26,10 +26,14 @@ module.exports.loginPost = [
     keepSessionInfo: true,
   }),
   (req, res, next) => {
-    res.json({
-      state: "Success",
-      message: "Successful Login"
-    })
+    if (!req.session.returnTo) {
+      res.json({
+        state: "Success",
+        message: "Successful Login"
+     })
+     return
+    }
+    res.redirect(req.session.returnTo)
   }
 ];
 
@@ -72,8 +76,8 @@ module.exports.oauth2GoogleGet = passport.authenticate('google')
 
 module.exports.oauth2GoogleRedirect = [
   passport.authenticate('google', {
-    successReturnToOrRedirect: 'http://localhost:5174/',
-    failureRedirect: 'http://localhost:5174/#/login'
+    successReturnToOrRedirect: 'http://localhost:3000/user_ui',
+    failureRedirect: 'http://localhost:3000/user_ui/#/login'
   }),
   (req, res) => {
     res.json("OK")
@@ -159,7 +163,7 @@ module.exports.signupPost = [
       req,
       { locations: ["body"] }
     );
-    User.register(
+    Customer.register(
       {
         firstname,
         lastname,

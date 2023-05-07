@@ -1,1 +1,0 @@
-import{d as s,u as a}from"./index-ed47b571.js";const i=s("branches",{state:()=>({items:[]}),getters:{alertsStore:()=>a()},actions:{async fetchBranches(){if(this.items&&this.items.length==0){var t="http://localhost:3000/admin/branch",e=await this.alertsStore.callAPI("danger",t);this.items=e.items}}}});export{i as u};
