@@ -2,6 +2,8 @@ const passport = require("passport");
 const { User } = require("../models/User");
 const federatedUserService = require("../services/FederatedUserService")
 const userService = require("../services/UserService")
+const customerService = require('../services/CustomerService')
+
 
 const FacebookStrategy = require('passport-facebook')
 const GoogleStrategy = require('passport-google-oidc')
@@ -9,13 +11,14 @@ const GoogleStrategy = require('passport-google-oidc')
 function handle(issuer, profile, cb) {
   federatedUserService.find({
     provider: issuer,
-    subject: profile.subject
+    subject: profile.id
   }, (err, federatedUser) => {
+    // console.log(profile.subject)
     if (err) return cb(err)
     if (federatedUser.length == 0) {
-      userService.save({
-        firstname: profile.familyName ?? '',
-        lastname: profile.givenName ?? '',
+      customerService.save({
+        firstname: profile.name.familyName ?? '',
+        lastname: profile.name.givenName ?? '',
         email: profile.emails[0].value,
         sex: profile.gender
       }, (err, user) => {
@@ -23,7 +26,7 @@ function handle(issuer, profile, cb) {
         var id = user._id
         var federatedUserData = {
           provider: issuer,
-          subject: profile.subject,
+          subject: profile.id,
           userId: id,
           displayName: profile.displayName,
           name: {
